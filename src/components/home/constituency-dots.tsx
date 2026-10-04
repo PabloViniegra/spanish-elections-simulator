@@ -1,3 +1,4 @@
+import { cssVar } from "@/lib/css-var";
 import { seats2023 } from "@/lib/seats-2023";
 
 const compared = [
@@ -17,9 +18,13 @@ export function ConstituencyDots() {
             <p className="text-caption text-ink-muted-80">
               {name}, {seats} escaños
             </p>
-            <ul aria-hidden="true" className="grid w-fit grid-cols-13 gap-1.5 sm:gap-2">
+            <ul aria-hidden="true" className="reveal-scope grid w-fit grid-cols-13 gap-1.5 sm:gap-2">
               {Array.from({ length: seats }, (_, i) => (
-                <li key={i} className="size-[clamp(1rem,4.2vw,1.5rem)] rounded-full bg-ink" />
+                <li
+                  key={i}
+                  style={cssVar("--i", i)}
+                  className="reveal-dot size-[clamp(1rem,4.2vw,1.5rem)] rounded-full bg-ink lg:size-[clamp(1.5rem,2.6vw,2rem)]"
+                />
               ))}
             </ul>
           </div>

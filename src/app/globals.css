@@ -183,3 +183,40 @@
     opacity: 0;
   }
 }
+
+/* Scroll-linked reveals: the markup is the finished state; where scroll
+   timelines exist and motion is allowed, dots arrive and winning quotients
+   darken in assignment order as their block scrolls into view. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal-scope {
+      view-timeline: --reveal block;
+    }
+
+    .reveal-dot {
+      animation: reveal-dot linear both;
+      animation-timeline: --reveal;
+      animation-range: cover calc(var(--i) * 0.6%) cover calc(14% + var(--i) * 0.6%);
+    }
+
+    .reveal-seat {
+      animation: reveal-seat linear both;
+      animation-timeline: --reveal;
+      animation-range: cover calc(6% + var(--o) * 4%) cover calc(16% + var(--o) * 4%);
+    }
+  }
+}
+
+@keyframes reveal-dot {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes reveal-seat {
+  from {
+    background-color: transparent;
+    color: var(--color-ink);
+  }
+}

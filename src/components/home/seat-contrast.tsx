@@ -11,7 +11,7 @@ export function SeatContrast() {
             <br />
             En Madrid, 37.
           </h2>
-          <p className="max-w-[30rem] text-body text-ink-muted-80">
+          <p className="max-w-[30rem] text-body text-pretty text-ink-muted-80">
             Cada provincia es una circunscripción con sus propios escaños, y un partido necesita el
             3 % de sus votos para entrar en el reparto.
           </p>

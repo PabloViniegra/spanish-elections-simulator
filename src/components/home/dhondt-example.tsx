@@ -1,3 +1,4 @@
+import { cssVar } from "@/lib/css-var";
 import { sectionTitle } from "./type";
 
 // Invented figures for a five-seat constituency; labelled as such on screen.
@@ -37,7 +38,7 @@ export function DhondtExample() {
           <h2 id="dhondt-title" className={sectionTitle}>
             Cada escaño tiene su cociente.
           </h2>
-          <p className="text-body text-ink-muted-80">
+          <p className="text-body text-pretty text-ink-muted-80">
             Los votos de cada partido se dividen entre 1, 2, 3… y los escaños van a los cocientes
             más altos.
           </p>
@@ -62,7 +63,7 @@ export function DhondtExample() {
                 <th scope="col" className="py-3 pl-2 text-right font-normal sm:pl-4">Escaños</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="reveal-scope">
               {blocs.map((bloc) => (
                 <tr key={bloc.name} className="border-b border-hairline">
                   <th scope="row" className="py-4 pr-2 text-body font-semibold sm:pr-4">{bloc.name}</th>
@@ -72,7 +73,9 @@ export function DhondtExample() {
                     return (
                       <td key={d} className={`px-1 py-3 text-right text-body lg:text-tagline lg:font-normal ${columnClass(d)}`}>
                         {order ? (
-                          <span className="inline-flex items-baseline gap-0.5 rounded-sm bg-ink px-1.5 py-1 sm:gap-1 sm:px-2 text-on-dark">
+                          <span
+                            style={cssVar("--o", order)}
+                            className="reveal-seat inline-flex items-baseline gap-0.5 rounded-sm bg-ink px-1.5 py-1 sm:gap-1 sm:px-2 text-on-dark">
                             {format(q)}
                             <sup className="text-fine-print">{order}.º</sup>
                             <span className="sr-only"> (escaño {order})</span>

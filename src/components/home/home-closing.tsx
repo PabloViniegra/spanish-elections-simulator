@@ -1,12 +1,12 @@
 import { CtaLinks } from "./cta-links";
-import { sectionTitle } from "./type";
+import { closingTitle } from "./type";
 
 export function HomeClosing() {
   return (
     <>
       <section aria-labelledby="closing-title" className="bg-primary text-on-primary">
         <div className="mx-auto flex max-w-content flex-col gap-6 px-5 py-section sm:px-8 lg:py-32">
-          <h2 id="closing-title" className={sectionTitle}>
+          <h2 id="closing-title" className={closingTitle}>
             Tú pones los porcentajes.
             <br />
             La ley, los escaños.
