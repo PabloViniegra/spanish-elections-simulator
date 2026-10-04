@@ -12,7 +12,7 @@ export function HomeClosing() {
             La ley, los escaños.
           </h2>
           <p className="max-w-[34rem] text-body">
-            El simulador llega pronto. Crea tu cuenta y te avisamos en cuanto abra.
+            Cuando abra, te escribimos.
           </p>
           <CtaLinks tone="blue" />
         </div>

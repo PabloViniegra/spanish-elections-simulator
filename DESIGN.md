@@ -212,6 +212,8 @@ Error and validation states were not surfaced in the analyzed pages.
 
 **`footer`** — Background `{colors.canvas-parchment}` (#f5f5f7), text `{colors.ink-muted-80}`. Link columns in `{typography.dense-link}` (17px / 400 / 2.41 line-height — the relaxed leading is what makes the dense columns scannable). Column headings in `{typography.caption-strong}` (14px / 600). Legal row at the very bottom in `{typography.fine-print}` (12px / 400) with `{colors.ink-muted-48}` text. Vertical padding 64px.
 
+**`footer-legal-dark`** — The home's single-line legal footer. Background `{colors.surface-black}`, text `{colors.on-dark-muted}` in `{typography.fine-print}`, vertical padding 24px, no link columns. Used where the page ends on `{component.action-band}`: the black strip closes the blue band and echoes the black nav, while the parchment `footer` stays the default once link columns exist.
+
 ## Do's and Don'ts
 
 ### Do

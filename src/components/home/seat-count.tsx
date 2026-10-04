@@ -25,7 +25,8 @@ const slot = (startMs: number, durationMs: number) => ({
 });
 
 // The finished count is the markup's default state; the CSS in globals.css
-// replays the count over it only when motion is allowed.
+// replays the count over it only when motion is allowed. Each counted
+// constituency leaves a faint mark on the rim, so the settled arc keeps its 52.
 export function SeatCount() {
   return (
     <figure className="flex w-full flex-col items-center gap-5">
@@ -48,17 +49,22 @@ export function SeatCount() {
         {steps.map(({ code, angle, startMs, durationMs }) => {
           const from = polar(HEMICYCLE_OUTER_RADIUS + 4, angle);
           const to = polar(HEMICYCLE_OUTER_RADIUS + 11, angle);
+          const tick = { x1: from.x, y1: from.y, x2: to.x, y2: to.y };
           return (
-            <line
-              key={code}
-              x1={from.x}
-              y1={from.y}
-              x2={to.x}
-              y2={to.y}
-              strokeWidth={0.8}
-              style={slot(startMs, durationMs)}
-              className="count-step stroke-primary-on-dark"
-            />
+            <g key={code}>
+              <line
+                {...tick}
+                strokeWidth={0.6}
+                style={{ animationDelay: `${startMs + durationMs}ms` }}
+                className="count-mark stroke-on-dark/35"
+              />
+              <line
+                {...tick}
+                strokeWidth={0.8}
+                style={slot(startMs, durationMs)}
+                className="count-step stroke-primary-on-dark"
+              />
+            </g>
           );
         })}
         <line
@@ -80,8 +86,9 @@ export function SeatCount() {
           </span>
         ))}
         <span style={{ animationDuration: `${totalMs}ms` }} className="count-final col-start-1 row-start-1">
-          {steps.length} circunscripciones · {TOTAL_SEATS} escaños ·{" "}
-          <span className="font-semibold text-primary-on-dark">mayoría absoluta en {MAJORITY}</span>
+          {steps.length} circunscripciones · {TOTAL_SEATS} escaños
+          <span className="hidden sm:inline"> · </span>
+          <span className="block font-semibold text-primary-on-dark sm:inline">mayoría absoluta en {MAJORITY}</span>
         </span>
       </figcaption>
     </figure>

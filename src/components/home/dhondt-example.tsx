@@ -20,7 +20,9 @@ function seatOrder(bloc: string, d: number) {
   return index === -1 ? undefined : index + 1;
 }
 
-const format = (n: number) => n.toLocaleString("es-ES");
+// es-ES leaves four-digit numbers ungrouped by default; force it so 7.500
+// lines up with 10.000 in the same column.
+const format = (n: number) => n.toLocaleString("es-ES", { useGrouping: "always" });
 
 // Divisors that award no seat are context, not result: hidden on narrow
 // screens so the table fits without horizontal scrolling.

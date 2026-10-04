@@ -120,8 +120,9 @@
 
 /* Home seat count: the markup renders the finished count; with motion
    allowed, each seat lights blue as its constituency is counted and settles
-   white, the per-constituency labels and ticks show only during their slot,
-   and the summary and majority line appear when the count ends. */
+   white, the per-constituency labels and ticks show only during their slot
+   and leave a faint rim mark behind, and the summary and majority line
+   appear when the count ends. */
 .count-step {
   opacity: 0;
 }
@@ -139,6 +140,10 @@
   .count-final {
     animation-name: count-final;
     animation-timing-function: linear;
+  }
+
+  .count-mark {
+    animation: count-mark 1ms both;
   }
 }
 
@@ -169,5 +174,12 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+/* Hidden until its delay ends, then back to the resting style. */
+@keyframes count-mark {
+  from {
+    opacity: 0;
   }
 }
