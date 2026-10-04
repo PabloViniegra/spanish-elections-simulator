@@ -58,4 +58,4 @@ opencode.json
 
 # local tooling output
 .playwright-mcp/
-.impeccable/critique/
+.impeccable/

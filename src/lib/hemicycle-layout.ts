@@ -5,8 +5,10 @@ const ROWS = 10;
 const INNER_RADIUS = 46;
 const ROW_GAP = 7.5;
 
-export const HEMICYCLE_WIDTH = 2 * (INNER_RADIUS + (ROWS - 1) * ROW_GAP) + 12;
-export const HEMICYCLE_HEIGHT = INNER_RADIUS + (ROWS - 1) * ROW_GAP + 6;
+export const HEMICYCLE_OUTER_RADIUS = INNER_RADIUS + (ROWS - 1) * ROW_GAP;
+export const HEMICYCLE_WIDTH = 2 * HEMICYCLE_OUTER_RADIUS + 12;
+export const HEMICYCLE_HEIGHT = HEMICYCLE_OUTER_RADIUS + 6;
+export const HEMICYCLE_CENTER = { x: HEMICYCLE_WIDTH / 2, y: HEMICYCLE_HEIGHT - 3 };
 
 // Seats spread over concentric half rings in proportion to the length of each
 // ring, then numbered from the left edge sweeping to the right, as in a parliament.
@@ -26,8 +28,7 @@ export function hemicycleSeats() {
       }
     });
 
-  const centerX = HEMICYCLE_WIDTH / 2;
-  const centerY = HEMICYCLE_HEIGHT - 3;
+  const { x: centerX, y: centerY } = HEMICYCLE_CENTER;
   return radii
     .flatMap((radius, row) =>
       Array.from({ length: counts[row] }, (_, index) => {

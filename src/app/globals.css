@@ -107,3 +107,67 @@
     @apply outline-2 outline-offset-2 outline-primary-focus;
   }
 }
+
+@layer base {
+  ::selection {
+    @apply bg-primary text-on-primary;
+  }
+
+  html {
+    scrollbar-color: var(--color-ink-muted-48) transparent;
+  }
+}
+
+/* Home seat count: the markup renders the finished count; with motion
+   allowed, each seat lights blue as its constituency is counted and settles
+   white, the per-constituency labels and ticks show only during their slot,
+   and the summary and majority line appear when the count ends. */
+.count-step {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .count-seat {
+    animation: count-seat 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .count-step {
+    animation-name: count-step;
+    animation-timing-function: linear;
+  }
+
+  .count-final {
+    animation-name: count-final;
+    animation-timing-function: linear;
+  }
+}
+
+@keyframes count-seat {
+  0% {
+    fill: color-mix(in srgb, var(--color-on-dark) 16%, transparent);
+  }
+  6%,
+  45% {
+    fill: var(--color-primary-on-dark);
+  }
+  100% {
+    fill: var(--color-on-dark);
+  }
+}
+
+@keyframes count-step {
+  from,
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes count-final {
+  from,
+  99% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
