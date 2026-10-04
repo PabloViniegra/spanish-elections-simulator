@@ -49,3 +49,9 @@ AGENTS.md
 skills-lock.json
 opencode.json
 .mcp.json
+
+# playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
