@@ -28,6 +28,9 @@
   --color-divider-soft: #f0f0f0;
   --color-hairline: #e0e0e0;
 
+  /* Not in DESIGN.md (no validation states documented); AA on white. */
+  --color-error: #d70015;
+
   /* SF Pro substitute: Inter with the optical-size axis (Display/Text cuts). */
   --font-sans: "Inter Variable", system-ui, sans-serif;
 

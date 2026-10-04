@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Simulador de Elecciones",
+  title: { default: "Simulador de Elecciones", template: "%s · Simulador de Elecciones" },
   description:
     "Convierte una estimación de voto en el reparto de escaños del Congreso de los Diputados.",
 };
