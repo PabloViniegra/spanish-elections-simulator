@@ -13,7 +13,7 @@ export function CountReplay({ children }: { children: ReactNode }) {
       <button
         type="button"
         onClick={() => setRun((n) => n + 1)}
-        className="min-h-11 rounded-full px-4 text-caption text-primary-on-dark transition-transform active:scale-95 motion-reduce:hidden"
+        className="min-h-11 rounded-full px-4 text-caption text-primary-on-dark transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 motion-reduce:hidden"
       >
         Volver a contar
       </button>

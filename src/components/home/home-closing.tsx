@@ -4,17 +4,19 @@ import { closingTitle } from "./type";
 export function HomeClosing() {
   return (
     <>
-      <section aria-labelledby="closing-title" className="bg-primary text-on-primary">
+      <section aria-labelledby="closing-title" className="closing-scope bg-primary text-on-primary">
         <div className="mx-auto flex max-w-content flex-col gap-6 px-5 py-section sm:px-8 lg:py-32">
-          <h2 id="closing-title" className={closingTitle}>
+          <h2 id="closing-title" className={`closing-rise [--c:0] ${closingTitle}`}>
             Tú pones los porcentajes.
             <br />
             La ley, los escaños.
           </h2>
-          <p className="max-w-[34rem] text-body">
+          <p className="closing-rise max-w-[34rem] text-body [--c:1]">
             Cuando abra, te escribimos.
           </p>
-          <CtaLinks tone="blue" />
+          <div className="closing-rise [--c:2]">
+            <CtaLinks tone="blue" />
+          </div>
         </div>
       </section>
       <footer className="bg-surface-black text-on-dark-muted">

@@ -220,3 +220,25 @@
     color: var(--color-ink);
   }
 }
+
+/* Closing band: title, line and actions rise in turn as the band enters. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .closing-scope {
+      view-timeline: --closing block;
+    }
+
+    .closing-rise {
+      animation: closing-rise cubic-bezier(0.23, 1, 0.32, 1) both;
+      animation-timeline: --closing;
+      animation-range: entry calc(var(--c) * 8%) entry calc(45% + var(--c) * 8%);
+    }
+  }
+}
+
+@keyframes closing-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
