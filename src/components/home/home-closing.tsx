@@ -1,7 +1,7 @@
 import { CtaLinks } from "./cta-links";
 import { closingTitle } from "./type";
 
-export function HomeClosing() {
+export function HomeClosing({ signedIn }: { signedIn?: boolean }) {
   return (
     <>
       <section aria-labelledby="closing-title" className="closing-scope bg-primary text-on-primary">
@@ -14,9 +14,11 @@ export function HomeClosing() {
           <p className="closing-rise max-w-[34rem] text-body [--c:1]">
             Cuando abra, te escribimos.
           </p>
-          <div className="closing-rise [--c:2]">
-            <CtaLinks tone="blue" />
-          </div>
+          {!signedIn && (
+            <div className="closing-rise [--c:2]">
+              <CtaLinks tone="blue" />
+            </div>
+          )}
         </div>
       </section>
       <footer className="bg-surface-black text-on-dark-muted">

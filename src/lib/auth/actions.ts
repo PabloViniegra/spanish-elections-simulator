@@ -64,3 +64,8 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
   }
   redirect(`/register/check-email?email=${encodeURIComponent(email)}`);
 }
+
+export async function signOut() {
+  await auth.api.signOut({ headers: await headers() });
+  redirect("/");
+}

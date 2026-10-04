@@ -1,6 +1,7 @@
 import Link from "next/link";
+import { signOut } from "@/lib/auth/actions";
 
-export function SiteHeader() {
+export function SiteHeader({ username }: { username?: string }) {
   return (
     <header className="bg-surface-black text-on-dark">
       <nav
@@ -10,17 +11,28 @@ export function SiteHeader() {
         <Link href="/" className="flex min-h-11 items-center text-fine-print font-semibold xs:text-caption">
           Simulador de Elecciones
         </Link>
-        <div className="flex items-center gap-4">
-          <Link href="/login" className="flex min-h-11 items-center">
-            Iniciar sesión
-          </Link>
-          {/* The link fills the 44px bar for touch; the pill inside stays compact. */}
-          <Link href="/register" className="group flex min-h-11 items-center">
-            <span className="rounded-full bg-primary px-3 py-1.5 text-on-primary transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-active:scale-[0.97]">
-              Crear cuenta
-            </span>
-          </Link>
-        </div>
+        {username ? (
+          <div className="flex items-center gap-4">
+            <span>{username}</span>
+            <form action={signOut}>
+              <button type="submit" className="flex min-h-11 items-center">
+                Cerrar sesión
+              </button>
+            </form>
+          </div>
+        ) : (
+          <div className="flex items-center gap-4">
+            <Link href="/login" className="flex min-h-11 items-center">
+              Iniciar sesión
+            </Link>
+            {/* The link fills the 44px bar for touch; the pill inside stays compact. */}
+            <Link href="/register" className="group flex min-h-11 items-center">
+              <span className="rounded-full bg-primary px-3 py-1.5 text-on-primary transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-active:scale-[0.97]">
+                Crear cuenta
+              </span>
+            </Link>
+          </div>
+        )}
       </nav>
     </header>
   );
