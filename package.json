@@ -12,6 +12,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
     "auth:generate": "auth generate --config src/lib/auth/auth.ts --output src/lib/db/auth-schema.ts --yes",
+    "email:launch": "tsx --env-file=.env.local scripts/send-launch-emails.mts",
     "test": "vitest run",
     "test:e2e": "playwright test"
   },
@@ -39,6 +40,7 @@
     "drizzle-kit": "0.31.11",
     "oxlint": "1.86.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.0.3"
   },
