@@ -1,4 +1,5 @@
 import { FormAlert } from "@/components/forms/form-alert";
+import { PasswordField } from "@/components/forms/password-field";
 import { SelectField } from "@/components/forms/select-field";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { TextField } from "@/components/forms/text-field";
@@ -27,8 +28,7 @@ export function RegisterForm({ state, action, pending }: RegisterFormProps) {
   const errors = state?.fieldErrors;
 
   return (
-    <form action={action} className="flex flex-col gap-5">
-      <FormAlert message={state?.error} />
+    <form action={action} noValidate className="flex flex-col gap-5">
       <TextField
         label="Nombre de usuario"
         name="username"
@@ -52,10 +52,9 @@ export function RegisterForm({ state, action, pending }: RegisterFormProps) {
         defaultValue={values?.email}
         error={errors?.email}
       />
-      <TextField
+      <PasswordField
         label="Contraseña"
         name="password"
-        type="password"
         hint="Mínimo 8 caracteres."
         autoComplete="new-password"
         required
@@ -63,24 +62,33 @@ export function RegisterForm({ state, action, pending }: RegisterFormProps) {
         maxLength={128}
         error={errors?.password}
       />
-      <SelectField
-        label="Provincia (opcional)"
-        name="province"
-        options={provinceOptions}
-        defaultValue={values?.province ?? ""}
-        error={errors?.province}
-      />
-      <SelectField
-        label="Perfil de uso"
-        name="usageProfile"
-        options={usageProfileOptions}
-        defaultValue={values?.usageProfile ?? "citizen"}
-        error={errors?.usageProfile}
-      />
+      <details open={Boolean(errors?.province || errors?.usageProfile)}>
+        <summary className="flex min-h-11 cursor-pointer items-center px-1 text-caption text-primary">
+          Añadir detalles (opcional)
+        </summary>
+        <div className="flex flex-col gap-5 pt-2">
+          <p className="px-1 text-caption text-ink-muted-80">
+            Nunca guardamos tu afiliación política ni tu intención de voto.
+          </p>
+          <SelectField
+            label="Provincia (opcional)"
+            name="province"
+            options={provinceOptions}
+            defaultValue={values?.province ?? ""}
+            error={errors?.province}
+          />
+          <SelectField
+            label="Perfil de uso"
+            hint="Cuéntanos cómo vas a usar el simulador."
+            name="usageProfile"
+            options={usageProfileOptions}
+            defaultValue={values?.usageProfile ?? "citizen"}
+            error={errors?.usageProfile}
+          />
+        </div>
+      </details>
+      <FormAlert message={state?.error} />
       <SubmitButton pending={pending} label="Crear cuenta" pendingLabel="Creando cuenta…" />
-      <p className="text-fine-print text-ink-muted-80">
-        Nunca guardamos tu afiliación política ni tu intención de voto.
-      </p>
     </form>
   );
 }

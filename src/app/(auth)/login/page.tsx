@@ -9,6 +9,7 @@ export default function LoginPage() {
   return (
     <AuthCard
       title="Inicia sesión"
+      description="Accede con tu usuario o tu correo electrónico."
       footer={
         <>
           ¿No tienes cuenta?{" "}

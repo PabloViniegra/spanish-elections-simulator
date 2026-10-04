@@ -28,20 +28,35 @@ test("login and register link to each other", async ({ page }) => {
 
 test("register keeps submitted values when the server rejects them", async ({ page }) => {
   await page.goto("/register");
-  // Skip browser validation so the server action (zod) handles the input.
-  await page.locator("form").evaluate((form: HTMLFormElement) => {
-    form.noValidate = true;
-  });
   await page.getByLabel("Nombre de usuario").fill("ab");
   await page.getByLabel("Correo electrónico").fill("ana@example.com");
   await page.getByLabel("Contraseña").fill("contraseña-segura");
+  await page.getByText("Añadir detalles (opcional)").click();
   await page.getByLabel("Provincia (opcional)").selectOption("28");
   await page.getByLabel("Perfil de uso").selectOption("teacher");
   await page.getByRole("button", { name: "Crear cuenta" }).click();
 
   await expect(page.getByText("El usuario debe tener al menos 3 caracteres.")).toBeVisible();
   await expect(page.getByLabel("Nombre de usuario")).toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel("Nombre de usuario")).toBeFocused();
   await expect(page.getByLabel("Correo electrónico")).toHaveValue("ana@example.com");
   await expect(page.getByLabel("Provincia (opcional)")).toHaveValue("28");
   await expect(page.getByLabel("Perfil de uso")).toHaveValue("teacher");
+});
+
+test("password can be revealed and hidden", async ({ page }) => {
+  await page.goto("/login");
+  const password = page.getByLabel("Contraseña");
+  await page.getByRole("button", { name: "Mostrar" }).click();
+  await expect(password).toHaveAttribute("type", "text");
+  await page.getByRole("button", { name: "Ocultar" }).click();
+  await expect(password).toHaveAttribute("type", "password");
+});
+
+test("empty login submit shows Spanish errors and focuses the first field", async ({ page }) => {
+  await page.goto("/login");
+  await page.getByRole("button", { name: "Iniciar sesión" }).click();
+  await expect(page.getByText("Introduce tu usuario o correo electrónico.")).toBeVisible();
+  await expect(page.getByText("Introduce tu contraseña.")).toBeVisible();
+  await expect(page.getByLabel("Usuario o correo electrónico")).toBeFocused();
 });
