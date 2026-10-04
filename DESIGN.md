@@ -190,6 +190,8 @@ Apple's whitespace is the product's pedestal. Every tile begins with at least 64
 
 **`product-tile-dark-3`** — Variant on `{colors.surface-tile-3}` (#252527). Used at the bottom of the stack and in embedded video/player frames.
 
+**`action-band`** — The closing call to action of a persuasion surface (home). Full-bleed band on `{colors.primary}` (Action Blue), text `{colors.on-primary}`, rounded `{rounded.none}`, vertical padding `{spacing.section}` (80px; 128px from `lg`). Left-aligned stack: two-line display headline → one short body line → CTA pair inverted for the surface: primary pill on `{colors.canvas}` with `{colors.primary}` text, ghost pill with a 1px `{colors.on-primary}` border and text. At most one per page, always last before the footer, so the accent reads as the destination of the page rather than decoration.
+
 **`store-utility-card`** — Used in store grid and accessories grid. Background `{colors.canvas}` (white), 1px solid `{colors.hairline}` border, rounded `{rounded.lg}` (18px), padding `{spacing.lg}` (24px). Top: product image (1:1 crop with `{rounded.sm}` (8px) inner image radius). Below: product name in `{typography.body-strong}` (17px / 600), price in `{typography.body}` (17px / 400), and a `{component.text-link}` ("Buy" or "Learn more"). No shadow by default; product render itself carries the system product-shadow.
 
 **`configurator-option-chip`** — Pill-shaped tappable cell used in the iPhone 17 Pro buy page. Background `{colors.canvas}`, text `{colors.ink}` in `{typography.caption}`, rounded `{rounded.pill}`, padding 12px × 16px. Contains a small product thumbnail + label + price delta. Arranged in a grid of 4–5 options per row.
@@ -220,6 +222,7 @@ Error and validation states were not surfaced in the analyzed pages.
 - Reserve `{rounded.pill}` for the primary blue CTA and any other element that should read as an "action" (configurator chips, search input, sticky bar CTA).
 - Apply the single product-shadow (`rgba(0, 0, 0, 0.22) 3px 5px 30px`) only to product renders resting on a surface — never on cards, buttons, or text.
 - Use `transform: scale(0.95)` as the active/press state on every button — it's the system-wide micro-interaction.
+- Use Action Blue as a surface only for the single closing `{component.action-band}`; everywhere else it stays an interactive signal.
 - Keep the global nav `{colors.surface-black}` (true black) — it's the only place pure black appears on most pages.
 
 ### Don't
