@@ -56,6 +56,7 @@ const authErrorMessages = new Map([
   ["INVALID_USERNAME_OR_PASSWORD", "Usuario, correo o contraseña incorrectos."],
   ["USER_ALREADY_EXISTS", "Ya existe una cuenta con ese correo electrónico."],
   ["USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL", "Ya existe una cuenta con ese correo electrónico."],
+  ["EMAIL_NOT_VERIFIED", "Confirma tu correo electrónico. Te hemos reenviado el enlace."],
   ["USERNAME_IS_ALREADY_TAKEN", "Ese nombre de usuario ya está en uso."],
 ]);
 

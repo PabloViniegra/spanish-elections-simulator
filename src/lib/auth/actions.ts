@@ -13,6 +13,8 @@ import {
   type FormState,
 } from "./forms";
 
+const verifiedRedirect = "/login?verified=1";
+
 export async function signIn(_prev: FormState, formData: FormData): Promise<FormState> {
   const values = formValues(formData, ["identifier"]);
   const parsed = signInSchema.safeParse({ ...values, ...formValues(formData, ["password"]) });
@@ -22,10 +24,10 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
   try {
     const requestHeaders = await headers();
     if (identifier.includes("@")) {
-      await auth.api.signInEmail({ body: { email: identifier, password }, headers: requestHeaders });
+      await auth.api.signInEmail({ body: { email: identifier, password, callbackURL: verifiedRedirect }, headers: requestHeaders });
     } else {
       await auth.api.signInUsername({
-        body: { username: identifier, password },
+        body: { username: identifier, password, callbackURL: verifiedRedirect },
         headers: requestHeaders,
       });
     }
@@ -45,12 +47,20 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
   const { username, email, password, province, usageProfile } = parsed.data;
   try {
     await auth.api.signUpEmail({
-      body: { name: username, username, email, password, province, usageProfile },
+      body: {
+        name: username,
+        username,
+        email,
+        password,
+        province,
+        usageProfile,
+        callbackURL: verifiedRedirect,
+      },
       headers: await headers(),
     });
   } catch (error) {
     if (!(error instanceof APIError)) throw error;
     return { values, error: authErrorMessage(error.body?.code) };
   }
-  redirect("/");
+  redirect(`/register/check-email?email=${encodeURIComponent(email)}`);
 }
