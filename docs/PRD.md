@@ -13,12 +13,12 @@ A public web app where anyone can enter a vote estimate and instantly see the re
 - Faithful seat allocation for the Congreso: same inputs as the official count produce the same seats.
 - Two input modes: national shares projected to provinces, and fine-grained per-province editing.
 - Explainability: every seat can be traced to its D'Hondt quotient.
-- Shareable scenarios through a single URL, with no accounts.
+- Shareable scenarios through a single URL.
 
 **Non-goals (v1)**
 
 - Senado, autonómicas, municipales, europeas.
-- User accounts, saved history, server-side storage.
+- Saved scenario history and server-side scenario storage.
 - Poll aggregation or forecasting models: the user supplies the estimate.
 - Pre-electoral coalition logic beyond treating a coalition as one candidacy.
 
@@ -26,18 +26,19 @@ A public web app where anyone can enter a vote estimate and instantly see the re
 
 ## Decision log
 
-Eight product and architecture decisions are fixed for v1; each one is revisitable but shapes everything below.
+Nine product and architecture decisions are fixed for v1; each one is revisitable but shapes everything below.
 
 | ID | Decision | Rationale |
 | --- | --- | --- |
 | D-01 | Congreso only | One well-understood ruleset; the engine is designed so other elections plug in later. |
 | D-02 | Two input modes: national % projected, plus per-province overrides | Casual users think in national %, power users need provincial control. |
 | D-03 | Proportional swing is the default projection | Never produces negative votes and respects each party's geographic shape. |
-| D-04 | Anonymous use; scenarios shared via URL | Zero friction, no personal data, no GDPR surface. |
-| D-05 | Scenario state encoded in the URL, no database | No backend storage to run or secure; links never expire. |
+| D-04 | User accounts with email or username and password (Better Auth); scenarios still shared via URL | Revised Oct 2026 (was anonymous-only): accounts enable a user profile; personal data stays minimal (NFR-07). |
+| D-05 | Scenario state encoded in the URL; the database stores only users and sessions | Links never expire and need no backend lookup. |
 | D-06 | Single Next.js project | One codebase for UI, static reference data and any light server work. |
 | D-07 | Seat engine runs in the browser as a pure TypeScript module | Instant recalculation on every keystroke; the same module is testable in isolation. |
 | D-08 | Deploy on Vercel | Native Next.js hosting, preview deployments per branch, free tier is enough at launch. |
+| D-09 | Neon Postgres accessed through Drizzle ORM | Serverless HTTP driver suits Vercel; typed queries and drizzle-kit migrations; first-class Better Auth adapter. |
 
 Visualisations committed for v1: hemicycle, provincial map, coalition calculator and per-province D'Hondt detail.
 
@@ -127,14 +128,14 @@ The engine must be exact and instant; everything else is sized for a free-tier, 
 | NFR-04 | Determinism | Same inputs always give the same seats, including ties decided by lot. |
 | NFR-05 | Accessibility | WCAG 2.2 AA; every chart has a table or text alternative; colour is never the only signal. |
 | NFR-06 | Responsiveness | Fully usable from 360 px width. |
-| NFR-07 | Privacy | No accounts, no personal data, cookieless analytics only. |
+| NFR-07 | Privacy | Minimal personal data: name, email, username, province and usage profile only; never political affiliation or voting intention. Passwords hashed by Better Auth; cookieless analytics only. |
 | NFR-08 | Compatibility | Last two versions of Chrome, Safari, Firefox and Edge. |
 | NFR-09 | Maintainability | Engine has zero UI or framework dependencies and at least 95% line coverage. |
 | NFR-10 | Forward compatibility | Shared URLs carry a schema version; old links keep working after upgrades. |
 
 ## Domain model and reference data
 
-Six entities carry the whole domain; reference data is static JSON built offline from official sources and versioned in the repo.
+Seven entities carry the whole domain; reference data is static JSON built offline from official sources and versioned in the repo.
 
 | Entity | Key fields | Notes |
 | --- | --- | --- |
@@ -144,6 +145,7 @@ Six entities carry the whole domain; reference data is static JSON built offline
 | Bloc | id, name, colour, candidacyIds\[\] | User-facing party grouping; default mapping shipped per election. |
 | Scenario | schemaVersion, baseElectionId, mode, nationalInputs, blank, turnout, overrides, blocs | Everything the user changed; the only thing serialised to the URL. |
 | Result | perConstituency (votes, shares, excluded, quotients, seats), national totals | Derived, never stored; recomputed from Scenario + Election. |
+| User | id, name, email, username, province (INE code), usageProfile (citizen, journalist, teacher) | Stored in Neon Postgres and managed by Better Auth, with its session, account and verification tables. |
 
 **Bundled elections (v1).** July 2023 as default base, plus November 2019, April 2019 and 2016 as validation fixtures and alternative bases. The last general election was held on 23 July 2023; no new one has been formally called as of this date, though an early election is being publicly discussed.
 
@@ -158,7 +160,7 @@ A build script (`scripts/build-data`) converts raw downloads into the Election J
 
 ## Architecture
 
-One Next.js (App Router) project on Vercel: pages are statically rendered, the seat engine runs in the browser, and there is no database.
+One Next.js (App Router) project on Vercel: pages are statically rendered, the seat engine runs in the browser, and Neon Postgres stores only users and sessions.
 
 &#91;embedded content: architecture · build-time data, client-side engine\]
 
@@ -172,6 +174,9 @@ Official data is converted once at build time. In the browser, the URL and the s
 /components             Hemicycle, ProvinceMap, CoalitionCalculator, DhondtTable
 /lib/engine             Pure TypeScript: apportion, threshold, dhondt, project, rake
 /lib/scenario           Scenario schema (zod), URL encode/decode, migrations
+/lib/auth               Better Auth server config and React client
+/lib/db                 Drizzle client and schema (Neon Postgres)
+/drizzle                SQL migrations
 /data/elections         Generated Election JSON, one file per election
 /scripts/build-data     Official downloads to Election JSON, with seat validation
 ```
@@ -208,6 +213,7 @@ Four questions still need an answer before the build starts; the main risk is a 
 
 - [ ] Default bloc mapping for 2023: is Sumar one bloc everywhere, and how are regional partners (for example Compromís inside Sumar in Valencia) grouped?
 - [ ] Should the URL also carry provincial overrides, or should heavily edited scenarios warn that the link will be long?
+- [ ] Which features require an account, and does the simulator stay usable without one?
 - [ ] Product name and domain.
 - [ ] Analytics: Vercel Analytics or another cookieless option such as Plausible?
 

@@ -8,7 +8,7 @@ web
 
 ## Users
 
-Primary: the politically curious citizen who sees a poll ("party X at 31%") and wants to know what it means in seats in the Congreso de los Diputados. They arrive with no account, often from a shared link on mobile, and expect an answer in seconds without learning electoral law first.
+Primary: the politically curious citizen who sees a poll ("party X at 31%") and wants to know what it means in seats in the Congreso de los Diputados. They often arrive from a shared link on mobile, and expect an answer in seconds without learning electoral law first.
 
 Secondary: journalists and analysts running quick "what if" scenarios, and teachers explaining the Spanish electoral system. Their needs (provincial detail, D'Hondt tables, exports) must stay reachable, but decisions are optimised for the casual citizen first.
 
@@ -24,7 +24,7 @@ Faithful and explainable: the engine reproduces official results seat for seat f
 
 ## Operating Context
 
-- Anonymous use, no accounts; scenarios live entirely in the URL and are shared on social media and messaging apps (with Open Graph hemicycle previews).
+- Users register with email or username and password (Better Auth); scenarios still live entirely in the URL and are shared on social media and messaging apps (with Open Graph hemicycle previews).
 - Base election: July 2023 general election by default; 2019 (Apr, Nov) and 2016 bundled as alternatives and validation fixtures.
 - Two input modes: national shares projected to provinces by proportional swing, and per-province overrides that lock a province.
 - Reference data comes from official sources (Ministerio del Interior/Infoelectoral, BOE, INE, CNIG).
@@ -36,6 +36,7 @@ Faithful and explainable: the engine reproduces official results seat for seat f
 - Seat engine runs in the browser; recalculation must feel instant (under 100 ms per edit).
 - Usable from 360 px width; last two versions of major browsers.
 - Spanish is the default locale; English UI is planned.
+- User profile: username, province (INE code) and usage profile (citizen, journalist, teacher). Political affiliation or voting intention is never stored.
 - Terminology: "bloc" is the user-facing party grouping of local candidacies; "Others" collects unmodelled votes and never wins seats.
 - Open: domain, analytics provider, default 2023 bloc mapping (e.g. Sumar and regional partners).
 
@@ -58,7 +59,7 @@ Full specification: `docs/PRD.md`.
 1. Exactness over approximation: if the engine disagrees with the official count, it is wrong.
 2. Explain every seat: results are always traceable to the rule and quotient that produced them.
 3. Neutral by construction: the product never suggests an outcome or favours a party.
-4. Zero friction: no accounts, no setup, the link is the scenario.
+4. Low friction: no setup, the link is the scenario.
 5. Casual first, depth on demand: national % is the front door; provincial and D'Hondt detail sit one step deeper.
 
 ## Accessibility & Inclusion
