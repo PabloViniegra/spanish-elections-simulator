@@ -6,6 +6,8 @@ import { seats2023 } from "./seats-2023";
 // counted visibly longer than Soria without the whole count dragging.
 const SLOT_BASE_MS = 60;
 const SLOT_PER_SEAT_MS = 9;
+// The hero copy settles before the first constituency is counted.
+const COUNT_DELAY_MS = 700;
 
 export type CountStep = {
   code: string;
@@ -24,7 +26,7 @@ export type CountStep = {
 export function seatCount() {
   const seats = hemicycleSeats();
   let seatsSoFar = 0;
-  let startMs = 0;
+  let startMs = COUNT_DELAY_MS;
   const steps: CountStep[] = provinces.map(({ code, name }, index) => {
     const count = seats2023.get(code) ?? 0;
     const wedge = seats.slice(seatsSoFar, seatsSoFar + count);

@@ -1,22 +1,27 @@
 import Link from "next/link";
 
-const pill = "inline-flex min-h-11 items-center rounded-full px-[22px] py-[11px] text-body transition-[translate,scale,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:-translate-y-0.5 hover:shadow-product active:translate-y-0 active:scale-[0.97] motion-reduce:hover:translate-y-0";
+const pill = "inline-flex min-h-11 items-center rounded-full px-[22px] py-[11px] text-body transition-[background-color,scale] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]";
 
 const tones = {
-  light: { primary: "bg-primary text-on-primary", ghost: "border-primary text-primary" },
-  dark: { primary: "bg-primary text-on-primary", ghost: "border-primary-on-dark text-primary-on-dark" },
-  blue: { primary: "bg-canvas text-primary", ghost: "border-on-primary text-on-primary" },
+  light: { primary: "bg-primary text-on-primary hover:bg-primary-focus", ghost: "border-primary text-primary hover:bg-primary/8" },
+  dark: {
+    primary: "bg-primary text-on-primary hover:bg-primary-focus",
+    ghost: "border-primary-on-dark text-primary-on-dark hover:bg-primary-on-dark/12",
+  },
+  blue: { primary: "bg-canvas text-primary hover:bg-surface-pearl", ghost: "border-on-primary text-on-primary hover:bg-on-primary/12" },
 };
 
-export function CtaLinks({ tone = "light" }: { tone?: keyof typeof tones }) {
+export function CtaLinks({ tone = "light", withLogin = true }: { tone?: keyof typeof tones; withLogin?: boolean }) {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <Link href="/register" className={`${pill} ${tones[tone].primary}`}>
         Crear cuenta
       </Link>
-      <Link href="/login" className={`${pill} border ${tones[tone].ghost}`}>
-        Iniciar sesión
-      </Link>
+      {withLogin && (
+        <Link href="/login" className={`${pill} border ${tones[tone].ghost}`}>
+          Iniciar sesión
+        </Link>
+      )}
     </div>
   );
 }

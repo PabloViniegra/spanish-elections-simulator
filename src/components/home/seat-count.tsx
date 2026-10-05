@@ -1,6 +1,7 @@
 import {
   HEMICYCLE_CENTER,
   HEMICYCLE_HEIGHT,
+  HEMICYCLE_INNER_RADIUS,
   HEMICYCLE_OUTER_RADIUS,
   HEMICYCLE_WIDTH,
   MAJORITY,
@@ -25,8 +26,7 @@ const slot = (startMs: number, durationMs: number) => ({
 });
 
 // The finished count is the markup's default state; the CSS in globals.css
-// replays the count over it only when motion is allowed. Each counted
-// constituency leaves a faint mark on the rim, so the settled arc keeps its 52.
+// replays the count over it only when motion is allowed.
 export function SeatCount() {
   return (
     <figure className="flex w-full flex-col items-center gap-5">
@@ -34,7 +34,7 @@ export function SeatCount() {
         viewBox={`${-PAD} ${-PAD} ${HEMICYCLE_WIDTH + 2 * PAD} ${HEMICYCLE_HEIGHT + PAD}`}
         role="img"
         aria-label={`Hemiciclo del Congreso: ${TOTAL_SEATS} escaños repartidos en ${steps.length} circunscripciones. La mayoría absoluta está en ${MAJORITY}.`}
-        className="w-full max-w-[min(64rem,calc((100svh-35rem)*2))] min-w-0"
+        className="w-full max-w-[min(64rem,max(18rem,calc((100svh-40rem)*2)))] min-w-0"
       >
         {seats.map(({ x, y, delayMs }) => (
           <circle
@@ -49,29 +49,23 @@ export function SeatCount() {
         {steps.map(({ code, angle, startMs, durationMs }) => {
           const from = polar(HEMICYCLE_OUTER_RADIUS + 4, angle);
           const to = polar(HEMICYCLE_OUTER_RADIUS + 11, angle);
-          const tick = { x1: from.x, y1: from.y, x2: to.x, y2: to.y };
           return (
-            <g key={code}>
-              <line
-                {...tick}
-                strokeWidth={0.6}
-                style={{ animationDelay: `${startMs + durationMs}ms` }}
-                className="count-mark stroke-on-dark/35"
-              />
-              <line
-                {...tick}
-                strokeWidth={0.8}
-                style={slot(startMs, durationMs)}
-                className="count-step stroke-primary-on-dark"
-              />
-            </g>
+            <line
+              key={code}
+              x1={from.x}
+              y1={from.y}
+              x2={to.x}
+              y2={to.y}
+              strokeWidth={0.8}
+              style={slot(startMs, durationMs)}
+              className="count-step stroke-primary-on-dark"
+            />
           );
         })}
-        <line
-          x1={HEMICYCLE_CENTER.x}
-          x2={HEMICYCLE_CENTER.x}
-          y1={-PAD}
-          y2={HEMICYCLE_HEIGHT}
+        {/* The majority line stops short of the seats instead of crossing them. */}
+        <path
+          d={`M${HEMICYCLE_CENTER.x} ${-PAD}V${HEMICYCLE_CENTER.y - HEMICYCLE_OUTER_RADIUS - 5}M${HEMICYCLE_CENTER.x} ${HEMICYCLE_CENTER.y - HEMICYCLE_INNER_RADIUS + 5}V${HEMICYCLE_HEIGHT}`}
+          fill="none"
           strokeWidth={0.6}
           strokeDasharray="1.5 1.5"
           style={{ animationDuration: `${totalMs}ms` }}

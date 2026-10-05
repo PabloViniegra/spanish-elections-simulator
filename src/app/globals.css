@@ -120,9 +120,8 @@
 
 /* Home seat count: the markup renders the finished count; with motion
    allowed, each seat lights blue as its constituency is counted and settles
-   white, the per-constituency labels and ticks show only during their slot
-   and leave a faint rim mark behind, and the summary and majority line
-   appear when the count ends. */
+   white, the per-constituency labels and ticks show only during their slot,
+   and the summary and majority line appear when the count ends. */
 .count-step {
   opacity: 0;
 }
@@ -142,8 +141,9 @@
     animation-timing-function: linear;
   }
 
-  .count-mark {
-    animation: count-mark 1ms both;
+  /* After the rules above so their animation shorthands don't reset it. */
+  .count-paused * {
+    animation-play-state: paused;
   }
 }
 
@@ -174,13 +174,6 @@
   }
   to {
     opacity: 1;
-  }
-}
-
-/* Hidden until its delay ends, then back to the resting style. */
-@keyframes count-mark {
-  from {
-    opacity: 0;
   }
 }
 
@@ -222,20 +215,19 @@
   }
 }
 
-/* Hero copy: on load, the title, line and actions rise out of a soft blur in
-   turn while the seat count starts. */
+/* Hero copy: on load, the title, line and actions rise in turn; the seat
+   count starts once they have settled. */
 @media (prefers-reduced-motion: no-preference) {
   .hero-rise {
-    animation: hero-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(var(--c) * 110ms);
+    animation: hero-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--c) * 80ms);
   }
 }
 
 @keyframes hero-rise {
   from {
     opacity: 0;
-    transform: translateY(24px);
-    filter: blur(8px);
+    transform: translateY(16px);
   }
 }
 

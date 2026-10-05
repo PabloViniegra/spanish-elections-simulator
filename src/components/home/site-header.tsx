@@ -8,12 +8,14 @@ export function SiteHeader({ username }: { username?: string }) {
         aria-label="Principal"
         className="mx-auto flex h-11 max-w-content items-center justify-between gap-4 px-5 text-fine-print whitespace-nowrap"
       >
-        <Link href="/" className="flex min-h-11 items-center text-fine-print font-semibold xs:text-caption">
+        <Link href="/" className="flex min-h-11 shrink-0 items-center text-fine-print font-semibold xs:text-caption">
           Simulador de Elecciones
         </Link>
         {username ? (
-          <div className="flex items-center gap-4">
-            <span>{username}</span>
+          <div className="flex min-w-0 items-center gap-4">
+            <span className="truncate" title={username}>
+              {username}
+            </span>
             <form action={signOut}>
               <button type="submit" className="flex min-h-11 items-center">
                 Cerrar sesión
@@ -22,12 +24,13 @@ export function SiteHeader({ username }: { username?: string }) {
           </div>
         ) : (
           <div className="flex items-center gap-4">
-            <Link href="/login" className="flex min-h-11 items-center">
+            {/* Below xs the hero right underneath already offers sign-in. */}
+            <Link href="/login" className="hidden min-h-11 items-center xs:flex">
               Iniciar sesión
             </Link>
             {/* The link fills the 44px bar for touch; the pill inside stays compact. */}
             <Link href="/register" className="group flex min-h-11 items-center">
-              <span className="rounded-full bg-primary px-3 py-1.5 text-on-primary transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-active:scale-[0.97]">
+              <span className="rounded-full bg-primary px-[15px] py-2 text-caption text-on-primary transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-active:scale-[0.97]">
                 Crear cuenta
               </span>
             </Link>

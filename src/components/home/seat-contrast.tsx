@@ -12,8 +12,8 @@ export function SeatContrast() {
             En Madrid, 37.
           </h2>
           <p className="rise max-w-[30rem] text-body [--c:1] text-pretty text-ink-muted-80">
-            Cada provincia es una circunscripción con sus propios escaños, y un partido necesita el
-            3 % de sus votos para entrar en el reparto.
+            Cada provincia parte de 2 escaños, y Ceuta y Melilla tienen 1. Los 248 restantes se
+            reparten según la población.
           </p>
         </div>
         <ConstituencyDots />
