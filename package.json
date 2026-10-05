@@ -38,6 +38,7 @@
     "auth": "1.7.7",
     "babel-plugin-react-compiler": "1.0.0",
     "drizzle-kit": "0.31.11",
+    "fast-check": "^4.10.2",
     "oxlint": "1.86.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
