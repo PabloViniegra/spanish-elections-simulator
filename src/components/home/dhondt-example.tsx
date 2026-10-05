@@ -34,11 +34,11 @@ export function DhondtExample() {
   return (
     <section aria-labelledby="dhondt-title" className="bg-canvas">
       <div className="mx-auto flex max-w-content flex-col gap-10 px-5 py-section sm:px-8">
-        <div className="flex max-w-[44rem] flex-col gap-4">
-          <h2 id="dhondt-title" className={sectionTitle}>
+        <div className="rise-scope flex max-w-[44rem] flex-col gap-4">
+          <h2 id="dhondt-title" className={`rise [--c:0] ${sectionTitle}`}>
             Cada escaño tiene su cociente.
           </h2>
-          <p className="text-body text-pretty text-ink-muted-80">
+          <p className="rise text-body text-pretty text-ink-muted-80 [--c:1]">
             Los votos de cada partido se dividen entre 1, 2, 3… y los escaños van a los cocientes
             más altos.
           </p>

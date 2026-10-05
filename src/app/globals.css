@@ -218,25 +218,44 @@
   from {
     background-color: transparent;
     color: var(--color-ink);
+    transform: scale(0.9);
   }
 }
 
-/* Closing band: title, line and actions rise in turn as the band enters. */
+/* Hero copy: on load, the title, line and actions rise out of a soft blur in
+   turn while the seat count starts. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-rise {
+    animation: hero-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: calc(var(--c) * 110ms);
+  }
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(8px);
+  }
+}
+
+/* Section copy: each group's title, line and actions rise in turn as the
+   group enters the viewport. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .closing-scope {
-      view-timeline: --closing block;
+    .rise-scope {
+      view-timeline: --rise block;
     }
 
-    .closing-rise {
-      animation: closing-rise cubic-bezier(0.23, 1, 0.32, 1) both;
-      animation-timeline: --closing;
+    .rise {
+      animation: rise cubic-bezier(0.23, 1, 0.32, 1) both;
+      animation-timeline: --rise;
       animation-range: entry calc(var(--c) * 8%) entry calc(45% + var(--c) * 8%);
     }
   }
 }
 
-@keyframes closing-rise {
+@keyframes rise {
   from {
     opacity: 0;
     transform: translateY(16px);
