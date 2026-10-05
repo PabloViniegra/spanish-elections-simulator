@@ -147,7 +147,7 @@ Seven entities carry the whole domain; reference data is static JSON built offli
 | Result | perConstituency (votes, shares, excluded, quotients, seats), national totals | Derived, never stored; recomputed from Scenario + Election. |
 | User | id, name, email, username, province (INE code), usageProfile (citizen, journalist, teacher) | Stored in Neon Postgres and managed by Better Auth, with its session, account and verification tables. |
 
-**Bundled elections (v1).** July 2023 as default base, plus November 2019, April 2019 and 2016 as validation fixtures and alternative bases. The last general election was held on 23 July 2023; no new one has been formally called as of this date, though an early election is being publicly discussed.
+**Bundled elections (v1).** July 2023 as default base, plus November 2019, April 2019 and 2016 as validation fixtures and alternative bases. The last general election was held on 23 July 2023. On 5 October 2026 an early general election was called for 29 November 2026; its seat table (R-03a, from the 1 January 2025 population of Real Decreto 1117/2025) becomes the default seat distribution once the decree is published, with 2023 votes as the default base.
 
 **Sources**
 
@@ -207,7 +207,7 @@ CI on every pull request runs 1–5 in under a minute; Vercel preview deployment
 
 ## Open questions, risks and roadmap
 
-Four questions still need an answer before the build starts; the main risk is a new general election changing the seat table mid-build.
+The early general election of 29 November 2026 turned the main risk into a deadline: the roadmap now ships a national-mode simulator before the campaign and moves depth features after election day.
 
 **Open questions**
 
@@ -221,16 +221,16 @@ Four questions still need an answer before the build starts; the main risk is a 
 
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
-| A new general election is called before launch | Seat table per province and default base change | Seats live in data, not code; add the new decree's table as a new Election once published. |
+| A new general election is called before launch (**materialised 5 Oct 2026**, election on 29 Nov 2026) | Seat table per province and default base change | Seats live in data, not code; add the decree's table, checked against the engine's R-03 apportionment, and default to it. |
 | Official data formats change between elections | Build script breaks | Golden tests fail loudly; the parser is isolated per election year. |
 | Users read projections as forecasts | Reputational | Persistent "this is a simulation, not a forecast" notice, and no default poll data. |
 | URL length with many overrides | Broken links on some platforms | Compression plus a size warning; short links can be added later with a store. |
 
 **Roadmap**
 
-1. **M0 – Engine.** R-01 to R-09, golden tests green for 2016–2023.
-2. **M1 – Data.** Build script, 2023 base, default bloc mapping, TopoJSON map.
-3. **M2 – Core UI.** National mode, hemicycle, coalition calculator, URL sharing.
-4. **M3 – Depth.** Provincial mode with locks, map, D'Hondt detail.
-5. **M4 – Launch.** Accessibility pass, explainer page, Spanish and English UI, Vercel production.
+1. **M0 – Engine. Done.** R-01 to R-09, golden tests green for 2016–2023, engine coverage gate.
+2. **M1 – Data for 29N.** Build script and 2016–2023 bases (done); 2026 seat table from the convocation decree, checked against R-03 with RD 1117/2025 population; default bloc mapping for 2023.
+3. **M2 – Launch before the campaign (13 Nov 2026).** National mode on 2023 votes and 2026 seats, hemicycle, coalition calculator, URL sharing, "simulation, not a forecast" notice, accessibility of the shipped views, Spanish UI, Vercel production.
+4. **M3 – Depth, after 29N.** Provincial mode with locks (FR-03), map (FR-07), D'Hondt detail (FR-09), 29 November 2026 results as a bundled election.
+5. **M4 – Completion.** Full accessibility pass, explainer page, English UI.
 6. **Later.** Senado, autonómicas, population what-ifs (R-03), short links.
