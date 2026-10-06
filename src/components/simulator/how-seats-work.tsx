@@ -1,7 +1,6 @@
 import Link from "next/link";
 
-// Reference for the casual reader; the per-province tables are not built yet,
-// so it points at the worked example on the home page instead.
+// Reference for the casual reader; the full story is on the explainer page.
 export function HowSeatsWork() {
   return (
     <details className="border-b border-hairline text-caption">
@@ -13,8 +12,8 @@ export function HowSeatsWork() {
           de cada candidatura se dividen entre 1, 2, 3… y los escaños van a los cocientes más altos.
         </p>
         <p>
-          <Link href="/#dhondt-title" className="text-ink underline underline-offset-2">
-            Ver un ejemplo con cinco escaños
+          <Link href="/como-funciona" className="text-ink underline underline-offset-2">
+            Cómo funciona el sistema, paso a paso
           </Link>
         </p>
       </div>

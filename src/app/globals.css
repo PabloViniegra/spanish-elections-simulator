@@ -394,3 +394,92 @@
     transition: none;
   }
 }
+
+/* Explainer page: the markup is the finished, still scene. Where scroll
+   timelines exist and motion is allowed, layers drift at different speeds
+   as their scene crosses the viewport (--d sets depth and direction), the
+   hero title lifts away faster than the hemicycle behind it, and bars grow
+   as they come into view. */
+@media (prefers-reduced-motion: no-preference) {
+  .seat-in {
+    animation: seat-in 700ms var(--ease-smooth) both;
+    animation-delay: calc(300ms + var(--i) * 2.5ms);
+  }
+}
+@keyframes seat-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .depth-scope {
+      view-timeline: --depth block;
+    }
+    .depth {
+      animation: depth linear both;
+      animation-timeline: --depth;
+      animation-range: cover;
+    }
+    .bar-grow {
+      transform-origin: left;
+      animation: bar-grow var(--ease-smooth) both;
+      animation-timeline: --depth;
+      animation-range: entry calc(20% + var(--i) * 5%) cover calc(40% + var(--i) * 5%);
+    }
+    .lift-scope {
+      view-timeline: --lift block;
+    }
+    .lift-away {
+      animation: lift-away linear both;
+      animation-timeline: --lift;
+      animation-range: exit 0% exit 80%;
+    }
+    .sink {
+      animation: sink linear both;
+      animation-timeline: --lift;
+      animation-range: exit;
+    }
+  }
+}
+/* Reading progress follows the page scroll; it is plain state, so it also runs
+   with reduced motion. Without scroll timelines it would sit full, so it hides. */
+.read-progress {
+  display: none;
+}
+@supports (animation-timeline: scroll()) {
+  .read-progress {
+    display: block;
+    transform-origin: left;
+    animation: bar-grow linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes depth {
+  from {
+    translate: 0 calc(var(--d) * 1rem);
+  }
+  to {
+    translate: 0 calc(var(--d) * -1rem);
+  }
+}
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes lift-away {
+  to {
+    opacity: 0;
+    translate: 0 -8rem;
+    filter: blur(8px);
+  }
+}
+@keyframes sink {
+  to {
+    opacity: 0.25;
+    scale: 1.15;
+    translate: 0 6rem;
+  }
+}
