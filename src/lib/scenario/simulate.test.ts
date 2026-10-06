@@ -3,7 +3,7 @@ import election2023 from "@/data/elections/2023-07.json";
 import { blocs2023 } from "@/lib/elections/blocs-2023";
 import { seats2023 } from "@/lib/seats-2023";
 import { seats2026 } from "@/lib/seats-2026";
-import { baseScenario, baseTurnout, othersShare, simulate } from "./simulate";
+import { baseScenario, baseTurnout, OTHERS, othersShare, provinceShares, simulate } from "./simulate";
 
 const base = baseScenario(election2023, blocs2023);
 
@@ -47,5 +47,27 @@ describe("simulate", () => {
 
   it("rejects shares over 100%", () => {
     expect(() => simulate({ ...base, blank: 5000 }, election2023, blocs2023, seats2026)).toThrow(RangeError);
+    const provinces = { "28": { shares: { pp: 9000 }, blank: 2000 } };
+    expect(() => simulate({ ...base, provinces }, election2023, blocs2023, seats2026)).toThrow(RangeError);
+  });
+
+  it("locks a province to the shares given and keeps the national targets (P-07)", () => {
+    const madrid = provinceShares(simulate(base, election2023, blocs2023, seats2026).provinces.get("28")!, blocs2023);
+    const provinces = { "28": { ...madrid, shares: { ...madrid.shares, pp: madrid.shares.pp + 1000, psoe: madrid.shares.psoe - 1000 } } };
+    const simulation = simulate({ ...base, provinces }, election2023, blocs2023, seats2026);
+    expect(simulation.offTarget).toEqual([]);
+    expect(simulation.provinces.get("28")!.get("pp")).toBeCloseTo(provinces["28"].shares.pp / 10_000, 9);
+    const seatsIn = (code: string, results: typeof simulation.results) =>
+      results.find((result) => result.code === code)!.candidacies.find(({ id }) => id === "pp")!.seats;
+    const baseResults = simulate(base, election2023, blocs2023, seats2026).results;
+    expect(seatsIn("28", simulation.results)).toBeGreaterThan(seatsIn("28", baseResults));
+  });
+
+  it("rounds a projected province to basis points that add up to 100%", () => {
+    simulate(base, election2023, blocs2023, seats2026).provinces.forEach((projected) => {
+      const province = provinceShares(projected, blocs2023);
+      expect(othersShare(province)).toBeGreaterThanOrEqual(0);
+      expect(Math.abs(othersShare(province) / 10_000 - projected.get(OTHERS)!)).toBeLessThan(0.0001);
+    });
   });
 });

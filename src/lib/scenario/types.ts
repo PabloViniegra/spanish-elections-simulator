@@ -8,6 +8,14 @@ export type Scenario = {
   blank: number;
   // Votes cast over census in basis points; null keeps the base turnout (P-06).
   turnout: number | null;
+  // Provinces edited by hand (P-07), by INE code, with shares of that
+  // province's valid votes. Absent when none is locked.
+  provinces?: Record<string, ProvinceShares>;
+};
+
+export type ProvinceShares = {
+  shares: Record<string, number>;
+  blank: number;
 };
 
 export const FULL_SHARE = 10_000;

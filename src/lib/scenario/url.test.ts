@@ -8,6 +8,8 @@ import type { Scenario } from "./types";
 import { decodeScenario, encodeScenario } from "./url";
 
 const base = baseScenario(election2023, blocs2023);
+const codes = new Set(election2023.constituencies.map(({ code }) => code));
+const link = (data: Omit<Scenario, "schemaVersion"> & { schemaVersion: number }) => `v1.${compressToEncodedURIComponent(JSON.stringify(data))}`;
 // A v1 link (PP 35%, PSOE 29.74%) frozen when the format shipped (NFR-10).
 const V1_FIXTURE =
   "v1.N4IgzgxgFgpgtgQwGowE5gJYHsB2IBcAjADQgBGCYMAogDYwQAu2OAkgCYEgBMADNwGYAtLwDsIUmCgJUMMAVAAHRQQEBWXr1KKwWGAW4BOUQBZSANywAPAoUEAOSQFdEqW4IGk0EW-cOkAKyccRnkiADYtcgxadidbAXDtHHNbO1IyHABzAnDuUggffBNRUidFPHxuQgBfDNoEHABrAnsSEEYnVBwsJ0YCHCdaWhqgA";
@@ -32,7 +34,7 @@ describe("scenario URL (FR-10)", () => {
       });
     fc.assert(
       fc.property(scenarios, (scenario) => {
-        expect(decodeScenario(encodeScenario(scenario), base)).toEqual(scenario);
+        expect(decodeScenario(encodeScenario(scenario), base, codes)).toEqual(scenario);
       }),
     );
   });
@@ -43,21 +45,32 @@ describe("scenario URL (FR-10)", () => {
   });
 
   it("decodes links from every shipped schema version", () => {
-    expect(decodeScenario(V1_FIXTURE, base)).toEqual({ ...base, shares: { ...base.shares, pp: 3500, psoe: 2974 } });
+    expect(decodeScenario(V1_FIXTURE, base, codes)).toEqual({ ...base, shares: { ...base.shares, pp: 3500, psoe: 2974 } });
+  });
+
+  it("restores locked provinces", () => {
+    const scenario = { ...base, provinces: { "28": { shares: { pp: 4500, psoe: 2500 }, blank: 80 } } };
+    expect(decodeScenario(encodeScenario(scenario), base, codes)).toEqual(scenario);
+  });
+
+  it("rejects locked provinces that do not fit", () => {
+    const province = { shares: { pp: 4000 }, blank: 100 };
+    expect(decodeScenario(link({ ...base, provinces: { "99": province } }), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, provinces: { "28": { ...province, shares: { ciudadanos: 100 } } } }), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, provinces: { "28": { ...province, shares: { pp: 9950 } } } }), base, codes)).toBeNull();
   });
 
   it("rejects broken, unknown-version and mismatched links", () => {
     // A link that skips encodeScenario, so it can carry an unsupported version.
-    const link = (data: Omit<Scenario, "schemaVersion"> & { schemaVersion: number }) => `v1.${compressToEncodedURIComponent(JSON.stringify(data))}`;
-    expect(decodeScenario("garbage", base)).toBeNull();
-    expect(decodeScenario("v1.%%%", base)).toBeNull();
-    expect(decodeScenario(`v1.${compressToEncodedURIComponent("{not json")}`, base)).toBeNull();
-    expect(decodeScenario(V1_FIXTURE.replace("v1.", "v2."), base)).toBeNull();
-    expect(decodeScenario(link({ ...base, schemaVersion: 2 }), base)).toBeNull();
-    expect(decodeScenario(link({ ...base, baseElectionId: "2019-11" }), base)).toBeNull();
-    expect(decodeScenario(link({ ...base, shares: { ...base.shares, ciudadanos: 100 } }), base)).toBeNull();
-    expect(decodeScenario(link({ ...base, shares: { ...base.shares, constructor: 100 } }), base)).toBeNull();
-    expect(decodeScenario(link({ ...base, shares: { ...base.shares, pp: 9000 } }), base)).toBeNull();
-    expect(decodeScenario(link({ ...base, blank: 1.5 }), base)).toBeNull();
+    expect(decodeScenario("garbage", base, codes)).toBeNull();
+    expect(decodeScenario("v1.%%%", base, codes)).toBeNull();
+    expect(decodeScenario(`v1.${compressToEncodedURIComponent("{not json")}`, base, codes)).toBeNull();
+    expect(decodeScenario(V1_FIXTURE.replace("v1.", "v2."), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, schemaVersion: 2 }), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, baseElectionId: "2019-11" }), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, shares: { ...base.shares, ciudadanos: 100 } }), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, shares: { ...base.shares, constructor: 100 } }), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, shares: { ...base.shares, pp: 9000 } }), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, blank: 1.5 }), base, codes)).toBeNull();
   });
 });

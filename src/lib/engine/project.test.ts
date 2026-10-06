@@ -55,6 +55,27 @@ describe("projectShares (P-01 to P-05)", () => {
     projection.provinces.forEach((province) => expect(province.get("R")).toBe(0));
   });
 
+  it("keeps locked provinces and rakes the rest to the national targets (P-07)", () => {
+    const fixed = new Map([["A", 0.1], ["B", 0.8], ["R", 0], ["blank", 0.1]]);
+    const projection = projectShares(base, baseShares, new Map([["01", fixed]]));
+    expect(projection.converged).toBe(true);
+    expect(projection.provinces.get("01")).toEqual(fixed);
+    baseShares.forEach((target, key) =>
+      expect(Math.abs(projection.national.get(key)! - target)).toBeLessThanOrEqual(RAKING_TOLERANCE),
+    );
+    expect(projection.provinces.get("03")!.get("A")).toBeGreaterThan(0.4);
+  });
+
+  it("keeps locked provinces and reports the shortfall when the rest cannot make up the target", () => {
+    const fixed = new Map([["A", 1], ["B", 0], ["R", 0], ["blank", 0]]);
+    const locked = new Map([["01", fixed], ["03", fixed]]);
+    const projection = projectShares(base, new Map([["A", 0.2], ["B", 0.5], ["R", 0.2], ["blank", 0.1]]), locked);
+    expect(projection.converged).toBe(false);
+    expect(projection.provinces.get("01")).toEqual(fixed);
+    expect(projection.national.get("A")).toBeCloseTo(2 / 3, 6);
+    expect(projection.provinces.get("02")!.get("A")).toBe(0);
+  });
+
   it("rejects targets that do not add up to 100% and empty bases", () => {
     expect(() => projectShares(base, new Map([["A", 0.5]]))).toThrow(RangeError);
     expect(() => projectShares([{ code: "01", votes: new Map([["A", 0]]) }], new Map([["A", 1]]))).toThrow(
