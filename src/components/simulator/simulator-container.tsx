@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import election2023 from "@/data/elections/2023-07.json";
 import { blocs2023 } from "@/lib/elections/blocs-2023";
 import { minimalWinningCoalitions } from "@/lib/scenario/coalitions";
-import { rebalance } from "@/lib/scenario/rebalance";
+import { adjustBlank, adjustShare, rebalance } from "@/lib/scenario/rebalance";
 import { baseScenario, fitsInFull, othersShare, provinceShares, simulate } from "@/lib/scenario/simulate";
 import type { ProvinceShares, Scenario } from "@/lib/scenario/types";
 import { decodeScenario, encodeScenario, SCENARIO_PARAM } from "@/lib/scenario/url";
@@ -17,13 +17,15 @@ import { type InputMode, ModeSwitch } from "./mode-switch";
 import { NationalInputs } from "./national-inputs";
 import { ProvinceInputs } from "./province-inputs";
 import { ResultsHemicycle } from "./results-hemicycle";
-import { ResultsStrip } from "./results-strip";
+import { RESULTS_ID, ResultsStrip } from "./results-strip";
 import { ShareLink } from "./share-link";
 
 const baseline = baseScenario(election2023, blocs2023);
 const baselineOthers = othersShare(baseline);
 const baselineSimulation = simulate(baseline, election2023, blocs2023, seats2026);
 const provinceCodes = new Set(provinces.map(({ code }) => code));
+// Anchor field for the blank vote, apart from any bloc id.
+const BLANK_FIELD = "blank";
 
 // Seats per bloc in one province of a simulation.
 function provinceSeats(results: typeof baselineSimulation.results, code: string) {
@@ -44,10 +46,27 @@ export function SimulatorContainer() {
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [mode, setMode] = useState<InputMode>("national");
   const [code, setCode] = useState("28");
+  const [free, setFree] = useState(false);
+  // The field being edited and the shares when it started moving: automatic
+  // adjustment scales from there, and squaring up by hand keeps that field.
+  const [anchor, setAnchor] = useState<{ scope: string; field: string; base: ProvinceShares } | null>(null);
 
   const update = (next: Scenario) => {
     setScenario(next);
     if (fitsInFull(next)) setValid(next);
+  };
+  const scope = mode === "national" ? mode : code;
+  const edit = <T extends ProvinceShares>(current: T, field: string, apply: (base: T) => T, plain: T) => {
+    // SAFETY: the scope pins the shape: national anchors hold the scenario,
+    // provincial ones that province's shares, the same type as `current`.
+    const base = anchor?.scope === scope && anchor.field === field ? (anchor.base as T) : current;
+    setAnchor({ scope, field, base });
+    return free ? plain : apply(base);
+  };
+  const keptField = anchor?.scope === scope && anchor.field !== BLANK_FIELD ? anchor.field : undefined;
+  const restart = (next: Scenario) => {
+    setAnchor(null);
+    update(next);
   };
   useEffect(() => {
     const url = new URL(window.location.href);
@@ -85,8 +104,8 @@ export function SimulatorContainer() {
 
   return (
     <>
-      <ResultsStrip ranked={ranked} stale={stale} />
-      <div className="mx-auto grid max-w-content gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-16">
+      <ResultsStrip ranked={ranked} stale={stale} selected={selected} />
+      <div className="mx-auto grid max-w-content gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-x-16 lg:gap-y-6">
         <div className="flex flex-col gap-6">
           <ModeSwitch mode={mode} onChange={setMode} />
           <div key={mode} className="settle">
@@ -101,10 +120,14 @@ export function SimulatorContainer() {
                 offTarget={simulation.offTarget}
                 lockedCount={lockedCodes.length}
                 stale={stale}
-                onShareChange={(blocId, value) => update({ ...scenario, shares: { ...scenario.shares, [blocId]: value } })}
-                onBlankChange={(blank) => update({ ...scenario, blank })}
-                onRebalance={() => update(rebalance(scenario, baselineOthers))}
-                onReset={() => update(baseline)}
+                free={free}
+                onFreeChange={setFree}
+                onShareChange={(blocId, value) =>
+                  update(edit(scenario, blocId, (base) => adjustShare(base, blocId, value), { ...scenario, shares: { ...scenario.shares, [blocId]: value } }))
+                }
+                onBlankChange={(blank) => update(edit(scenario, BLANK_FIELD, (base) => adjustBlank(base, blank), { ...scenario, blank }))}
+                onRebalance={() => restart(rebalance(scenario, baselineOthers, keptField))}
+                onReset={() => restart(baseline)}
               />
             ) : (
               <ProvinceInputs
@@ -122,17 +145,27 @@ export function SimulatorContainer() {
                 offTarget={simulation.offTarget}
                 stale={stale}
                 onSelect={setCode}
-                onShareChange={(blocId, value) => editProvince({ ...province, shares: { ...province.shares, [blocId]: value } })}
-                onBlankChange={(blank) => editProvince({ ...province, blank })}
-                onRebalance={() => editProvince(rebalance(province, othersShare(projected)))}
-                onUnlock={unlockProvince}
-                onReset={() => update(baseline)}
+                free={free}
+                onFreeChange={setFree}
+                onShareChange={(blocId, value) =>
+                  editProvince(edit(province, blocId, (base) => adjustShare(base, blocId, value), { ...province, shares: { ...province.shares, [blocId]: value } }))
+                }
+                onBlankChange={(blank) => editProvince(edit(province, BLANK_FIELD, (base) => adjustBlank(base, blank), { ...province, blank }))}
+                onRebalance={() => {
+                  setAnchor(null);
+                  editProvince(rebalance(province, othersShare(projected), keptField));
+                }}
+                onUnlock={() => {
+                  setAnchor(null);
+                  unlockProvince();
+                }}
+                onReset={() => restart(baseline)}
               />
             )}
           </div>
-          <HowSeatsWork />
         </div>
-        <div className="flex flex-col gap-6 lg:sticky lg:top-6">
+        {/* Below the inputs on narrow screens so the seats come right after them. */}
+        <div id={RESULTS_ID} className="flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
           <ShareLink brokenLink={brokenLink} />
           <ResultsHemicycle ranked={ranked} stale={stale} selected={selected} />
           <div className={`transition-opacity ${stale ? "opacity-40" : ""}`}>
@@ -143,6 +176,9 @@ export function SimulatorContainer() {
               coalitions={minimalWinningCoalitions(simulation.seats)}
             />
           </div>
+        </div>
+        <div className="lg:col-start-1">
+          <HowSeatsWork />
         </div>
       </div>
     </>

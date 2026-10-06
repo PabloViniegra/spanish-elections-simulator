@@ -1,4 +1,5 @@
 import type { Bloc } from "@/lib/elections/types";
+import { AdjustToggle } from "./adjust-toggle";
 import { OffTargetWarning } from "./off-target-warning";
 import { ShareBudget } from "./share-budget";
 import { ShareRows } from "./share-rows";
@@ -14,6 +15,9 @@ type NationalInputsProps = {
   // Provinces edited by hand, which the national shares work around.
   lockedCount: number;
   stale: boolean;
+  // Square the shares by hand instead of scaling the other parties.
+  free: boolean;
+  onFreeChange: (free: boolean) => void;
   onShareChange: (blocId: string, value: number) => void;
   onBlankChange: (value: number) => void;
   onRebalance: () => void;
@@ -39,6 +43,7 @@ export function NationalInputs(props: NationalInputsProps) {
           porcentajes solo se ajustan las demás.
         </p>
       )}
+      <AdjustToggle free={props.free} onChange={props.onFreeChange} />
       <OffTargetWarning blocs={blocs} offTarget={offTarget} />
       <ShareBudget others={others} onRebalance={props.onRebalance} />
       <ShareRows

@@ -1,5 +1,6 @@
 import { SelectField } from "@/components/forms/select-field";
 import type { Bloc } from "@/lib/elections/types";
+import { AdjustToggle } from "./adjust-toggle";
 import { OffTargetWarning } from "./off-target-warning";
 import { ShareBudget } from "./share-budget";
 import { ShareRows } from "./share-rows";
@@ -21,6 +22,9 @@ type ProvinceInputsProps = {
   baseSeats: ReadonlyMap<string, number>;
   offTarget: readonly { blocId: string; requested: number; reached: number }[];
   stale: boolean;
+  // Square the shares by hand instead of scaling the other parties.
+  free: boolean;
+  onFreeChange: (free: boolean) => void;
   onSelect: (code: string) => void;
   onShareChange: (blocId: string, value: number) => void;
   onBlankChange: (value: number) => void;
@@ -72,6 +76,7 @@ export function ProvinceInputs(props: ProvinceInputsProps) {
           </p>
         )}
       </div>
+      <AdjustToggle free={props.free} onChange={props.onFreeChange} />
       <OffTargetWarning blocs={blocs} offTarget={offTarget} />
       <ShareBudget others={props.others} onRebalance={props.onRebalance} />
       <ShareRows

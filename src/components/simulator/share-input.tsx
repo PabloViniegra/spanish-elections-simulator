@@ -21,6 +21,7 @@ const toPosition = (value: number) => Math.round(Math.sqrt(Math.min(value, SLIDE
 const fromPosition = (position: number) => Math.round((position / SLIDER_STEPS) ** 2 * SLIDER_MAX);
 
 // One national share as a slider plus an exact field, both in percent.
+// Both scroll clear of the pinned strip and share budget when focused.
 export function ShareInput({ id, label, value, onChange, colour = "var(--color-ink)" }: ShareInputProps) {
   const update = (percent: number) =>
     onChange(Number.isNaN(percent) ? 0 : Math.min(FULL_SHARE, Math.max(0, Math.round(percent * 100))));
@@ -40,7 +41,7 @@ export function ShareInput({ id, label, value, onChange, colour = "var(--color-i
         aria-valuetext={formatShare(value)}
         onChange={(event) => onChange(fromPosition(event.target.valueAsNumber))}
         style={sliderStyle}
-        className="share-slider min-w-0 flex-1"
+        className="share-slider min-w-0 flex-1 scroll-mt-28 lg:scroll-mt-12"
       />
       <div className="flex items-center gap-1">
         <input
@@ -52,7 +53,7 @@ export function ShareInput({ id, label, value, onChange, colour = "var(--color-i
           step={0.01}
           value={value / 100}
           onChange={(event) => update(event.target.valueAsNumber)}
-          className="min-h-11 w-[5.5rem] rounded-xs border border-hairline bg-canvas px-2 text-right lg:min-h-0 lg:py-1.5 text-caption tabular-nums"
+          className="min-h-11 w-[5.5rem] scroll-mt-28 rounded-xs lg:scroll-mt-12 border border-hairline bg-canvas px-2 text-right lg:min-h-0 lg:py-1.5 text-caption tabular-nums"
         />
         <span aria-hidden="true" className="text-caption text-ink-muted-80">
           %
