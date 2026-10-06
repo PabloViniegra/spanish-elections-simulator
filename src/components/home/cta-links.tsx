@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const pill = "inline-flex min-h-11 items-center rounded-full px-[22px] py-[11px] text-body transition-[background-color,scale] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]";
+const pill = "inline-flex min-h-11 items-center rounded-full px-[22px] py-[11px] text-body transition-[background-color,scale] duration-200 ease-snappy active:scale-[0.97]";
 
 const tones = {
   light: { primary: "bg-primary text-on-primary hover:bg-primary-focus", ghost: "border-primary text-primary hover:bg-primary/8" },

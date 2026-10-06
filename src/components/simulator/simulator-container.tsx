@@ -89,45 +89,47 @@ export function SimulatorContainer() {
       <div className="mx-auto grid max-w-content gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-16">
         <div className="flex flex-col gap-6">
           <ModeSwitch mode={mode} onChange={setMode} />
-          {mode === "national" ? (
-            <NationalInputs
-              blocs={blocs2023}
-              shares={scenario.shares}
-              blank={scenario.blank}
-              others={othersShare(scenario)}
-              seats={simulation.seats}
-              baseSeats={baselineSimulation.seats}
-              offTarget={simulation.offTarget}
-              lockedCount={lockedCodes.length}
-              stale={stale}
-              onShareChange={(blocId, value) => update({ ...scenario, shares: { ...scenario.shares, [blocId]: value } })}
-              onBlankChange={(blank) => update({ ...scenario, blank })}
-              onRebalance={() => update(rebalance(scenario, baselineOthers))}
-              onReset={() => update(baseline)}
-            />
-          ) : (
-            <ProvinceInputs
-              blocs={blocs2023}
-              rowBlocs={provinceBlocs}
-              provinces={provinces}
-              code={code}
-              deputies={seats2026.get(code) ?? 0}
-              lockedCodes={lockedCodes}
-              shares={province.shares}
-              blank={province.blank}
-              others={othersShare(province)}
-              seats={provinceSeats(simulation.results, code)}
-              baseSeats={provinceSeats(baselineSimulation.results, code)}
-              offTarget={simulation.offTarget}
-              stale={stale}
-              onSelect={setCode}
-              onShareChange={(blocId, value) => editProvince({ ...province, shares: { ...province.shares, [blocId]: value } })}
-              onBlankChange={(blank) => editProvince({ ...province, blank })}
-              onRebalance={() => editProvince(rebalance(province, othersShare(projected)))}
-              onUnlock={unlockProvince}
-              onReset={() => update(baseline)}
-            />
-          )}
+          <div key={mode} className="settle">
+            {mode === "national" ? (
+              <NationalInputs
+                blocs={blocs2023}
+                shares={scenario.shares}
+                blank={scenario.blank}
+                others={othersShare(scenario)}
+                seats={simulation.seats}
+                baseSeats={baselineSimulation.seats}
+                offTarget={simulation.offTarget}
+                lockedCount={lockedCodes.length}
+                stale={stale}
+                onShareChange={(blocId, value) => update({ ...scenario, shares: { ...scenario.shares, [blocId]: value } })}
+                onBlankChange={(blank) => update({ ...scenario, blank })}
+                onRebalance={() => update(rebalance(scenario, baselineOthers))}
+                onReset={() => update(baseline)}
+              />
+            ) : (
+              <ProvinceInputs
+                blocs={blocs2023}
+                rowBlocs={provinceBlocs}
+                provinces={provinces}
+                code={code}
+                deputies={seats2026.get(code) ?? 0}
+                lockedCodes={lockedCodes}
+                shares={province.shares}
+                blank={province.blank}
+                others={othersShare(province)}
+                seats={provinceSeats(simulation.results, code)}
+                baseSeats={provinceSeats(baselineSimulation.results, code)}
+                offTarget={simulation.offTarget}
+                stale={stale}
+                onSelect={setCode}
+                onShareChange={(blocId, value) => editProvince({ ...province, shares: { ...province.shares, [blocId]: value } })}
+                onBlankChange={(blank) => editProvince({ ...province, blank })}
+                onRebalance={() => editProvince(rebalance(province, othersShare(projected)))}
+                onUnlock={unlockProvince}
+                onReset={() => update(baseline)}
+              />
+            )}
+          </div>
           <HowSeatsWork />
         </div>
         <div className="flex flex-col gap-6 lg:sticky lg:top-6">

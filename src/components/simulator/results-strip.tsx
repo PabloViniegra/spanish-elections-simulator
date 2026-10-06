@@ -21,7 +21,7 @@ export function ResultsStrip({ ranked, stale = false }: ResultsStripProps) {
       <div className={`mx-auto flex h-full max-w-content flex-col justify-center gap-1.5 px-5 transition-opacity sm:px-8 ${stale ? "opacity-40" : ""}`}>
         <div className="relative flex h-3 overflow-hidden rounded-full bg-hairline">
           {ranked.map((bloc) => (
-            <span key={bloc.id} className="h-full" style={{ width: `${(bloc.seats / TOTAL_SEATS) * 100}%`, backgroundColor: bloc.colour }} />
+            <span key={bloc.id} className="h-full transition-[width] duration-700 motion-reduce:transition-none" style={{ width: `${(bloc.seats / TOTAL_SEATS) * 100}%`, backgroundColor: bloc.colour }} />
           ))}
           <span className="absolute inset-y-0 w-px bg-ink" style={{ left: `${(MAJORITY / TOTAL_SEATS) * 100}%` }} />
         </div>

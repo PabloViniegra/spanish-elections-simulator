@@ -85,6 +85,13 @@
   --shadow-*: initial;
   --shadow-product: 3px 5px 30px 0 rgb(0 0 0 / 0.22);
 
+  /* Motion: long, soft ease-outs with no overshoot. Every transition-*
+     utility without its own timing uses these. */
+  --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-snappy: cubic-bezier(0.23, 1, 0.32, 1);
+  --default-transition-duration: 350ms;
+  --default-transition-timing-function: var(--ease-smooth);
+
   --spacing-section: 80px;
   --container-text: 980px;
   --container-content: 1440px;
@@ -128,7 +135,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .count-seat {
-    animation: count-seat 900ms cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: count-seat 900ms var(--ease-snappy) both;
   }
 
   .count-step {
@@ -219,15 +226,16 @@
    count starts once they have settled. */
 @media (prefers-reduced-motion: no-preference) {
   .hero-rise {
-    animation: hero-rise 600ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    animation-delay: calc(var(--c) * 80ms);
+    animation: hero-rise 900ms var(--ease-smooth) both;
+    animation-delay: calc(var(--c) * 90ms);
   }
 }
 
 @keyframes hero-rise {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(20px);
+    filter: blur(6px);
   }
 }
 
@@ -240,7 +248,7 @@
     }
 
     .rise {
-      animation: rise cubic-bezier(0.23, 1, 0.32, 1) both;
+      animation: rise var(--ease-smooth) both;
       animation-timeline: --rise;
       animation-range: entry calc(var(--c) * 8%) entry calc(45% + var(--c) * 8%);
     }
@@ -250,7 +258,60 @@
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(20px);
+    filter: blur(4px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* A changed figure is remounted with this class and blurs into place,
+     instead of swapping its digits in one frame. */
+  .tick {
+    animation: tick 450ms var(--ease-smooth) both;
+  }
+
+  /* A newly shown panel settles in from just below. */
+  .settle {
+    animation: settle 500ms var(--ease-smooth) both;
+  }
+
+  /* Simulated seats change colour in a sweep from left to right. */
+  .seat {
+    transition:
+      fill 600ms var(--ease-smooth) calc(var(--i) * 0.6ms),
+      opacity 350ms var(--ease-smooth);
+  }
+
+  /* Disclosures open and close by height where the browser can animate it. */
+  :root {
+    interpolate-size: allow-keywords;
+  }
+
+  details::details-content {
+    block-size: 0;
+    overflow-y: clip;
+    transition:
+      block-size 450ms var(--ease-smooth),
+      content-visibility 450ms allow-discrete;
+  }
+
+  details[open]::details-content {
+    block-size: auto;
+  }
+}
+
+@keyframes tick {
+  from {
+    opacity: 0;
+    transform: translateY(0.3em);
+    filter: blur(3px);
+  }
+}
+
+@keyframes settle {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
 }
 
@@ -292,6 +353,9 @@
   border-radius: 50%;
   background: var(--slider-colour);
   box-shadow: 0 0 0 1px var(--color-ink-muted-48);
+  transition:
+    scale 250ms var(--ease-snappy),
+    box-shadow 250ms var(--ease-snappy);
 }
 
 .share-slider::-moz-range-thumb {
@@ -301,4 +365,32 @@
   border-radius: 50%;
   background: var(--slider-colour);
   box-shadow: 0 0 0 1px var(--color-ink-muted-48);
+  transition:
+    scale 250ms var(--ease-snappy),
+    box-shadow 250ms var(--ease-snappy);
+}
+
+/* The thumb swells while held, like a native control picked up. */
+.share-slider:active::-webkit-slider-thumb {
+  scale: 1.2;
+  box-shadow:
+    0 0 0 1px var(--color-ink-muted-48),
+    0 2px 8px rgb(0 0 0 / 0.18);
+}
+
+.share-slider:active::-moz-range-thumb {
+  scale: 1.2;
+  box-shadow:
+    0 0 0 1px var(--color-ink-muted-48),
+    0 2px 8px rgb(0 0 0 / 0.18);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .share-slider::-webkit-slider-thumb {
+    transition: none;
+  }
+
+  .share-slider::-moz-range-thumb {
+    transition: none;
+  }
 }

@@ -25,17 +25,19 @@ export function CoalitionCalculator({ ranked, selected, onToggle, coalitions }: 
           {ranked.map((bloc) => (
             <label
               key={bloc.id}
-              className="group flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-hairline px-3 text-caption has-checked:border-ink has-checked:bg-ink has-checked:text-canvas has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-focus"
+              className="group flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-hairline px-3 text-caption transition-[color,background-color,border-color,scale] duration-300 active:scale-[0.96] active:duration-150 has-checked:border-ink has-checked:bg-ink has-checked:text-canvas has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-focus"
             >
               <input type="checkbox" checked={selected.has(bloc.id)} onChange={() => onToggle(bloc.id)} className="sr-only" />
               <span aria-hidden="true" className="size-2.5 rounded-full group-has-checked:ring-1 group-has-checked:ring-canvas" style={{ backgroundColor: bloc.colour }} />
-              {bloc.name} <span className="tabular-nums text-ink-muted-80 group-has-checked:text-canvas">{bloc.seats}</span>
+              {bloc.name} <span className="tabular-nums text-ink-muted-80 transition-colors duration-300 group-has-checked:text-canvas">{bloc.seats}</span>
             </label>
           ))}
         </div>
       </fieldset>
       <p aria-live="polite" className="text-body">
-        <span className="text-lead font-semibold tabular-nums">{total}</span> escaños.{" "}
+        <span key={total} className="tick inline-block text-lead font-semibold tabular-nums">
+          {total}
+        </span> escaños.{" "}
         {total === 0
           ? `La mayoría absoluta son ${MAJORITY}.`
           : gap > 0

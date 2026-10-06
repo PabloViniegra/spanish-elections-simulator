@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import type { Bloc } from "@/lib/elections/types";
 import {
   HEMICYCLE_CENTER,
@@ -10,6 +11,8 @@ import {
 } from "@/lib/hemicycle-layout";
 
 const seats = hemicycleSeats();
+// Seat order drives the colour sweep in globals.css (.seat).
+const sweepStyle = (index: number): CSSProperties & Record<`--${string}`, number> => ({ "--i": index });
 
 type ResultsHemicycleProps = {
   // Blocs with seats, largest first; they fill the chamber from the left.
@@ -41,6 +44,8 @@ export function ResultsHemicycle({ ranked, stale = false, selected }: ResultsHem
             cx={x.toFixed(1)}
             cy={y.toFixed(1)}
             r={2.6}
+            className="seat"
+            style={sweepStyle(index)}
             fill={owners[index]?.colour ?? "var(--color-hairline)"}
             opacity={picking && owners[index] && !selected.has(owners[index].id) ? 0.2 : 1}
           />

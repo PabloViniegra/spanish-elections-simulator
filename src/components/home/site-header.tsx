@@ -30,7 +30,7 @@ export function SiteHeader({ username }: { username?: string }) {
             </Link>
             {/* The link fills the 44px bar for touch; the pill inside stays compact. */}
             <Link href="/register" className="group flex min-h-11 items-center">
-              <span className="rounded-full bg-primary px-[15px] py-2 text-caption text-on-primary transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] group-active:scale-[0.97]">
+              <span className="rounded-full bg-primary px-[15px] py-2 text-caption text-on-primary transition-transform duration-150 ease-snappy group-active:scale-[0.97]">
                 Crear cuenta
               </span>
             </Link>

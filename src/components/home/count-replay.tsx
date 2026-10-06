@@ -30,7 +30,7 @@ export function CountReplay({ children }: { children: ReactNode }) {
       <button
         type="button"
         onClick={handleClick}
-        className="min-h-11 rounded-full px-4 text-caption text-primary-on-dark transition-transform duration-150 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-95 motion-reduce:hidden"
+        className="min-h-11 rounded-full px-4 text-caption text-primary-on-dark transition-transform duration-150 ease-snappy active:scale-95 motion-reduce:hidden"
       >
         {done ? "Volver a contar" : paused ? "Seguir contando" : "Pausar recuento"}
       </button>
