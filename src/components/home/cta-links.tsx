@@ -14,8 +14,8 @@ const tones = {
 export function CtaLinks({ tone = "light", withLogin = true }: { tone?: keyof typeof tones; withLogin?: boolean }) {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <Link href="/register" className={`${pill} ${tones[tone].primary}`}>
-        Crear cuenta
+      <Link href="/simulador" className={`${pill} ${tones[tone].primary}`}>
+        Abrir el simulador
       </Link>
       {withLogin && (
         <Link href="/login" className={`${pill} border ${tones[tone].ghost}`}>

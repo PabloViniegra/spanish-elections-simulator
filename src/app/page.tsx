@@ -16,7 +16,7 @@ export default async function Home() {
         <HomeHero username={username} />
         <SeatContrast />
         <DhondtExample />
-        <HomeClosing signedIn={Boolean(session)} />
+        <HomeClosing />
       </main>
     </>
   );

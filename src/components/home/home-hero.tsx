@@ -13,17 +13,12 @@ export function HomeHero({ username }: { username?: string }) {
             52 repartos.
           </h1>
           <p className="hero-rise max-w-[34rem] text-body text-on-dark-muted [--c:1] lg:text-lead-airy">
-            Las 50 provincias, Ceuta y Melilla reparten cada una sus propios escaños. Antes de las
-            generales del 29 de noviembre podrás poner una estimación de voto y ver cómo queda el
-            Congreso.
+            Las 50 provincias, Ceuta y Melilla reparten cada una sus propios escaños. Pon una
+            estimación de voto y mira cómo queda el Congreso en las generales del 29 de noviembre.
           </p>
-          {username ? (
-            <p className="hero-rise text-tagline text-pretty wrap-anywhere [--c:2]">Hola, {username}. Te avisamos en cuanto abra.</p>
-          ) : (
-            <div className="hero-rise [--c:2]">
-              <CtaLinks tone="dark" />
-            </div>
-          )}
+          <div className="hero-rise [--c:2]">
+            <CtaLinks tone="dark" withLogin={!username} />
+          </div>
           <p className="hero-rise text-caption text-on-dark-muted [--c:3]">
             Es una simulación, no una previsión.
           </p>

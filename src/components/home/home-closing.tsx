@@ -1,7 +1,7 @@
 import { CtaLinks } from "./cta-links";
 import { closingTitle } from "./type";
 
-export function HomeClosing({ signedIn }: { signedIn?: boolean }) {
+export function HomeClosing() {
   return (
     <>
       <section aria-labelledby="closing-title" className="rise-scope bg-primary text-on-primary [&_:focus-visible]:outline-on-primary">
@@ -13,13 +13,10 @@ export function HomeClosing({ signedIn }: { signedIn?: boolean }) {
           </h2>
           <p className="rise max-w-[34rem] text-body text-pretty [--c:1]">
             Con los votos oficiales, reproduce uno a uno los escaños de las cuatro últimas generales.
-            Abre antes del 29 de noviembre y te escribimos en cuanto esté listo.
           </p>
-          {!signedIn && (
-            <div className="rise [--c:2]">
-              <CtaLinks tone="blue" withLogin={false} />
-            </div>
-          )}
+          <div className="rise [--c:2]">
+            <CtaLinks tone="blue" withLogin={false} />
+          </div>
         </div>
       </section>
       <footer className="bg-surface-black text-on-dark-muted">
