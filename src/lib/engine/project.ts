@@ -10,11 +10,6 @@ export type BaseProvince = {
   votes: ReadonlyMap<string, number>;
 };
 
-export type ProjectionTargets = {
-  // National share per key as a fraction of valid votes, summing to 1.
-  shares: ReadonlyMap<string, number>;
-};
-
 export type Projection = {
   // Share of each key in each province, by province code; rows sum to 1.
   provinces: Map<string, Map<string, number>>;
@@ -29,7 +24,9 @@ export type Projection = {
 export const RAKING_TOLERANCE = 0.00001;
 export const RAKING_MAX_ITERATIONS = 50;
 
-export function projectShares(base: readonly BaseProvince[], { shares }: ProjectionTargets): Projection {
+// `shares` holds the national target per key as a fraction of valid votes,
+// summing to 1.
+export function projectShares(base: readonly BaseProvince[], shares: ReadonlyMap<string, number>): Projection {
   const keys = [...shares.keys()];
   const targets = keys.map((key) => shares.get(key) ?? 0);
   const rowTotals = base.map(({ votes }) => sum([...votes.values()]));

@@ -67,7 +67,7 @@ export function simulate(scenario: Scenario, election: Election, blocs: readonly
     [BLANK, scenario.blank / FULL_SHARE],
     [OTHERS, others / FULL_SHARE],
   ]);
-  const projection = projectShares(base, { shares });
+  const projection = projectShares(base, shares);
   const turnoutRatio = scenario.turnout === null ? 1 : scenario.turnout / FULL_SHARE / baseTurnout(election);
 
   const constituencies = base.map(({ code, votes }) => {

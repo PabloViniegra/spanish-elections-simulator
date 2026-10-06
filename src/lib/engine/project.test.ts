@@ -16,14 +16,14 @@ function expectNear(actual: ReadonlyMap<string, number>, expected: ReadonlyMap<s
 
 describe("projectShares (P-01 to P-05)", () => {
   it("returns the base shares when every target equals the base share", () => {
-    const projection = projectShares(base, { shares: baseShares });
+    const projection = projectShares(base, baseShares);
     expect(projection.converged).toBe(true);
     expectNear(projection.provinces.get("02")!, new Map([["A", 0.2], ["B", 0.5], ["R", 0.2], ["blank", 0.1]]));
   });
 
   it("swings every province in proportion and matches the national targets", () => {
     const shares = new Map([["A", 0.3], ["B", 0.5], ["R", 0.05], ["blank", 0.15]]);
-    const projection = projectShares(base, { shares });
+    const projection = projectShares(base, shares);
     expect(projection.converged).toBe(true);
     shares.forEach((target, key) =>
       expect(Math.abs(projection.national.get(key)! - target)).toBeLessThanOrEqual(RAKING_TOLERANCE),
@@ -34,30 +34,30 @@ describe("projectShares (P-01 to P-05)", () => {
   });
 
   it("keeps a regional bloc at zero outside its provinces (P-05)", () => {
-    const projection = projectShares(base, { shares: new Map([["A", 0.4], ["B", 0.4], ["R", 0.1], ["blank", 0.1]]) });
+    const projection = projectShares(base, new Map([["A", 0.4], ["B", 0.4], ["R", 0.1], ["blank", 0.1]]));
     expect(projection.provinces.get("01")!.get("R")).toBe(0);
     expect(projection.provinces.get("02")!.get("R")).toBeCloseTo(0.3, 4);
   });
 
   it("reports the share reached when a target cannot be met", () => {
-    const projection = projectShares(base, { shares: new Map([["A", 0.2], ["B", 0.2], ["R", 0.5], ["blank", 0.1]]) });
+    const projection = projectShares(base, new Map([["A", 0.2], ["B", 0.2], ["R", 0.5], ["blank", 0.1]]));
     expect(projection.converged).toBe(false);
     expect(projection.national.get("R")).toBeLessThan(1 / 3 + 1e-9);
   });
 
   it("spreads a new bloc evenly (P-04)", () => {
     const shares = new Map([["A", 0.35], ["B", 0.35], ["R", 0.05], ["blank", 0.1], ["N", 0.15]]);
-    projectShares(base, { shares }).provinces.forEach((province) => expect(province.get("N")).toBeCloseTo(0.15, 2));
+    projectShares(base, shares).provinces.forEach((province) => expect(province.get("N")).toBeCloseTo(0.15, 2));
   });
 
   it("drops a bloc set to zero everywhere", () => {
-    const projection = projectShares(base, { shares: new Map([["A", 0.6], ["B", 0.3], ["R", 0], ["blank", 0.1]]) });
+    const projection = projectShares(base, new Map([["A", 0.6], ["B", 0.3], ["R", 0], ["blank", 0.1]]));
     projection.provinces.forEach((province) => expect(province.get("R")).toBe(0));
   });
 
   it("rejects targets that do not add up to 100% and empty bases", () => {
-    expect(() => projectShares(base, { shares: new Map([["A", 0.5]]) })).toThrow(RangeError);
-    expect(() => projectShares([{ code: "01", votes: new Map([["A", 0]]) }], { shares: new Map([["A", 1]]) })).toThrow(
+    expect(() => projectShares(base, new Map([["A", 0.5]]))).toThrow(RangeError);
+    expect(() => projectShares([{ code: "01", votes: new Map([["A", 0]]) }], new Map([["A", 1]]))).toThrow(
       RangeError,
     );
   });
@@ -68,7 +68,7 @@ describe("projectShares (P-01 to P-05)", () => {
         const total = weights.reduce((sum, weight) => sum + weight, 0);
         const keys = ["A", "B", "R", "blank"];
         const shares = new Map(keys.map((key, index) => [key, weights[index] / total]));
-        projectShares(base, { shares }).provinces.forEach((province) =>
+        projectShares(base, shares).provinces.forEach((province) =>
           expect([...province.values()].reduce((sum, share) => sum + share, 0)).toBeCloseTo(1, 9),
         );
       }),
