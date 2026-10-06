@@ -2,7 +2,7 @@ import { allocateCongreso } from "@/lib/engine/congreso";
 import type { ConstituencyVotes } from "@/lib/engine/types";
 import type { Election } from "./types";
 
-function constituencyVotes(election: Election): ConstituencyVotes[] {
+export function constituencyVotes(election: Election): ConstituencyVotes[] {
   return election.constituencies.map(({ code, seats, blankVotes, results }) => ({
     code,
     seats,

@@ -1,13 +1,19 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { seats2023 } from "../seats-2023";
+import { seats2026 } from "../seats-2026";
 import { apportionSeats } from "./apportion";
 import { HOUSE_SIZE, PROVINCE_CODES } from "./constants";
 import { population2022 } from "./fixtures/population-2022";
+import { population2025 } from "./fixtures/population-2025";
 
 describe("apportionSeats (R-01 to R-03)", () => {
   it("reproduces the 2023 seats from the official 2022 population", () => {
     expect(apportionSeats(population2022)).toEqual(seats2023);
+  });
+
+  it("reproduces the 2026 seats from the official 2025 population", () => {
+    expect(apportionSeats(population2025)).toEqual(seats2026);
   });
 
   it("gives Ceuta and Melilla one seat and every province at least two", () => {

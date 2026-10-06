@@ -33,3 +33,12 @@ export type CandidacyVotes = {
   // Official seats won, kept to check the engine against the real count.
   elected: number;
 };
+
+// National grouping of local candidacies (R-08); every election ships a
+// default set the user can edit (FR-11).
+export type Bloc = {
+  id: string;
+  name: string;
+  colour: string;
+  candidacyIds: string[];
+};

@@ -1,5 +1,5 @@
 import { cssVar } from "@/lib/css-var";
-import { seats2023 } from "@/lib/seats-2023";
+import { seats2026 } from "@/lib/seats-2026";
 
 const compared = [
   { code: "42", name: "Soria" },
@@ -12,7 +12,7 @@ export function ConstituencyDots() {
   return (
     <div className="flex flex-col gap-8">
       {compared.map(({ code, name }) => {
-        const seats = seats2023.get(code) ?? 0;
+        const seats = seats2026.get(code) ?? 0;
         return (
           <div key={code} className="flex flex-col gap-3">
             <p className="text-caption text-ink-muted-80">

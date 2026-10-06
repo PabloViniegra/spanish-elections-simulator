@@ -147,7 +147,7 @@ Seven entities carry the whole domain; reference data is static JSON built offli
 | Result | perConstituency (votes, shares, excluded, quotients, seats), national totals | Derived, never stored; recomputed from Scenario + Election. |
 | User | id, name, email, username, province (INE code), usageProfile (citizen, journalist, teacher) | Stored in Neon Postgres and managed by Better Auth, with its session, account and verification tables. |
 
-**Bundled elections (v1).** July 2023 as default base, plus November 2019, April 2019 and 2016 as validation fixtures and alternative bases. The last general election was held on 23 July 2023. On 5 October 2026 an early general election was called for 29 November 2026; its seat table (R-03a, from the 1 January 2025 population of Real Decreto 1117/2025) becomes the default seat distribution once the decree is published, with 2023 votes as the default base.
+**Bundled elections (v1).** July 2023 as default base, plus November 2019, April 2019 and 2016 as validation fixtures and alternative bases. The last general election was held on 23 July 2023. On 5 October 2026 an early general election was called for 29 November 2026; its seat table (R-03a, from the 1 January 2025 population of Real Decreto 1117/2025) is the default seat distribution, with 2023 votes as the default base. Real Decreto 806/2026 (BOE-A-2026-20742) set it on 6 October 2026: Madrid 38 (+1) and Cádiz 8 (−1) against 2023.
 
 **Sources**
 
@@ -211,7 +211,7 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 
 **Open questions**
 
-- [ ] Default bloc mapping for 2023: is Sumar one bloc everywhere, and how are regional partners (for example Compromís inside Sumar in Valencia) grouped?
+- [x] Default bloc mapping for 2023: regional lists of PSOE, PP and Sumar (Compromís included) count with their national party; every other candidacy with a seat is its own bloc.
 - [ ] Should the URL also carry provincial overrides, or should heavily edited scenarios warn that the link will be long?
 - [ ] Which features require an account, and does the simulator stay usable without one?
 - [ ] Product name and domain.
@@ -229,7 +229,7 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 **Roadmap**
 
 1. **M0 – Engine. Done.** R-01 to R-09, golden tests green for 2016–2023, engine coverage gate.
-2. **M1 – Data for 29N.** Build script and 2016–2023 bases (done); 2026 seat table from the convocation decree, checked against R-03 with RD 1117/2025 population; default bloc mapping for 2023.
+2. **M1 – Data for 29N.** Done: build script and 2016–2023 bases; 2026 seat table from Real Decreto 806/2026, checked against R-03 with RD 1117/2025 population; default bloc mapping for 2023.
 3. **M2 – Launch before the campaign (13 Nov 2026).** National mode on 2023 votes and 2026 seats, hemicycle, coalition calculator, URL sharing, "simulation, not a forecast" notice, accessibility of the shipped views, Spanish UI, Vercel production.
 4. **M3 – Depth, after 29N.** Provincial mode with locks (FR-03), map (FR-07), D'Hondt detail (FR-09), 29 November 2026 results as a bundled election.
 5. **M4 – Completion.** Full accessibility pass, explainer page, English UI.

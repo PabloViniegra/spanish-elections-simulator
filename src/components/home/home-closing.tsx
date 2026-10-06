@@ -25,8 +25,8 @@ export function HomeClosing({ signedIn }: { signedIn?: boolean }) {
       <footer className="bg-surface-black text-on-dark-muted">
         <div className="mx-auto max-w-content px-5 py-6 sm:px-8">
           <p className="max-w-prose text-fine-print">
-            Escaños de 2023 según el Real Decreto 400/2023. Es una simulación, no una previsión, y
-            no favorece a ningún partido.
+            Escaños del 29 de noviembre de 2026 según el Real Decreto 806/2026. Es una simulación,
+            no una previsión, y no favorece a ningún partido.
           </p>
         </div>
       </footer>
