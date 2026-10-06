@@ -16,6 +16,7 @@ import { HowSeatsWork } from "./how-seats-work";
 import { type InputMode, ModeSwitch } from "./mode-switch";
 import { NationalInputs } from "./national-inputs";
 import { ProvinceInputs } from "./province-inputs";
+import { ProvinceMapContainer } from "./province-map-container";
 import { ResultsHemicycle } from "./results-hemicycle";
 import { RESULTS_ID, ResultsStrip } from "./results-strip";
 import { ShareLink } from "./share-link";
@@ -176,6 +177,18 @@ export function SimulatorContainer() {
               coalitions={minimalWinningCoalitions(simulation.seats)}
             />
           </div>
+        </div>
+        <div className="lg:col-start-1">
+          {/* Keyed by mode so a province pointed at in one mode is not kept in the other. */}
+          <ProvinceMapContainer
+            key={mode}
+            blocs={blocs2023}
+            results={simulation.results}
+            stale={stale}
+            selected={mode === "province" ? code : null}
+            lockedCodes={lockedCodes}
+            onPick={mode === "province" ? setCode : undefined}
+          />
         </div>
         <div className="lg:col-start-1">
           <HowSeatsWork />

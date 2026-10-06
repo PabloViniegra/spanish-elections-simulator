@@ -5,6 +5,9 @@ import { OffTargetWarning } from "./off-target-warning";
 import { ShareBudget } from "./share-budget";
 import { ShareRows } from "./share-rows";
 
+// Target of the map's "edit this province" link, below the sticky strip.
+export const PROVINCE_INPUTS_ID = "voto-por-provincia";
+
 type ProvinceInputsProps = {
   blocs: readonly Bloc[];
   // The blocs with a row here: those that run in the province.
@@ -40,7 +43,7 @@ export function ProvinceInputs(props: ProvinceInputsProps) {
   const locked = lockedCodes.includes(code);
   const nameOf = new Map(provinces.map((province) => [province.code, province.name]));
   return (
-    <section aria-labelledby="inputs-title" className="flex flex-col gap-4">
+    <section id={PROVINCE_INPUTS_ID} aria-labelledby="inputs-title" className="flex scroll-mt-16 flex-col gap-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="inputs-title" className="text-tagline">
           Voto por provincia

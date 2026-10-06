@@ -37,10 +37,10 @@ export function ShareRows(props: ShareRowsProps) {
               {bloc.name}
             </label>
             <p className={`flex items-baseline justify-end gap-2 text-right tabular-nums transition-opacity sm:row-span-2 sm:block ${stale ? "opacity-40" : ""}`}>
-              <span key={blocSeats} className="tick text-tagline sm:block">
+              <span key={`seats-${blocSeats}`} className="tick text-tagline sm:block">
                 {blocSeats}
               </span>
-              <span key={delta} className={`tick text-caption sm:block ${delta === 0 ? "text-ink-muted-80" : "font-semibold"}`}>
+              <span key={`delta-${delta}`} className={`tick text-caption sm:block ${delta === 0 ? "text-ink-muted-80" : "font-semibold"}`}>
                 {formatDelta(delta)}
                 <span className="sr-only"> respecto a 2023</span>
               </span>
