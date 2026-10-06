@@ -11,8 +11,8 @@ export default async function Home() {
   const username = session?.user.name;
   return (
     <>
-      <SiteHeader username={username} />
-      <main className="flex-1">
+      <SiteHeader username={username} current="home" />
+      <main id="contenido" className="flex-1">
         <HomeHero username={username} />
         <SeatContrast />
         <DhondtExample />

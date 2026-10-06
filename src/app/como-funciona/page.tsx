@@ -22,8 +22,8 @@ export default async function ExplainerPage() {
   return (
     <>
       <div aria-hidden="true" className="read-progress fixed inset-x-0 top-0 z-50 h-0.5 bg-primary" />
-      <SiteHeader username={session?.user.name} explainer />
-      <main className="flex-1">
+      <SiteHeader username={session?.user.name} current="como-funciona" />
+      <main id="contenido" className="flex-1">
         <ExplainerHero />
         <ConstituencyMap />
         <SeatLadder />

@@ -13,8 +13,8 @@ export default async function SimulatorPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   return (
     <>
-      <SiteHeader username={session?.user.name} />
-      <main className="flex-1">
+      <SiteHeader username={session?.user.name} current="simulador" />
+      <main id="contenido" className="flex-1">
         <div className="bg-canvas-parchment">
           <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-10 sm:px-8">
             <h1 className="text-display-lg text-balance">Cambia el voto y mira los 350 escaños del 29 de noviembre</h1>
