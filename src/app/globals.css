@@ -253,3 +253,52 @@
     transform: translateY(16px);
   }
 }
+
+/* Share slider: browsers paint the unfilled track depending on the accent
+   luminance, which turns it dark for light party colours. Drawing the track
+   keeps every row identical; --fill and --slider-colour come from the input. */
+.share-slider {
+  appearance: none;
+  height: 2.75rem;
+  background: transparent;
+  cursor: pointer;
+}
+
+/* Touch screens get a 44px grab area; a pointer needs less. */
+@media (min-width: 834px) {
+  .share-slider {
+    height: 1.5rem;
+  }
+}
+
+.share-slider::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--slider-colour) var(--fill), var(--color-hairline) var(--fill));
+}
+
+.share-slider::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--slider-colour) var(--fill), var(--color-hairline) var(--fill));
+}
+
+.share-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-top: calc((4px - 1.25rem) / 2);
+  border: 2px solid var(--color-canvas);
+  border-radius: 50%;
+  background: var(--slider-colour);
+  box-shadow: 0 0 0 1px var(--color-ink-muted-48);
+}
+
+.share-slider::-moz-range-thumb {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--color-canvas);
+  border-radius: 50%;
+  background: var(--slider-colour);
+  box-shadow: 0 0 0 1px var(--color-ink-muted-48);
+}

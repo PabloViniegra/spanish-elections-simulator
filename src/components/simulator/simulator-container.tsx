@@ -5,16 +5,20 @@ import { useEffect, useState } from "react";
 import election2023 from "@/data/elections/2023-07.json";
 import { blocs2023 } from "@/lib/elections/blocs-2023";
 import { minimalWinningCoalitions } from "@/lib/scenario/coalitions";
+import { rebalance } from "@/lib/scenario/rebalance";
 import { baseScenario, othersShare, simulate } from "@/lib/scenario/simulate";
 import type { Scenario } from "@/lib/scenario/types";
 import { decodeScenario, encodeScenario, SCENARIO_PARAM } from "@/lib/scenario/url";
 import { seats2026 } from "@/lib/seats-2026";
 import { CoalitionCalculator } from "./coalition-calculator";
+import { HowSeatsWork } from "./how-seats-work";
 import { NationalInputs } from "./national-inputs";
 import { ResultsHemicycle } from "./results-hemicycle";
+import { ResultsStrip } from "./results-strip";
 import { ShareLink } from "./share-link";
 
 const baseline = baseScenario(election2023, blocs2023);
+const baselineOthers = othersShare(baseline);
 const baselineSeats = simulate(baseline, election2023, blocs2023, seats2026).seats;
 
 // National mode (FR-02): 2023 votes as the base, 2026 seats. Results follow
@@ -44,6 +48,7 @@ export function SimulatorContainer() {
     setSelected(next);
   };
 
+  const stale = othersShare(scenario) < 0;
   const simulation = simulate(valid, election2023, blocs2023, seats2026);
   const ranked = blocs2023
     .map((bloc) => ({ ...bloc, seats: simulation.seats.get(bloc.id) ?? 0 }))
@@ -51,31 +56,38 @@ export function SimulatorContainer() {
     .sort((a, b) => b.seats - a.seats);
 
   return (
-    <div className="mx-auto grid max-w-content gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-16">
-      <div className="flex flex-col gap-6 lg:sticky lg:top-6 lg:order-2">
-        <ShareLink brokenLink={brokenLink} />
-        <ResultsHemicycle ranked={ranked} />
-        <CoalitionCalculator
-          ranked={ranked}
-          selected={selected}
-          onToggle={toggle}
-          coalitions={minimalWinningCoalitions(simulation.seats)}
-        />
+    <>
+      <ResultsStrip ranked={ranked} stale={stale} />
+      <div className="mx-auto grid max-w-content gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-16">
+        <div className="flex flex-col gap-6">
+          <NationalInputs
+            blocs={blocs2023}
+            shares={scenario.shares}
+            blank={scenario.blank}
+            others={othersShare(scenario)}
+            seats={simulation.seats}
+            baseSeats={baselineSeats}
+            offTarget={simulation.offTarget}
+            onShareChange={(blocId, value) => update({ ...scenario, shares: { ...scenario.shares, [blocId]: value } })}
+            onBlankChange={(blank) => update({ ...scenario, blank })}
+            onRebalance={() => update(rebalance(scenario, baselineOthers))}
+            onReset={() => update(baseline)}
+          />
+          <HowSeatsWork />
+        </div>
+        <div className="flex flex-col gap-6 lg:sticky lg:top-6">
+          <ShareLink brokenLink={brokenLink} />
+          <ResultsHemicycle ranked={ranked} stale={stale} selected={selected} />
+          <div className={`transition-opacity ${stale ? "opacity-40" : ""}`}>
+            <CoalitionCalculator
+              ranked={ranked}
+              selected={selected}
+              onToggle={toggle}
+              coalitions={minimalWinningCoalitions(simulation.seats)}
+            />
+          </div>
+        </div>
       </div>
-      <div className="lg:order-1">
-        <NationalInputs
-          blocs={blocs2023}
-          shares={scenario.shares}
-          blank={scenario.blank}
-          others={othersShare(scenario)}
-          seats={simulation.seats}
-          baseSeats={baselineSeats}
-          offTarget={simulation.offTarget}
-          onShareChange={(blocId, value) => update({ ...scenario, shares: { ...scenario.shares, [blocId]: value } })}
-          onBlankChange={(blank) => update({ ...scenario, blank })}
-          onReset={() => update(baseline)}
-        />
-      </div>
-    </div>
+    </>
   );
 }

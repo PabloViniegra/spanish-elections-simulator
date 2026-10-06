@@ -20,16 +20,16 @@ export function CoalitionCalculator({ ranked, selected, onToggle, coalitions }: 
         Calculadora de mayorías
       </h2>
       <fieldset>
-        <legend className="mb-2 text-caption text-ink-muted-80">Elige los partidos que sumarían sus escaños.</legend>
+        <legend className="mb-2 text-caption text-ink-muted-80">Cada color es un partido. Elígelos para sumar sus escaños.</legend>
         <div className="flex flex-wrap gap-2">
           {ranked.map((bloc) => (
             <label
               key={bloc.id}
-              className="flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-hairline px-3 text-caption has-checked:border-ink has-checked:bg-canvas-parchment has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-focus"
+              className="group flex min-h-11 cursor-pointer items-center gap-2 rounded-full border border-hairline px-3 text-caption has-checked:border-ink has-checked:bg-ink has-checked:text-canvas has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-primary-focus"
             >
               <input type="checkbox" checked={selected.has(bloc.id)} onChange={() => onToggle(bloc.id)} className="sr-only" />
-              <span aria-hidden="true" className="size-2.5 rounded-full" style={{ backgroundColor: bloc.colour }} />
-              {bloc.name} <span className="tabular-nums text-ink-muted-80">{bloc.seats}</span>
+              <span aria-hidden="true" className="size-2.5 rounded-full group-has-checked:ring-1 group-has-checked:ring-canvas" style={{ backgroundColor: bloc.colour }} />
+              {bloc.name} <span className="tabular-nums text-ink-muted-80 group-has-checked:text-canvas">{bloc.seats}</span>
             </label>
           ))}
         </div>
@@ -43,7 +43,7 @@ export function CoalitionCalculator({ ranked, selected, onToggle, coalitions }: 
             : `Mayoría absoluta, con ${-gap} de margen.`}
       </p>
       <details className="text-caption">
-        <summary className="cursor-pointer py-2">Combinaciones mínimas que llegan a {MAJORITY} ({coalitions.length})</summary>
+        <summary className="min-h-11 cursor-pointer py-3">Combinaciones mínimas que llegan a {MAJORITY} ({coalitions.length})</summary>
         <p className="mb-2 text-ink-muted-80">Cada una pierde la mayoría si sale cualquiera de sus partidos.</p>
         <ul className="flex flex-col gap-1">
           {coalitions.map(({ members, seats }) => (

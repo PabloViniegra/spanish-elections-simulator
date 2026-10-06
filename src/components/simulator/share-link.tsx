@@ -24,7 +24,7 @@ export function ShareLink({ brokenLink }: { brokenLink: boolean }) {
         <button
           type="button"
           onClick={copy}
-          className="min-h-11 rounded-full border border-primary px-5 text-caption text-primary transition-[background-color,scale] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-primary/8 active:scale-[0.97]"
+          className="min-h-11 rounded-full border border-ink px-5 text-caption transition-[background-color,scale] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:bg-ink/8 active:scale-[0.97]"
         >
           Copiar enlace a este escenario
         </button>
