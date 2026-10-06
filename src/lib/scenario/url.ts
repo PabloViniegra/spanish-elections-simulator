@@ -1,5 +1,5 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
-import { z } from "zod";
+import * as z from "zod/mini";
 import { fitsInFull } from "./simulate";
 import { FULL_SHARE, type Scenario } from "./types";
 
@@ -8,14 +8,14 @@ import { FULL_SHARE, type Scenario } from "./types";
 const PREFIX = "v1.";
 export const SCENARIO_PARAM = "e";
 
-const share = z.number().int().min(0).max(FULL_SHARE);
+const share = z.int().check(z.gte(0), z.lte(FULL_SHARE));
 const scenarioSchema = z.object({
   schemaVersion: z.literal(1),
   baseElectionId: z.string(),
   shares: z.record(z.string(), share),
   blank: share,
-  turnout: share.nullable(),
-  provinces: z.record(z.string(), z.object({ shares: z.record(z.string(), share), blank: share })).optional(),
+  turnout: z.nullable(share),
+  provinces: z.optional(z.record(z.string(), z.object({ shares: z.record(z.string(), share), blank: share }))),
 });
 
 export function encodeScenario(scenario: Scenario) {
