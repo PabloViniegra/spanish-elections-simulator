@@ -2,15 +2,17 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { LoginFormContainer } from "@/components/auth/login-form-container";
+import { safeNextPath, withNext } from "@/lib/auth/next-path";
 
 export const metadata: Metadata = { title: "Iniciar sesión" };
 
 type LoginPageProps = {
-  searchParams: Promise<{ verified?: string; error?: string }>;
+  searchParams: Promise<{ verified?: string; error?: string; next?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { verified, error } = await searchParams;
+  const { verified, error, next: nextParam } = await searchParams;
+  const next = safeNextPath(nextParam);
   return (
     <AuthCard
       title="Inicia sesión"
@@ -18,7 +20,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       footer={
         <>
           ¿No tienes cuenta?{" "}
-          <Link href="/register" className="text-primary underline">
+          <Link href={withNext("/register", next)} className="text-primary underline">
             Crea una
           </Link>
         </>
@@ -34,7 +36,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
           El enlace de confirmación no es válido o ha caducado. Inicia sesión para recibir uno nuevo.
         </p>
       )}
-      <LoginFormContainer />
+      <LoginFormContainer next={next} />
     </AuthCard>
   );
 }

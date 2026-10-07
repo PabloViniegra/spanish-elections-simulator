@@ -9,7 +9,8 @@ import { minimalWinningCoalitions } from "@/lib/scenario/coalitions";
 import { adjustBlank, adjustShare, rebalance } from "@/lib/scenario/rebalance";
 import { fitsInFull, othersShare, provinceShares, simulate } from "@/lib/scenario/simulate";
 import type { ProvinceShares, Scenario } from "@/lib/scenario/types";
-import { decodeScenario, encodeScenario, SCENARIO_PARAM } from "@/lib/scenario/url";
+import { restoreScenario } from "@/lib/scenario/restore";
+import { encodeScenario, SCENARIO_PARAM, simulatorHref } from "@/lib/scenario/url";
 import { provinces } from "@/lib/provinces";
 import { seats2026 } from "@/lib/seats-2026";
 import { BaseSelect } from "./base-select";
@@ -20,13 +21,14 @@ import { type InputMode, ModeSwitch } from "./mode-switch";
 import { NationalInputs } from "./national-inputs";
 import { ProvinceInputs } from "./province-inputs";
 import { ProvinceMapContainer } from "./province-map-container";
+import { ReadOnlyNotice } from "./read-only-notice";
 import { ResultsHemicycle } from "./results-hemicycle";
 import { RESULTS_ID, ResultsStrip } from "./results-strip";
+import { SaveSimulationContainer } from "./save-simulation-container";
 import { ShareLink } from "./share-link";
 import { UndoNotice } from "./undo-notice";
 import { useScenario } from "./use-scenario";
 
-const provinceCodes = new Set(provinces.map(({ code }) => code));
 const baseOptions = bases.map(({ election, label }) => ({ id: election.id, label }));
 // Anchor field for the blank vote, apart from any bloc id.
 const BLANK_FIELD = "blank";
@@ -39,18 +41,14 @@ function provinceSeats(results: Results, code: string) {
   return new Map(result?.candidacies.map(({ id, seats }) => [id, seats]));
 }
 
-// A shared link fits the base election it names, or none (FR-01, FR-10).
-function restore(shared: string) {
-  return bases.map((base) => decodeScenario(shared, baselineOf(base).scenario, provinceCodes)).find(Boolean) ?? null;
-}
-
 // National (FR-02) and provincial (FR-03) modes over one scenario: the votes
 // of a bundled election as the base (FR-01), 2026 seats. Results follow the
-// last scenario whose shares fit in 100%, which the address mirrors.
-export function SimulatorContainer() {
+// last scenario whose shares fit in 100%, which the address mirrors. Signed
+// out, a shared link shows its results without the inputs.
+export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
   const shared = useSearchParams().get(SCENARIO_PARAM);
   // Read once: the address changes with every edit afterwards.
-  const [restored] = useState(() => (shared ? restore(shared) : null));
+  const [restored] = useState(() => (shared ? restoreScenario(shared) : null));
   const [brokenLink] = useState(Boolean(shared) && !restored);
   const { scenario, valid, notice, update, discard, undo } = useScenario(restored ?? baselineOf(defaultBase).scenario);
   const base = baseById(valid.baseElectionId) ?? defaultBase;
@@ -133,70 +131,77 @@ export function SimulatorContainer() {
       <ResultsStrip ranked={ranked} stale={stale} selected={picked} />
       <div className="mx-auto grid max-w-content grid-cols-[minmax(0,1fr)] gap-10 [&>*]:min-w-0 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-x-16 lg:gap-y-6">
         <div className="flex flex-col gap-6">
-          <BaseSelect bases={baseOptions} value={base.election.id} onChange={changeBase} />
-          <ModeSwitch mode={mode} onChange={setMode} />
-          <UndoNotice notice={notice} onUndo={undo} />
-          <div key={mode} className="settle">
-            {mode === "national" ? (
-              <NationalInputs
-                blocs={blocs}
-                base={base}
-                shares={scenario.shares}
-                blank={scenario.blank}
-                others={othersShare(scenario)}
-                seats={simulation.seats}
-                baseSeats={baseline.simulation.seats}
-                offTarget={simulation.offTarget}
-                lockedCount={lockedCodes.length}
-                stale={stale}
-                free={free}
-                onFreeChange={setFree}
-                onShareChange={(blocId, value) =>
-                  update(edit(scenario, blocId, (base) => adjustShare(base, blocId, value), { ...scenario, shares: { ...scenario.shares, [blocId]: value } }))
-                }
-                onBlankChange={(blank) => update(edit(scenario, BLANK_FIELD, (base) => adjustBlank(base, blank), { ...scenario, blank }))}
-                onRebalance={() => {
-                  setAnchor(null);
-                  update(rebalance(scenario, baseline.others, keptField));
-                }}
-                onReset={reset}
-              />
-            ) : (
-              <ProvinceInputs
-                blocs={blocs}
-                rowBlocs={provinceBlocs}
-                base={base}
-                provinces={provinces}
-                code={code}
-                deputies={seats2026.get(code) ?? 0}
-                lockedCodes={lockedCodes}
-                shares={province.shares}
-                blank={province.blank}
-                others={othersShare(province)}
-                seats={provinceSeats(simulation.results, code)}
-                baseSeats={provinceSeats(baseline.simulation.results, code)}
-                offTarget={simulation.offTarget}
-                stale={stale}
-                onSelect={setCode}
-                free={free}
-                onFreeChange={setFree}
-                onShareChange={(blocId, value) =>
-                  editProvince(edit(province, blocId, (base) => adjustShare(base, blocId, value), { ...province, shares: { ...province.shares, [blocId]: value } }))
-                }
-                onBlankChange={(blank) => editProvince(edit(province, BLANK_FIELD, (base) => adjustBlank(base, blank), { ...province, blank }))}
-                onRebalance={() => {
-                  setAnchor(null);
-                  editProvince(rebalance(province, othersShare(projected), keptField));
-                }}
-                onUnlock={unlockProvince}
-                onReset={reset}
-              />
-            )}
-          </div>
+          {signedIn ? (
+            <>
+              <BaseSelect bases={baseOptions} value={base.election.id} onChange={changeBase} />
+              <ModeSwitch mode={mode} onChange={setMode} />
+              <UndoNotice notice={notice} onUndo={undo} />
+              <div key={mode} className="settle">
+                {mode === "national" ? (
+                  <NationalInputs
+                    blocs={blocs}
+                    base={base}
+                    shares={scenario.shares}
+                    blank={scenario.blank}
+                    others={othersShare(scenario)}
+                    seats={simulation.seats}
+                    baseSeats={baseline.simulation.seats}
+                    offTarget={simulation.offTarget}
+                    lockedCount={lockedCodes.length}
+                    stale={stale}
+                    free={free}
+                    onFreeChange={setFree}
+                    onShareChange={(blocId, value) =>
+                      update(edit(scenario, blocId, (base) => adjustShare(base, blocId, value), { ...scenario, shares: { ...scenario.shares, [blocId]: value } }))
+                    }
+                    onBlankChange={(blank) => update(edit(scenario, BLANK_FIELD, (base) => adjustBlank(base, blank), { ...scenario, blank }))}
+                    onRebalance={() => {
+                      setAnchor(null);
+                      update(rebalance(scenario, baseline.others, keptField));
+                    }}
+                    onReset={reset}
+                  />
+                ) : (
+                  <ProvinceInputs
+                    blocs={blocs}
+                    rowBlocs={provinceBlocs}
+                    base={base}
+                    provinces={provinces}
+                    code={code}
+                    deputies={seats2026.get(code) ?? 0}
+                    lockedCodes={lockedCodes}
+                    shares={province.shares}
+                    blank={province.blank}
+                    others={othersShare(province)}
+                    seats={provinceSeats(simulation.results, code)}
+                    baseSeats={provinceSeats(baseline.simulation.results, code)}
+                    offTarget={simulation.offTarget}
+                    stale={stale}
+                    onSelect={setCode}
+                    free={free}
+                    onFreeChange={setFree}
+                    onShareChange={(blocId, value) =>
+                      editProvince(edit(province, blocId, (base) => adjustShare(base, blocId, value), { ...province, shares: { ...province.shares, [blocId]: value } }))
+                    }
+                    onBlankChange={(blank) => editProvince(edit(province, BLANK_FIELD, (base) => adjustBlank(base, blank), { ...province, blank }))}
+                    onRebalance={() => {
+                      setAnchor(null);
+                      editProvince(rebalance(province, othersShare(projected), keptField));
+                    }}
+                    onUnlock={unlockProvince}
+                    onReset={reset}
+                  />
+                )}
+              </div>
+            </>
+          ) : (
+            <ReadOnlyNotice next={shared ? simulatorHref(shared) : "/simulador"} />
+          )}
         </div>
         {/* Below the inputs on narrow screens so the seats come right after them. */}
         <div id={RESULTS_ID} className="flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
           <ShareLink brokenLink={brokenLink} />
+          {signedIn && <SaveSimulationContainer scenario={valid} />}
           <ResultsHemicycle ranked={ranked} stale={stale} selected={picked} baseLabel={base.label} />
           <div className={`transition-opacity ${stale ? "opacity-40" : ""}`}>
             <CoalitionCalculator

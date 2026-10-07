@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { DhondtExample } from "@/components/home/dhondt-example";
 import { HomeClosing } from "@/components/home/home-closing";
 import { HomeHero } from "@/components/home/home-hero";
 import { SeatContrast } from "@/components/home/seat-contrast";
 import { SiteHeader } from "@/components/home/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
-import { auth } from "@/lib/auth/auth";
+import { getSession } from "@/lib/auth/session";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   const username = session?.user.name;
   return (
     <>

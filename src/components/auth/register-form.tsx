@@ -4,6 +4,7 @@ import { SelectField } from "@/components/forms/select-field";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { TextField } from "@/components/forms/text-field";
 import type { FormState } from "@/lib/auth/forms";
+import { usageProfileLabels } from "@/lib/auth/user-fields";
 import { provinces } from "@/lib/provinces";
 
 const provinceOptions = [
@@ -11,24 +12,23 @@ const provinceOptions = [
   ...provinces.map(({ code, name }) => ({ value: code, label: name })),
 ];
 
-const usageProfileOptions = [
-  { value: "citizen", label: "Uso personal" },
-  { value: "journalist", label: "Periodismo o análisis" },
-  { value: "teacher", label: "Docencia" },
-];
+const usageProfileOptions = Object.entries(usageProfileLabels).map(([value, label]) => ({ value, label }));
 
 type RegisterFormProps = {
   state: FormState;
   action: (formData: FormData) => void;
   pending: boolean;
+  // Where to go once signed in.
+  next: string;
 };
 
-export function RegisterForm({ state, action, pending }: RegisterFormProps) {
+export function RegisterForm({ state, action, pending, next }: RegisterFormProps) {
   const values = state?.values;
   const errors = state?.fieldErrors;
 
   return (
     <form action={action} noValidate className="flex flex-col gap-5">
+      <input type="hidden" name="next" value={next} />
       <TextField
         label="Nombre de usuario"
         name="username"

@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/home/site-header";
 import { SimulatorContainer } from "@/components/simulator/simulator-container";
 import { JsonLd } from "@/components/seo/json-ld";
-import { auth } from "@/lib/auth/auth";
+import { withNext } from "@/lib/auth/next-path";
+import { getSession } from "@/lib/auth/session";
+import { SCENARIO_PARAM } from "@/lib/scenario/url";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -12,8 +14,14 @@ export const metadata: Metadata = {
   alternates: { canonical: "/simulador" },
 };
 
-export default async function SimulatorPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+type SimulatorPageProps = {
+  searchParams: Promise<Partial<Record<typeof SCENARIO_PARAM, string | string[]>>>;
+};
+
+// Simulating takes an account; a shared link stays public, read-only.
+export default async function SimulatorPage({ searchParams }: SimulatorPageProps) {
+  const session = await getSession();
+  if (!session && !(await searchParams)[SCENARIO_PARAM]) redirect(withNext("/login", "/simulador"));
   return (
     <>
       <JsonLd
@@ -40,7 +48,7 @@ export default async function SimulatorPage() {
             <p className="max-w-xl text-caption font-semibold">Es una simulación, no una previsión.</p>
           </div>
         </div>
-        <SimulatorContainer />
+        <SimulatorContainer signedIn={Boolean(session)} />
       </main>
     </>
   );

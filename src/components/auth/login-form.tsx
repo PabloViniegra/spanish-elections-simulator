@@ -8,11 +8,14 @@ type LoginFormProps = {
   state: FormState;
   action: (formData: FormData) => void;
   pending: boolean;
+  // Where to go once signed in.
+  next: string;
 };
 
-export function LoginForm({ state, action, pending }: LoginFormProps) {
+export function LoginForm({ state, action, pending, next }: LoginFormProps) {
   return (
     <form action={action} noValidate className="flex flex-col gap-5">
+      <input type="hidden" name="next" value={next} />
       <TextField
         label="Usuario o correo electrónico"
         name="identifier"

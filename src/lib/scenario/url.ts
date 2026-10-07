@@ -8,6 +8,9 @@ import { FULL_SHARE, type Scenario } from "./types";
 const PREFIX = "v1.";
 export const SCENARIO_PARAM = "e";
 
+// The simulator opened on an encoded scenario.
+export const simulatorHref = (param: string) => `/simulador?${SCENARIO_PARAM}=${encodeURIComponent(param)}`;
+
 const share = z.int().check(z.gte(0), z.lte(FULL_SHARE));
 const scenarioSchema = z.object({
   schemaVersion: z.literal(1),

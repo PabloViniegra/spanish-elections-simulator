@@ -65,9 +65,12 @@ export function SiteHeader({ username, current }: { username?: string; current: 
         <div className="hidden items-center gap-5 sm:flex">
           {username ? (
             <>
-              <span className="max-w-40 truncate text-on-dark-muted" title={username}>
-                {username}
-              </span>
+              <NavLink href="/perfil" page="perfil" current={current} variant="bar">
+                <span className="sr-only">Mi perfil: </span>
+                <span className="max-w-40 truncate" title={username}>
+                  {username}
+                </span>
+              </NavLink>
               <SignOut className="flex min-h-11 items-center" />
             </>
           ) : (
@@ -94,7 +97,9 @@ export function SiteHeader({ username, current }: { username?: string; current: 
           <div className="mt-1 border-t border-white/15 pt-1">
             {username ? (
               <>
-                <p className="flex min-h-12 items-center truncate text-on-dark-muted">{username}</p>
+                <NavLink href="/perfil" page="perfil" current={current} variant="row">
+                  <span className="truncate">Mi perfil · {username}</span>
+                </NavLink>
                 <SignOut className="flex min-h-12 items-center" />
               </>
             ) : (

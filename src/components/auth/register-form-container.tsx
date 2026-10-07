@@ -5,7 +5,7 @@ import { useFocusOnError } from "@/components/forms/use-focus-on-error";
 import { signUp } from "@/lib/auth/actions";
 import { RegisterForm } from "./register-form";
 
-export function RegisterFormContainer() {
+export function RegisterFormContainer({ next }: { next: string }) {
   const [state, action, pending] = useActionState(signUp, undefined);
   const ref = useFocusOnError(state);
   // The post-action form reset restores selects to their mount-time default,
@@ -16,6 +16,7 @@ export function RegisterFormContainer() {
         key={JSON.stringify(state?.values ?? null)}
         state={state}
         action={action}
+        next={next}
         pending={pending}
       />
     </div>

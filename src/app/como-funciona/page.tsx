@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import { BallotCards } from "@/components/explainer/ballot-cards";
 import { ConstituencyMap } from "@/components/explainer/constituency-map";
 import { DhondtAuction } from "@/components/explainer/dhondt-auction";
@@ -10,7 +9,7 @@ import { SeatLadder } from "@/components/explainer/seat-ladder";
 import { ThresholdBars } from "@/components/explainer/threshold-bars";
 import { SiteHeader } from "@/components/home/site-header";
 import { JsonLd } from "@/components/seo/json-ld";
-import { auth } from "@/lib/auth/auth";
+import { getSession } from "@/lib/auth/session";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -21,7 +20,7 @@ export const metadata: Metadata = {
 
 // FR-14: the electoral system in plain language, in the order a vote travels.
 export default async function ExplainerPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getSession();
   return (
     <>
       <JsonLd

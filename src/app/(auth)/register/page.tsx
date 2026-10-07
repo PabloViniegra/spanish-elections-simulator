@@ -2,10 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { RegisterFormContainer } from "@/components/auth/register-form-container";
+import { safeNextPath, withNext } from "@/lib/auth/next-path";
 
 export const metadata: Metadata = { title: "Crear cuenta" };
 
-export default function RegisterPage() {
+type RegisterPageProps = {
+  searchParams: Promise<{ next?: string }>;
+};
+
+export default async function RegisterPage({ searchParams }: RegisterPageProps) {
+  const next = safeNextPath((await searchParams).next);
   return (
     <AuthCard
       title="Crea tu cuenta"
@@ -13,13 +19,13 @@ export default function RegisterPage() {
       footer={
         <>
           ¿Ya tienes cuenta?{" "}
-          <Link href="/login" className="text-primary underline">
+          <Link href={withNext("/login", next)} className="text-primary underline">
             Inicia sesión
           </Link>
         </>
       }
     >
-      <RegisterFormContainer />
+      <RegisterFormContainer next={next} />
     </AuthCard>
   );
 }

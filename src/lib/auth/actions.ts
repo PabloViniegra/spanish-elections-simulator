@@ -4,6 +4,7 @@ import { APIError } from "better-auth/api";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "./auth";
+import { safeNextPath, withNext } from "./next-path";
 import {
   authErrorMessage,
   fieldErrorsOf,
@@ -13,7 +14,8 @@ import {
   type FormState,
 } from "./forms";
 
-const verifiedRedirect = "/login?verified=1";
+// The confirmation link lands on the login page, which then goes on to `next`.
+const verifiedRedirect = (next: string) => withNext("/login?verified=1", next);
 
 export async function signIn(_prev: FormState, formData: FormData): Promise<FormState> {
   const values = formValues(formData, ["identifier"]);
@@ -21,13 +23,15 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
   if (!parsed.success) return { values, fieldErrors: fieldErrorsOf(parsed.error) };
 
   const { identifier, password } = parsed.data;
+  const next = safeNextPath(formValues(formData, ["next"]).next);
+  const callbackURL = verifiedRedirect(next);
   try {
     const requestHeaders = await headers();
     if (identifier.includes("@")) {
-      await auth.api.signInEmail({ body: { email: identifier, password, callbackURL: verifiedRedirect }, headers: requestHeaders });
+      await auth.api.signInEmail({ body: { email: identifier, password, callbackURL }, headers: requestHeaders });
     } else {
       await auth.api.signInUsername({
-        body: { username: identifier, password, callbackURL: verifiedRedirect },
+        body: { username: identifier, password, callbackURL },
         headers: requestHeaders,
       });
     }
@@ -36,7 +40,7 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
     if (!(error instanceof APIError)) throw error;
     return { values, error: authErrorMessage(error.body?.code) };
   }
-  redirect("/");
+  redirect(next);
 }
 
 export async function signUp(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -54,7 +58,7 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
         password,
         province,
         usageProfile,
-        callbackURL: verifiedRedirect,
+        callbackURL: verifiedRedirect(safeNextPath(formValues(formData, ["next"]).next)),
       },
       headers: await headers(),
     });
