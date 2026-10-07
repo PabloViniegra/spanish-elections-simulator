@@ -15,7 +15,7 @@ import { SITE_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Cómo funciona",
   description: "Cómo se convierten los votos en los 350 escaños del Congreso, explicado paso a paso y sin tecnicismos.",
-  alternates: { canonical: "/como-funciona" },
+  alternates: { canonical: "/how-it-works" },
 };
 
 // FR-14: the electoral system in plain language, in the order a vote travels.
@@ -29,12 +29,12 @@ export default async function ExplainerPage() {
           "@type": "BreadcrumbList",
           itemListElement: [
             { "@type": "ListItem", position: 1, name: "Inicio", item: SITE_URL },
-            { "@type": "ListItem", position: 2, name: "Cómo funciona", item: `${SITE_URL}/como-funciona` },
+            { "@type": "ListItem", position: 2, name: "Cómo funciona", item: `${SITE_URL}/how-it-works` },
           ],
         }}
       />
       <div aria-hidden="true" className="read-progress fixed inset-x-0 top-0 z-50 h-0.5 bg-primary" />
-      <SiteHeader username={session?.user.name} current="como-funciona" />
+      <SiteHeader username={session?.user.name} current="how-it-works" />
       <main id="contenido" className="flex-1">
         <ExplainerHero />
         <ConstituencyMap />

@@ -16,10 +16,10 @@ function SignOut({ className }: { className: string }) {
 function Destinations({ current, variant }: { current: NavPage; variant: "bar" | "row" }) {
   return (
     <>
-      <NavLink href="/simulador" page="simulador" current={current} variant={variant}>
+      <NavLink href="/simulator" page="simulator" current={current} variant={variant}>
         Simulador
       </NavLink>
-      <NavLink href="/como-funciona" page="como-funciona" current={current} variant={variant}>
+      <NavLink href="/how-it-works" page="how-it-works" current={current} variant={variant}>
         Cómo funciona
       </NavLink>
     </>
@@ -30,7 +30,7 @@ function Destinations({ current, variant }: { current: NavPage; variant: "bar" |
 // on the bar, so it only appears where signing up is the point (home and
 // explainer); inside the simulator it drops to a plain link.
 export function SiteHeader({ username, current }: { username?: string; current: NavPage }) {
-  const pill = current !== "simulador";
+  const pill = current !== "simulator";
   return (
     <header className="relative bg-surface-black text-on-dark [&_:focus-visible]:outline-primary-on-dark">
       <a
@@ -65,7 +65,7 @@ export function SiteHeader({ username, current }: { username?: string; current: 
         <div className="hidden items-center gap-5 sm:flex">
           {username ? (
             <>
-              <NavLink href="/perfil" page="perfil" current={current} variant="bar">
+              <NavLink href="/profile" page="profile" current={current} variant="bar">
                 <span className="sr-only">Mi perfil: </span>
                 <span className="max-w-40 truncate" title={username}>
                   {username}
@@ -97,7 +97,7 @@ export function SiteHeader({ username, current }: { username?: string; current: 
           <div className="mt-1 border-t border-white/15 pt-1">
             {username ? (
               <>
-                <NavLink href="/perfil" page="perfil" current={current} variant="row">
+                <NavLink href="/profile" page="profile" current={current} variant="row">
                   <span className="truncate">Mi perfil · {username}</span>
                 </NavLink>
                 <SignOut className="flex min-h-12 items-center" />

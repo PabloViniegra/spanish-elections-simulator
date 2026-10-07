@@ -5,23 +5,23 @@ const SHARED =
   "v1.N4IgzgxgFgpgtgQwGowE5gJYHsB2IBcAjADQgBGCYMAogDYwQAu2OAkgCYEgBMADNwGYAtLwDsIUmCgJUMMAVAAHRQQEBWXr1KKwWGAW4BOUQBZSANywAPAoUEAOSQFdEqW4IGk0EW-cOkAKyccRnkiADYtcgxadidbAXDtHHNbO1IyHABzAnDuUggffBNRUidFPHxuQgBfDNoEHABrAnsSEEYnVBwsJ0YCHCdaWhqgA";
 
 test("the simulator asks to sign in and comes back afterwards", async ({ page }) => {
-  await page.goto("/simulador");
-  await expect(page).toHaveURL(/\/login\?next=%2Fsimulador$/);
+  await page.goto("/simulator");
+  await expect(page).toHaveURL(/\/login\?next=%2Fsimulator$/);
   await page.getByRole("link", { name: "Crea una" }).click();
-  await expect(page).toHaveURL(/\/register\?next=%2Fsimulador$/);
+  await expect(page).toHaveURL(/\/register\?next=%2Fsimulator$/);
 });
 
 test("a shared link shows its results read-only when signed out", async ({ page }) => {
-  await page.goto(`/simulador?e=${SHARED}`);
+  await page.goto(`/simulator?e=${SHARED}`);
   await expect(page.getByRole("heading", { name: "Escenario compartido sobre las generales de julio de 2023" })).toBeVisible();
   await expect(page.getByRole("group", { name: "Votos de partida" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Guardar en mi perfil" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Copiar enlace" })).toBeVisible();
   const login = page.getByRole("main").getByRole("link", { name: "Iniciar sesión" });
-  await expect(login).toHaveAttribute("href", `/login?next=${encodeURIComponent(`/simulador?e=${SHARED}`)}`);
+  await expect(login).toHaveAttribute("href", `/login?next=${encodeURIComponent(`/simulator?e=${SHARED}`)}`);
 });
 
 test("the profile page asks to sign in", async ({ page }) => {
-  await page.goto("/perfil");
-  await expect(page).toHaveURL(/\/login\?next=%2Fperfil$/);
+  await page.goto("/profile");
+  await expect(page).toHaveURL(/\/login\?next=%2Fprofile$/);
 });

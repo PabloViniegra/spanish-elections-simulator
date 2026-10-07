@@ -18,7 +18,7 @@ export async function saveSimulation(_prev: SaveState, formData: FormData): Prom
   if (!parsed.success) return { fieldErrors: fieldErrorsOf(parsed.error) };
 
   await db.insert(simulation).values({ userId: session.user.id, name: parsed.data.name, scenario: parsed.data.scenario });
-  revalidatePath("/perfil");
+  revalidatePath("/profile");
   return { saved: parsed.data.name };
 }
 
@@ -31,6 +31,6 @@ export async function deleteSimulation(id: string) {
     .delete(simulation)
     .where(and(eq(simulation.id, z.string().parse(id)), eq(simulation.userId, session.user.id)))
     .returning({ id: simulation.id });
-  revalidatePath("/perfil");
+  revalidatePath("/profile");
   return deleted.length > 0;
 }

@@ -195,7 +195,7 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
               </div>
             </>
           ) : (
-            <ReadOnlyNotice baseLabel={base.label} next={shared ? simulatorHref(shared) : "/simulador"} />
+            <ReadOnlyNotice baseLabel={base.label} next={shared ? simulatorHref(shared) : "/simulator"} />
           )}
         </div>
         {/* Below the inputs on narrow screens so the seats come right after them. */}

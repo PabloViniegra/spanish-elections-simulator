@@ -169,7 +169,7 @@ Official data is converted once at build time. In the browser, the URL and the s
 **Repository layout**
 
 ```
-/app                    Pages: /, /provincia/[code], /como-funciona
+/app                    Pages: /, /provincia/[code], /how-it-works
 /app/api/og/route.tsx   Open Graph image for shared scenarios
 /components             Hemicycle, ProvinceMap, CoalitionCalculator, DhondtTable
 /lib/engine             Pure TypeScript: apportion, threshold, dhondt, project, rake

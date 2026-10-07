@@ -42,7 +42,7 @@ export function SaveSimulation({ state, action, pending, scenario, defaultName, 
           {state?.saved && (
             <>
               Guardada como «{state.saved}».{" "}
-              <Link href="/perfil" className="text-primary underline">
+              <Link href="/profile" className="text-primary underline">
                 Ver mis simulaciones
               </Link>
             </>

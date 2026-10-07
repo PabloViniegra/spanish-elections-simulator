@@ -15,11 +15,11 @@ const longDate = (date: Date) => date.toLocaleDateString("es-ES", { day: "numeri
 const savedAt = (date: Date) => `${longDate(date)}, a las ${date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Madrid" })}`;
 
 export default async function ProfilePage() {
-  const { user } = await requireSession("/perfil");
+  const { user } = await requireSession("/profile");
   const saved = await listSimulations(user.id);
   return (
     <>
-      <SiteHeader username={user.name} current="perfil" />
+      <SiteHeader username={user.name} current="profile" />
       <main id="contenido" className="flex-1">
         <div className="bg-canvas-parchment">
           <div className="mx-auto max-w-content px-5 py-10 sm:px-8">

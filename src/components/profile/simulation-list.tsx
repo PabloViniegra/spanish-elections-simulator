@@ -52,7 +52,7 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
       {simulations.length === 0 ? (
         <p className="text-body text-ink-muted-80">
           Todavía no has guardado ninguna.{" "}
-          <Link href="/simulador" className="text-primary underline">
+          <Link href="/simulator" className="text-primary underline">
             Abre el simulador
           </Link>{" "}
           y usa «Guardar en mi perfil».

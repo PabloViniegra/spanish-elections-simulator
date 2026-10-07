@@ -9,7 +9,7 @@ const PREFIX = "v1.";
 export const SCENARIO_PARAM = "e";
 
 // The simulator opened on an encoded scenario.
-export const simulatorHref = (param: string) => `/simulador?${SCENARIO_PARAM}=${encodeURIComponent(param)}`;
+export const simulatorHref = (param: string) => `/simulator?${SCENARIO_PARAM}=${encodeURIComponent(param)}`;
 
 const share = z.int().check(z.gte(0), z.lte(FULL_SHARE));
 const scenarioSchema = z.object({

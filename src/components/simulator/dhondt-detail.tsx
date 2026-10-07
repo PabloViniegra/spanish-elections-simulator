@@ -34,7 +34,7 @@ export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, 
         <p className="max-w-prose text-caption text-pretty text-ink-muted-80">
           Cada partido que pasa el 3 % divide sus votos simulados entre 1, 2, 3… Cada resultado es un cociente, y los
           escaños van a los cocientes más altos.{" "}
-          <Link href="/como-funciona" className="text-ink underline underline-offset-2">
+          <Link href="/how-it-works" className="text-ink underline underline-offset-2">
             Cómo funciona
           </Link>
         </p>
