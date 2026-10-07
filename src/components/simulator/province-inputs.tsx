@@ -1,4 +1,5 @@
 import { SelectField } from "@/components/forms/select-field";
+import type { Base } from "@/lib/elections/bases";
 import type { Bloc } from "@/lib/elections/types";
 import { AdjustToggle } from "./adjust-toggle";
 import { OffTargetWarning } from "./off-target-warning";
@@ -10,6 +11,8 @@ export const PROVINCE_INPUTS_ID = "voto-por-provincia";
 
 type ProvinceInputsProps = {
   blocs: readonly Bloc[];
+  // The election the votes start from and seats compare against (FR-01).
+  base: Pick<Base, "label" | "short">;
   // The blocs with a row here: those that run in the province.
   rowBlocs: readonly Bloc[];
   provinces: readonly { code: string; name: string }[];
@@ -49,7 +52,7 @@ export function ProvinceInputs(props: ProvinceInputsProps) {
           Voto por provincia
         </h2>
         <button type="button" onClick={props.onReset} className="min-h-11 text-caption underline underline-offset-2">
-          Volver a los resultados de 2023
+          Volver a los resultados de {props.base.label}
         </button>
       </div>
       <SelectField
@@ -86,6 +89,7 @@ export function ProvinceInputs(props: ProvinceInputsProps) {
         idPrefix="province"
         legend={`Porcentaje de voto válido de cada partido en ${nameOf.get(code)}`}
         blocs={props.rowBlocs}
+        baseLabel={props.base.short}
         shares={props.shares}
         blank={props.blank}
         seats={props.seats}

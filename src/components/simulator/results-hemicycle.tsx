@@ -21,12 +21,14 @@ type ResultsHemicycleProps = {
   stale?: boolean;
   // Blocs picked in the coalition calculator; the rest of the chamber steps back.
   selected?: ReadonlySet<string>;
+  // The base election, as in "los votos de {baseLabel}".
+  baseLabel: string;
 };
 
 // FR-06: 350 seats coloured by bloc, with the 176 majority line. The chips of
 // the coalition calculator below double as the legend, and the label of the
 // image names every bloc with its seats, so colour is never the only signal.
-export function ResultsHemicycle({ ranked, stale = false, selected }: ResultsHemicycleProps) {
+export function ResultsHemicycle({ ranked, stale = false, selected, baseLabel }: ResultsHemicycleProps) {
   const picking = selected !== undefined && selected.size > 0;
   // A picked coalition sits first, so it fills from the left up to the line
   // or past it; the colour sweep animates the regrouping.
@@ -66,7 +68,7 @@ export function ResultsHemicycle({ ranked, stale = false, selected }: ResultsHem
       <figcaption className="text-center text-caption text-ink-muted-80">
         {stale && <strong className="font-semibold text-ink">Último reparto válido. </strong>}La línea marca la mayoría absoluta: {MAJORITY} escaños.
         {/* Travels with the seats, sticky on wide screens and in any screenshot. */}
-        <span className="block font-semibold text-ink">Es una simulación con los votos de 2023, no una previsión.</span>
+        <span className="block font-semibold text-ink">Es una simulación con los votos de {baseLabel}, no una previsión.</span>
       </figcaption>
     </figure>
   );

@@ -1,3 +1,4 @@
+import type { Base } from "@/lib/elections/bases";
 import type { Bloc } from "@/lib/elections/types";
 import { AdjustToggle } from "./adjust-toggle";
 import { OffTargetWarning } from "./off-target-warning";
@@ -6,6 +7,8 @@ import { ShareRows } from "./share-rows";
 
 type NationalInputsProps = {
   blocs: readonly Bloc[];
+  // The election the votes start from and seats compare against (FR-01).
+  base: Pick<Base, "label" | "short">;
   shares: Readonly<Record<string, number>>;
   blank: number;
   others: number;
@@ -34,7 +37,7 @@ export function NationalInputs(props: NationalInputsProps) {
           Estimación de voto
         </h2>
         <button type="button" onClick={props.onReset} className="min-h-11 text-caption underline underline-offset-2">
-          Volver a los resultados de 2023
+          Volver a los resultados de {props.base.label}
         </button>
       </div>
       {lockedCount > 0 && (
@@ -50,6 +53,7 @@ export function NationalInputs(props: NationalInputsProps) {
         idPrefix="share"
         legend="Porcentaje de voto válido de cada partido"
         blocs={blocs}
+        baseLabel={props.base.short}
         shares={shares}
         blank={blank}
         seats={seats}

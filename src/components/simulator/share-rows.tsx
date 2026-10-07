@@ -7,6 +7,8 @@ type ShareRowsProps = {
   idPrefix: string;
   legend: string;
   blocs: readonly Bloc[];
+  // The base election the seat changes compare against, e.g. "2023".
+  baseLabel: string;
   shares: Readonly<Record<string, number>>;
   blank: number;
   seats: ReadonlyMap<string, number>;
@@ -19,13 +21,13 @@ type ShareRowsProps = {
 
 // One row per bloc with its share and the seats it gets, then the blank vote.
 export function ShareRows(props: ShareRowsProps) {
-  const { idPrefix, legend, blocs, shares, blank, seats, baseSeats, stale, onShareChange, onBlankChange } = props;
+  const { idPrefix, legend, blocs, baseLabel, shares, blank, seats, baseSeats, stale, onShareChange, onBlankChange } = props;
   return (
     <fieldset className="flex flex-col">
       <legend className="sr-only">{legend}</legend>
       <div aria-hidden="true" className="flex justify-between border-b border-hairline pb-2 text-fine-print text-ink-muted-80">
         <span>Partido y % de voto válido</span>
-        <span>Escaños (frente a 2023)</span>
+        <span>Escaños (frente a {baseLabel})</span>
       </div>
       {blocs.map((bloc) => {
         const blocSeats = seats.get(bloc.id) ?? 0;
@@ -42,7 +44,7 @@ export function ShareRows(props: ShareRowsProps) {
               </span>
               <span key={`delta-${delta}`} className={`tick text-caption sm:block ${delta === 0 ? "text-ink-muted-80" : "font-semibold"}`}>
                 {formatDelta(delta)}
-                <span className="sr-only"> respecto a 2023</span>
+                <span className="sr-only"> respecto a {baseLabel}</span>
               </span>
             </p>
             <div className="col-span-2 sm:col-span-1">
