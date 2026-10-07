@@ -39,7 +39,9 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
       <main id="contenido" className="flex-1">
         <div className="bg-canvas-parchment">
           <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-10 sm:px-8">
-            <h1 className="text-display-lg text-balance">Cambia el voto y mira los 350 escaños del 29 de noviembre</h1>
+            <h1 className="text-display-lg text-balance">
+              {session ? "Cambia el voto y mira los 350 escaños del 29 de noviembre" : "Así quedarían los 350 escaños del 29 de noviembre con este escenario"}
+            </h1>
             <p className="max-w-xl text-body text-pretty text-ink-muted-80">
               Partimos de los votos de 2023, provincia a provincia, con los escaños del Real Decreto 806/2026. También puedes
               partir de las generales de 2016 o de 2019. Si cambias un partido, su voto varía en la misma proporción en cada

@@ -9,20 +9,26 @@ type SaveSimulationProps = {
   pending: boolean;
   // The scenario as its URL parameter.
   scenario: string;
+  // A name to start from, so saving takes one click.
+  defaultName: string;
+  // The inputs do not add up to 100%: what gets saved is the last scenario that did.
+  stale: boolean;
 };
 
-export function SaveSimulation({ state, action, pending, scenario }: SaveSimulationProps) {
+export function SaveSimulation({ state, action, pending, scenario, defaultName, stale }: SaveSimulationProps) {
   return (
     <form action={action} noValidate className="flex flex-col gap-3">
       <input type="hidden" name="scenario" value={scenario} />
       <TextField
-        label="Nombre del simulacro"
+        label="Nombre de la simulación"
         name="name"
+        defaultValue={defaultName}
         maxLength={NAME_MAX}
         required
         autoComplete="off"
         error={state?.fieldErrors?.name}
       />
+      {stale && <p className="text-caption text-ink-muted-80">Se guardará el último reparto que suma 100 %, el que muestran los resultados.</p>}
       <FormAlert message={state?.error ?? state?.fieldErrors?.scenario} />
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
         <button
@@ -35,9 +41,9 @@ export function SaveSimulation({ state, action, pending, scenario }: SaveSimulat
         <p aria-live="polite" className="text-caption text-ink-muted-80">
           {state?.saved && (
             <>
-              Guardado como «{state.saved}».{" "}
+              Guardada como «{state.saved}».{" "}
               <Link href="/perfil" className="text-primary underline">
-                Ver mis simulacros
+                Ver mis simulaciones
               </Link>
             </>
           )}

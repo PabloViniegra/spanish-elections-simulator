@@ -4,7 +4,7 @@ import { restoreScenario } from "@/lib/scenario/restore";
 export const NAME_MAX = 80;
 
 export const saveSimulationSchema = z.object({
-  name: z.string().trim().min(1, "Ponle un nombre al simulacro.").max(NAME_MAX, `El nombre no puede superar los ${NAME_MAX} caracteres.`),
+  name: z.string().trim().min(1, "Ponle un nombre a la simulación.").max(NAME_MAX, `El nombre no puede superar los ${NAME_MAX} caracteres.`),
   // The scenario as its URL parameter; it must restore like a shared link.
   scenario: z
     .string()

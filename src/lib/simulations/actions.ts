@@ -22,10 +22,15 @@ export async function saveSimulation(_prev: SaveState, formData: FormData): Prom
   return { saved: parsed.data.name };
 }
 
+// True once the simulation is gone.
 export async function deleteSimulation(id: string) {
   const session = await getSession();
-  if (!session) return;
+  if (!session) return false;
   // Scoped to the owner, so an id from someone else deletes nothing.
-  await db.delete(simulation).where(and(eq(simulation.id, z.string().parse(id)), eq(simulation.userId, session.user.id)));
+  const deleted = await db
+    .delete(simulation)
+    .where(and(eq(simulation.id, z.string().parse(id)), eq(simulation.userId, session.user.id)))
+    .returning({ id: simulation.id });
   revalidatePath("/perfil");
+  return deleted.length > 0;
 }

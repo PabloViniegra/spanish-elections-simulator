@@ -195,13 +195,13 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
               </div>
             </>
           ) : (
-            <ReadOnlyNotice next={shared ? simulatorHref(shared) : "/simulador"} />
+            <ReadOnlyNotice baseLabel={base.label} next={shared ? simulatorHref(shared) : "/simulador"} />
           )}
         </div>
         {/* Below the inputs on narrow screens so the seats come right after them. */}
         <div id={RESULTS_ID} className="flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
           <ShareLink brokenLink={brokenLink} />
-          {signedIn && <SaveSimulationContainer scenario={valid} />}
+          {signedIn && <SaveSimulationContainer key={encodeScenario(valid)} scenario={valid} ranked={ranked} stale={stale} />}
           <ResultsHemicycle ranked={ranked} stale={stale} selected={picked} baseLabel={base.label} />
           <div className={`transition-opacity ${stale ? "opacity-40" : ""}`}>
             <CoalitionCalculator
