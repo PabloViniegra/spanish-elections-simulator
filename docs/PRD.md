@@ -116,6 +116,8 @@ Fifteen requirements cover v1; Must items are the launch bar, Should items can s
 | FR-14 | Should | Explainer page on how the system works, linked to the D'Hondt detail. | Covers R-03 to R-07 in plain language. |
 | FR-15 | Should | Spanish and English UI. | All UI strings externalised; Spanish is the default locale. |
 
+**FR-13 implemented (7 Oct 2026).** Downloads are available next to the hemicycle, including on public shared scenarios. The UTF-8 CSV has one row per province × bloc, including zero votes, with province code/name, bloc ID/name, simulated votes, percentage of valid votes (blank and Others included in the denominator), and seats. Filenames include a stable scenario identifier. The PNG exports the complete distribution without coalition highlighting, with a legend, the base election, the 2026 seat-table context, the majority line, the simulation disclaimer and the exact scenario URL, wrapped without truncation. Downloads are disabled while the inputs are invalid; this state, PNG preparation and download failures have visible feedback.
+
 ## Non-functional requirements
 
 The engine must be exact and instant; everything else is sized for a free-tier, no-backend launch.

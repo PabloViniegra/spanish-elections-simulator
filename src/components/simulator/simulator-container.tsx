@@ -16,6 +16,7 @@ import { seats2026 } from "@/lib/seats-2026";
 import { BaseSelect } from "./base-select";
 import { CoalitionCalculator } from "./coalition-calculator";
 import { DHONDT_ID, DhondtDetail } from "./dhondt-detail";
+import { ExportResultsContainer } from "./export-results-container";
 import { HowSeatsWork } from "./how-seats-work";
 import { type InputMode, ModeSwitch } from "./mode-switch";
 import { NationalInputs } from "./national-inputs";
@@ -203,6 +204,7 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
           <ShareLink brokenLink={brokenLink} />
           {signedIn && <SaveSimulationContainer key={encodeScenario(valid)} scenario={valid} ranked={ranked} stale={stale} />}
           <ResultsHemicycle ranked={ranked} stale={stale} selected={picked} baseLabel={base.label} />
+          <ExportResultsContainer results={simulation.results} blocs={blocs} ranked={ranked} scenario={valid} baseId={base.election.id} baseLabel={base.label} stale={stale} />
           <div className={`transition-opacity duration-150 ${stale ? "opacity-40" : ""}`}>
             <CoalitionCalculator
               ranked={ranked}
