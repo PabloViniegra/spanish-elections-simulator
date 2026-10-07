@@ -5,7 +5,7 @@ test("login page shows the sign-in form", async ({ page }) => {
   await expect(page).toHaveTitle("Iniciar sesión · Simulador de Elecciones");
   await expect(page.getByRole("heading", { level: 1, name: "Inicia sesión" })).toBeVisible();
   await expect(page.getByLabel("Usuario o correo electrónico")).toBeVisible();
-  await expect(page.getByLabel("Contraseña")).toHaveAttribute("type", "password");
+  await expect(page.getByLabel("Contraseña", { exact: true })).toHaveAttribute("type", "password");
   await expect(page.getByRole("button", { name: "Iniciar sesión" })).toBeVisible();
 });
 
@@ -30,7 +30,7 @@ test("register keeps submitted values when the server rejects them", async ({ pa
   await page.goto("/register");
   await page.getByLabel("Nombre de usuario").fill("ab");
   await page.getByLabel("Correo electrónico").fill("ana@example.com");
-  await page.getByLabel("Contraseña").fill("contraseña-segura");
+  await page.getByLabel("Contraseña", { exact: true }).fill("contraseña-segura");
   await page.getByText("Añadir detalles (opcional)").click();
   await page.getByLabel("Provincia (opcional)").selectOption("28");
   await page.getByLabel("Perfil de uso").selectOption("teacher");
@@ -46,7 +46,7 @@ test("register keeps submitted values when the server rejects them", async ({ pa
 
 test("password can be revealed and hidden", async ({ page }) => {
   await page.goto("/login");
-  const password = page.getByLabel("Contraseña");
+  const password = page.getByLabel("Contraseña", { exact: true });
   await page.getByRole("button", { name: "Mostrar" }).click();
   await expect(password).toHaveAttribute("type", "text");
   await page.getByRole("button", { name: "Ocultar" }).click();
