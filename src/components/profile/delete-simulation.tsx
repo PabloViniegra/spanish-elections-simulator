@@ -35,7 +35,7 @@ export function DeleteSimulation({ id, name }: { id: string; name: string }) {
     );
   }
   return (
-    <div className="flex flex-col gap-1">
+    <div className="settle flex flex-col gap-1">
       <div role="group" aria-label={`Confirmar eliminación de «${name}»`} className="flex flex-wrap items-center gap-x-4">
         <span className="text-caption">¿Eliminar? No se puede deshacer.</span>
         <button type="button" disabled={pending} onClick={remove} className={`${button} text-error disabled:text-ink-muted-48`}>

@@ -203,7 +203,7 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
           <ShareLink brokenLink={brokenLink} />
           {signedIn && <SaveSimulationContainer key={encodeScenario(valid)} scenario={valid} ranked={ranked} stale={stale} />}
           <ResultsHemicycle ranked={ranked} stale={stale} selected={picked} baseLabel={base.label} />
-          <div className={`transition-opacity ${stale ? "opacity-40" : ""}`}>
+          <div className={`transition-opacity duration-150 ${stale ? "opacity-40" : ""}`}>
             <CoalitionCalculator
               ranked={ranked}
               selected={picked}

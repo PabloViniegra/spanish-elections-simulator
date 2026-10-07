@@ -85,7 +85,7 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
         </p>
       )}
       {/* Stale results lose their colour, not their contrast. */}
-      <div className={`flex flex-col gap-3 transition-[filter] ${stale ? "grayscale" : ""}`}>
+      <div className={`flex flex-col gap-3 ${stale ? "grayscale" : ""}`}>
         <ul aria-label="Provincias donde cada partido saca más escaños" className="flex flex-wrap gap-x-4 gap-y-1 text-caption">
           {led.map(({ bloc, count }) => (
             <li key={bloc.id} className="flex items-center gap-1.5">

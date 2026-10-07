@@ -65,11 +65,11 @@ export function ShareLink({ brokenLink }: { brokenLink: boolean }) {
           className="group inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-primary px-7 text-[1.0625rem] leading-none font-semibold tracking-[-0.01em] text-on-primary transition-[background-color,scale] duration-200 ease-snappy hover:bg-primary-focus focus-visible:outline-offset-[3px] active:scale-[0.96] data-[copied=true]:bg-ink"
         >
           <span aria-hidden="true" className="relative size-[18px] flex-none">
-            <LinkIcon className="absolute inset-0 transition-[opacity,scale,rotate] duration-300 ease-snappy group-data-[copied=true]:-rotate-45 group-data-[copied=true]:scale-50 group-data-[copied=true]:opacity-0" />
-            <CheckIcon className="absolute inset-0 scale-50 opacity-0 transition-[opacity,scale] duration-300 ease-snappy group-data-[copied=true]:scale-100 group-data-[copied=true]:opacity-100" />
+            <LinkIcon className="absolute inset-0 transition-[opacity,scale,rotate] duration-300 ease-snappy group-data-[copied=true]:-rotate-45 group-data-[copied=true]:scale-50 group-data-[copied=true]:opacity-0 motion-reduce:transition-none" />
+            <CheckIcon className="absolute inset-0 scale-50 opacity-0 transition-[opacity,scale] duration-300 ease-snappy motion-reduce:transition-none group-data-[copied=true]:scale-100 group-data-[copied=true]:opacity-100" />
           </span>
           <span className="inline-grid justify-items-center">
-            <span className="col-start-1 row-start-1 transition-[opacity,translate] duration-200 ease-snappy group-data-[copied=true]:-translate-y-[40%] group-data-[copied=true]:opacity-0">
+            <span className="col-start-1 row-start-1 transition-[opacity,translate] duration-200 ease-snappy motion-reduce:transition-none group-data-[copied=true]:-translate-y-[40%] group-data-[copied=true]:opacity-0">
               Copiar enlace
             </span>
             <span aria-hidden="true" className="col-start-1 row-start-1 -my-[0.15em] overflow-clip py-[0.15em]">
@@ -77,7 +77,7 @@ export function ShareLink({ brokenLink }: { brokenLink: boolean }) {
                 <span
                   key={index}
                   style={{ transitionDelay: `${index * 30}ms` }}
-                  className="inline-block translate-y-[110%] rotate-[8deg] opacity-0 transition-[opacity,translate,rotate] duration-[420ms] ease-snappy group-data-[copied=true]:translate-y-0 group-data-[copied=true]:rotate-0 group-data-[copied=true]:opacity-100 motion-reduce:transition-none"
+                  className="inline-block translate-y-[110%] rotate-[8deg] opacity-0 transition-[opacity,translate,rotate] duration-300 ease-snappy group-data-[copied=true]:translate-y-0 group-data-[copied=true]:rotate-0 group-data-[copied=true]:opacity-100 motion-reduce:transition-none"
                 >
                   {char}
                 </span>

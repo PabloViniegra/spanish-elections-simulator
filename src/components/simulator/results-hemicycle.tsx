@@ -41,7 +41,7 @@ export function ResultsHemicycle({ ranked, stale = false, selected, baseLabel }:
         viewBox={`0 0 ${HEMICYCLE_WIDTH} ${HEMICYCLE_HEIGHT}`}
         role="img"
         aria-label={`Hemiciclo de 350 escaños: ${summary}`}
-        className={`w-full transition-opacity ${stale ? "opacity-40" : ""}`}
+        className={`w-full transition-opacity duration-150 ${stale ? "opacity-40" : ""}`}
       >
         {seats.map(({ x, y }, index) => (
           <circle

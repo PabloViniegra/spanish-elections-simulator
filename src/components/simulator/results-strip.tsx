@@ -32,12 +32,12 @@ export function ResultsStrip({ ranked, stale = false, selected }: ResultsStripPr
   return (
     <a href={`#${RESULTS_ID}`} className="sticky top-0 z-10 block h-15 border-b border-hairline bg-canvas lg:hidden">
       <span className="sr-only">Ver el reparto de escaños</span>
-      <div aria-hidden="true" className={`mx-auto flex h-full max-w-content flex-col justify-center gap-1.5 px-5 transition-opacity sm:px-8 ${stale ? "opacity-40" : ""}`}>
+      <div aria-hidden="true" className={`mx-auto flex h-full max-w-content flex-col justify-center gap-1.5 px-5 transition-opacity duration-150 sm:px-8 ${stale ? "opacity-40" : ""}`}>
         <div className="relative flex h-3 overflow-hidden rounded-full bg-hairline">
           {ranked.map((bloc) => (
             <span
               key={bloc.id}
-              className="h-full transition-[width,opacity] duration-700 motion-reduce:transition-none"
+              className="h-full transition-[width,opacity] duration-150 motion-reduce:transition-none"
               style={{ width: `${(bloc.seats / TOTAL_SEATS) * 100}%`, backgroundColor: bloc.colour, opacity: picked.length > 0 && !selected.has(bloc.id) ? 0.2 : 1 }}
             />
           ))}

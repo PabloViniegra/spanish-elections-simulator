@@ -12,7 +12,7 @@ export function ModeSwitch({ mode, onChange }: { mode: InputMode; onChange: (mod
       {/* One pill slides under the pressed option instead of two fading. */}
       <span
         aria-hidden="true"
-        className={`absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-ink transition-transform duration-500 motion-reduce:transition-none ${mode === "province" ? "translate-x-full" : ""}`}
+        className={`absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-ink transition-transform duration-250 ease-in-out motion-reduce:transition-none ${mode === "province" ? "translate-x-full" : ""}`}
       />
       {MODES.map((option) => (
         <button
@@ -20,7 +20,7 @@ export function ModeSwitch({ mode, onChange }: { mode: InputMode; onChange: (mod
           type="button"
           aria-pressed={mode === option.mode}
           onClick={() => onChange(option.mode)}
-          className="relative min-h-11 rounded-full px-4 text-caption font-semibold transition-[color,scale] duration-500 active:scale-[0.97] active:duration-150 aria-pressed:text-on-dark motion-reduce:transition-none"
+          className="relative min-h-11 rounded-full px-4 text-caption font-semibold transition-[color,scale] duration-150 active:scale-[0.97] aria-pressed:text-on-dark motion-reduce:transition-none"
         >
           {option.label}
         </button>
