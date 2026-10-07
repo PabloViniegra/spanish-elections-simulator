@@ -5,6 +5,8 @@ import type { dhondtDetail } from "@/lib/engine/last-seat";
 import { formatVotes } from "./format";
 import { QuotientTable } from "./quotient-table";
 
+export const DHONDT_ID = "reparto-dhondt";
+
 type DhondtDetailProps = {
   blocs: readonly Bloc[];
   provinces: readonly { code: string; name: string }[];
@@ -24,14 +26,14 @@ export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, 
   const province = provinces.find((candidate) => candidate.code === code)?.name;
   const { rows, lastSeat, runnerUp } = detail;
   return (
-    <section aria-labelledby="dhondt-title" className="flex flex-col gap-4">
+    <section id={DHONDT_ID} aria-labelledby="dhondt-title" className="flex scroll-mt-16 flex-col gap-4">
       <div className="flex flex-col gap-1">
         <h2 id="dhondt-title" className="text-tagline">
           Reparto D’Hondt por provincia
         </h2>
         <p className="max-w-prose text-caption text-pretty text-ink-muted-80">
-          Los votos simulados de cada partido que pasa el 3 % se dividen entre 1, 2, 3… y los escaños van a los cocientes
-          más altos.{" "}
+          Cada partido que pasa el 3 % divide sus votos simulados entre 1, 2, 3… Cada resultado es un cociente, y los
+          escaños van a los cocientes más altos.{" "}
           <Link href="/como-funciona" className="text-ink underline underline-offset-2">
             Cómo funciona
           </Link>
@@ -39,7 +41,7 @@ export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, 
       </div>
       <SelectField
         label="Provincia"
-        hint={deputies === 1 ? "Elige 1 diputado." : `Elige ${deputies} diputados.`}
+        hint={deputies === 1 ? "1 diputado." : `${deputies} diputados.`}
         value={code}
         onChange={(event) => onSelect(event.target.value)}
         options={provinces.map((option) => ({ value: option.code, label: option.name }))}
@@ -56,11 +58,11 @@ export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, 
             </div>
             {runnerUp && (
               <div>
-                <dt className="text-ink-muted-80">Siguiente cociente</dt>
+                <dt className="text-ink-muted-80">Primero que se queda fuera</dt>
                 <dd className="font-semibold">
                   {nameOf(runnerUp.candidacyId)}, con {formatVotes(runnerUp.quotient)}
                   <span className="block font-normal">
-                    Le faltan {formatVotes(runnerUp.votesToFlip)} votos para quitárselo a {nameOf(lastSeat.candidacyId)}.
+                    Le habrían hecho falta {formatVotes(runnerUp.votesToFlip)} votos más para ganar ese escaño a {nameOf(lastSeat.candidacyId)}.
                   </span>
                 </dd>
               </div>

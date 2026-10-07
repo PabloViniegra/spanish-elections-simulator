@@ -9,13 +9,13 @@ type ProvinceTooltipProps = ProvinceSplitProps & {
   y: number;
   width: number;
   height: number;
-  // Provincial mode: a click edits the province under the cursor.
-  pickable: boolean;
+  // What a click does to the province under the cursor, if anything.
+  hint: string | null;
 };
 
 // Follows the mouse over the map. Visual only: the panel below and the table
 // carry the same figures for touch screens and assistive technology.
-export function ProvinceTooltip({ province, x, y, width, height, pickable }: ProvinceTooltipProps) {
+export function ProvinceTooltip({ province, x, y, width, height, hint }: ProvinceTooltipProps) {
   // Open towards the middle of the map so the card never leaves it.
   const left = x > width / 2;
   const above = y > height / 2;
@@ -30,7 +30,7 @@ export function ProvinceTooltip({ province, x, y, width, height, pickable }: Pro
       }}
     >
       <ProvinceSplit province={province} />
-      {pickable && <p className="mt-2 text-ink-muted-80">Haz clic para editar esta provincia.</p>}
+      {hint && <p className="mt-2 text-ink-muted-80">{hint}</p>}
     </div>
   );
 }

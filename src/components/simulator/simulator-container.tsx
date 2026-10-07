@@ -14,7 +14,7 @@ import { provinces } from "@/lib/provinces";
 import { seats2026 } from "@/lib/seats-2026";
 import { BaseSelect } from "./base-select";
 import { CoalitionCalculator } from "./coalition-calculator";
-import { DhondtDetail } from "./dhondt-detail";
+import { DHONDT_ID, DhondtDetail } from "./dhondt-detail";
 import { HowSeatsWork } from "./how-seats-work";
 import { type InputMode, ModeSwitch } from "./mode-switch";
 import { NationalInputs } from "./national-inputs";
@@ -108,6 +108,13 @@ export function SimulatorContainer() {
     const name = provinces.find((option) => option.code === code)?.name;
     restart({ ...scenario, provinces: rest.length > 0 ? Object.fromEntries(rest) : undefined }, `${name} vuelve a la proyección.`);
   };
+  // The detail sits below the map, off-screen on a phone: bring it back.
+  const showDetail = (next: string) => {
+    setCode(next);
+    const panel = document.getElementById(DHONDT_ID);
+    panel?.scrollIntoView();
+    panel?.querySelector("select")?.focus({ preventScroll: true });
+  };
   const result = simulation.results.find((constituency) => constituency.code === code)!;
   // Coalition picks carry over between bases where the bloc still exists.
   const picked = new Set([...selected].filter((blocId) => blocs.some((bloc) => bloc.id === blocId)));
@@ -124,7 +131,7 @@ export function SimulatorContainer() {
   return (
     <>
       <ResultsStrip ranked={ranked} stale={stale} selected={picked} />
-      <div className="mx-auto grid max-w-content gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-x-16 lg:gap-y-6">
+      <div className="mx-auto grid max-w-content grid-cols-[minmax(0,1fr)] gap-10 [&>*]:min-w-0 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-x-16 lg:gap-y-6">
         <div className="flex flex-col gap-6">
           <BaseSelect bases={baseOptions} value={base.election.id} onChange={changeBase} />
           <ModeSwitch mode={mode} onChange={setMode} />
@@ -210,6 +217,7 @@ export function SimulatorContainer() {
             selected={mode === "province" ? code : null}
             lockedCodes={lockedCodes}
             onPick={mode === "province" ? setCode : undefined}
+            onDetail={showDetail}
           />
         </div>
         <div className="lg:col-start-1">

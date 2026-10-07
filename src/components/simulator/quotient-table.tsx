@@ -20,7 +20,7 @@ const isCell = (target: { candidacyId: string; divisor: number } | null, candida
 export function QuotientTable({ caption, rows, blocs, last, runnerUp }: QuotientTableProps) {
   const columns = rows[0]?.quotients.length ?? 0;
   return (
-    <div role="region" aria-label={caption} tabIndex={0} className="overflow-x-auto focus-visible:outline-offset-2">
+    <div role="region" aria-label={caption} tabIndex={0} className="relative overflow-x-auto focus-visible:outline-offset-2">
       <table className="w-full border-collapse text-caption tabular-nums">
         <caption className="sr-only">{caption}</caption>
         <thead>
@@ -73,7 +73,7 @@ export function QuotientTable({ caption, rows, blocs, last, runnerUp }: Quotient
                         </span>
                       )}
                       {lastSeat && <span className="sr-only">, último escaño</span>}
-                      {next && <span className="block text-fine-print font-normal">siguiente</span>}
+                      {next && <span className="block text-fine-print font-normal">queda fuera</span>}
                     </td>
                   );
                 })}

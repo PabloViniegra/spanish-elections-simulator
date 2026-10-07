@@ -34,21 +34,27 @@ type ProvinceSeatsProps = {
   // The province shown is the one being edited.
   editing: boolean;
   onEdit: () => void;
+  onDetail: () => void;
 };
 
 // Below the map: what a mouse sees in the tooltip, for touch screens, and in
 // provincial mode which province the inputs edit, since they may be off-screen.
-export function ProvinceSeats({ province, editing, onEdit }: ProvinceSeatsProps) {
+export function ProvinceSeats({ province, editing, onEdit, onDetail }: ProvinceSeatsProps) {
   return (
     <div className="min-h-16 text-caption">
       {province ? (
         <>
           <ProvinceSplit province={province} />
-          {editing && (
-            <button type="button" onClick={onEdit} className="min-h-11 text-primary underline underline-offset-2">
-              Editar el voto en {province.name}
+          <div className="flex flex-wrap gap-x-5">
+            {editing && (
+              <button type="button" onClick={onEdit} className="min-h-11 text-primary underline underline-offset-2">
+                Editar el voto en {province.name}
+              </button>
+            )}
+            <button type="button" onClick={onDetail} className="min-h-11 text-primary underline underline-offset-2">
+              Ver el reparto D’Hondt de {province.name}
             </button>
-          )}
+          </div>
         </>
       ) : (
         <p className="max-w-prose text-ink-muted-80">Pasa el cursor o toca una provincia para ver su reparto. Todas están en la tabla de abajo.</p>

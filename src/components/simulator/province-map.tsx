@@ -31,13 +31,15 @@ type ProvinceMapProps = {
   onActive: (code: string | null) => void;
   // A tap or click on a province, to edit it in provincial mode.
   onPick?: (code: string) => void;
+  // A mouse click where nothing is edited: take the reader to the D'Hondt detail.
+  onDetail?: (code: string) => void;
 };
 
 // FR-07: the 52 constituencies, Canary Islands in an inset. A mouse shows the
 // province under it and clears it on leaving it; a tap pins it, and in
 // national mode a second tap clears it. Seat ties are striped with the colours of the tied
 // blocs, so no bloc wins a province by votes alone.
-export function ProvinceMap({ leaders, active, selected, lockedCodes, label, onActive, onPick }: ProvinceMapProps) {
+export function ProvinceMap({ leaders, active, selected, lockedCodes, label, onActive, onPick, onDetail }: ProvinceMapProps) {
   const pointer = useRef("mouse");
   const ties = [
     ...new Map(
@@ -65,7 +67,8 @@ export function ProvinceMap({ leaders, active, selected, lockedCodes, label, onA
     onPointerLeave: leave,
     onClick: () => {
       onActive(pointer.current !== "mouse" && active === code && !onPick ? null : code);
-      onPick?.(code);
+      if (onPick) onPick(code);
+      else if (pointer.current === "mouse") onDetail?.(code);
     },
   });
   const outline = (code: string | null, width: number) => {

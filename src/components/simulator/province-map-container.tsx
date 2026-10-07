@@ -22,12 +22,14 @@ type ProvinceMapContainerProps = {
   selected: string | null;
   lockedCodes: readonly string[];
   onPick?: (code: string) => void;
+  // Takes the reader to the D'Hondt detail of a province.
+  onDetail: (code: string) => void;
 };
 
 // FR-07: provinces coloured by the bloc with the most seats, ties striped,
 // with the split of the one pointed at in a tooltip or tapped in a panel, a count of provinces per bloc and a
 // table for every province.
-export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCodes, onPick }: ProvinceMapContainerProps) {
+export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCodes, onPick, onDetail }: ProvinceMapContainerProps) {
   const [active, setActive] = useState<string | null>(null);
   // Mouse position over the map, for the tooltip; null for touch screens.
   const [cursor, setCursor] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
@@ -107,8 +109,15 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
             label={`Mapa del partido con más escaños en cada provincia: ${summary}.`}
             onActive={setActive}
             onPick={onPick}
+            onDetail={onDetail}
           />
-          {hovered && <ProvinceTooltip province={hovered} {...cursor} pickable={Boolean(onPick) && hovered.code !== selected} />}
+          {hovered && (
+            <ProvinceTooltip
+              province={hovered}
+              {...cursor}
+              hint={onPick ? (hovered.code === selected ? null : "Haz clic para editar esta provincia.") : "Haz clic para ver su reparto D’Hondt."}
+            />
+          )}
         </div>
         <p className="max-w-prose text-caption text-ink-muted-80">
           Las rayas finas marcan un empate en escaños. El tamaño no refleja los escaños: {largest.name} elige {largest.deputies} y {smallest.name},{" "}
@@ -118,6 +127,7 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
           province={rows.find((row) => row.code === shown) ?? null}
           editing={shown !== null && shown === selected}
           onEdit={edit}
+          onDetail={() => shown && onDetail(shown)}
         />
         <ProvinceTable
           rows={rows}
