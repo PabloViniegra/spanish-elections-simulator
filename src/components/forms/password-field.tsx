@@ -27,7 +27,7 @@ export function PasswordField({ label, hint, error, ...inputProps }: PasswordFie
           />
           <button
             type="button"
-            aria-pressed={visible}
+            aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
             onClick={() => setVisible((current) => !current)}
             className="absolute inset-y-0 right-1 rounded-sm px-4 text-caption text-primary"
           >
