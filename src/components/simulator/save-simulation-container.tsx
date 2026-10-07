@@ -1,10 +1,13 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useActionState } from "react";
+import { notify } from "@/components/feedback/notify";
 import { useFocusOnError } from "@/components/forms/use-focus-on-error";
 import type { Scenario } from "@/lib/scenario/types";
 import { encodeScenario } from "@/lib/scenario/url";
 import { saveSimulation } from "@/lib/simulations/actions";
+import type { SaveState } from "@/lib/simulations/forms";
 import { SaveSimulation } from "./save-simulation";
 
 type SaveSimulationContainerProps = {
@@ -16,7 +19,18 @@ type SaveSimulationContainerProps = {
 
 // Keyed by the scenario where it is used, so "saved" never outlives an edit.
 export function SaveSimulationContainer({ scenario, ranked, stale }: SaveSimulationContainerProps) {
-  const [state, action, pending] = useActionState(saveSimulation, undefined);
+  const router = useRouter();
+  const [state, action, pending] = useActionState(async (previous: SaveState, formData: FormData) => {
+    const next = await saveSimulation(previous, formData);
+    if (next?.saved) {
+      notify.success({
+        title: "Simulación guardada",
+        description: `«${next.saved}» ya está en tu perfil.`,
+        button: { title: "Ver mis simulaciones", onClick: () => router.push("/profile") },
+      });
+    }
+    return next;
+  }, undefined);
   const ref = useFocusOnError(state);
   const defaultName = ranked
     .slice(0, 3)

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { notify } from "@/components/feedback/notify";
 import type { Bloc } from "@/lib/elections/types";
 import type { ConstituencyResult } from "@/lib/engine/types";
 import type { Scenario } from "@/lib/scenario/types";
@@ -34,31 +35,35 @@ type ExportResultsContainerProps = {
 
 export function ExportResultsContainer({ results, blocs, ranked, scenario, baseId, baseLabel, stale }: ExportResultsContainerProps) {
   const [busy, setBusy] = useState(false);
-  const [message, setMessage] = useState("");
   const filename = `${baseId}-${exportScenarioId(scenario)}`;
   const csv = () => {
     if (stale || busy) return;
     try {
       download(new Blob([resultsCsv(results, blocs)], { type: "text/csv;charset=utf-8" }), `simulacion-${filename}.csv`);
-      setMessage("Descarga del CSV iniciada.");
+      notify.success({ title: "CSV descargado", description: "Resultados por provincia y bloque." });
     } catch {
-      setMessage("No se ha podido descargar el CSV. Vuelve a intentarlo.");
+      notify.error({ title: "No se ha podido descargar el CSV", description: "Vuelve a intentarlo." });
     }
   };
   const png = async () => {
     if (stale || busy) return;
     setBusy(true);
-    setMessage("");
+    const url = new URL(window.location.href);
+    url.searchParams.set(SCENARIO_PARAM, encodeScenario(scenario));
     try {
-      const url = new URL(window.location.href);
-      url.searchParams.set(SCENARIO_PARAM, encodeScenario(scenario));
-      download(await hemicyclePng(ranked, baseLabel, url.href), `hemiciclo-${filename}.png`);
-      setMessage("Descarga del PNG iniciada.");
+      await notify.promise(
+        hemicyclePng(ranked, baseLabel, url.href).then((blob) => download(blob, `hemiciclo-${filename}.png`)),
+        {
+          loading: { title: "Preparando PNG…" },
+          success: { title: "PNG descargado", description: "El hemiciclo con el enlace a esta simulación." },
+          error: { title: "No se ha podido descargar el PNG", description: "Vuelve a intentarlo." },
+        },
+      );
     } catch {
-      setMessage("No se ha podido descargar el PNG. Vuelve a intentarlo.");
+      // The toast already says so; the buttons come back for a retry.
     } finally {
       setBusy(false);
     }
   };
-  return <ExportResults stale={stale} busy={busy} message={message} onCsv={csv} onPng={png} />;
+  return <ExportResults stale={stale} busy={busy} onCsv={csv} onPng={png} />;
 }

@@ -283,6 +283,13 @@
       opacity 200ms var(--ease-snappy);
   }
 
+  /* Profile: each saved chamber fills seat by seat from the left, the list
+     one chamber after another (--row is capped so the last ones don't wait). */
+  .chamber-fill {
+    animation: chamber-fill 450ms var(--ease-snappy) both;
+    animation-delay: calc(150ms + var(--row) * 110ms + var(--i) * 1.3ms);
+  }
+
   /* Disclosures open and close by height where the browser can animate it. */
   :root {
     interpolate-size: allow-keywords;
@@ -304,6 +311,12 @@
 @keyframes tick {
   from {
     opacity: 0;
+  }
+}
+
+@keyframes chamber-fill {
+  from {
+    fill: var(--color-hairline);
   }
 }
 
@@ -512,4 +525,17 @@
   .menu-panel > :nth-child(3) {
     animation-delay: 90ms;
   }
+}
+
+/* Toasts (Sileo) sit on an ink pill, so states take the on-dark tones; on the
+   viewport, since Sileo injects its own :root defaults after this sheet. */
+[data-sileo-viewport] {
+  --sileo-state-success: #30d158;
+  --sileo-state-error: #ff453a;
+  --sileo-state-warning: #ffd60a;
+  --sileo-state-info: var(--color-primary-on-dark);
+  --sileo-state-action: var(--color-primary-on-dark);
+  --sileo-state-loading: var(--color-on-dark-muted);
+  --sileo-duration: 500ms;
+  font-family: var(--font-sans);
 }

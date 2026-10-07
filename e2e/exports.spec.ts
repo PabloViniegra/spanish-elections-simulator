@@ -35,7 +35,7 @@ test("downloads the shared scenario as CSV and PNG on a narrow screen", async ({
   const rows = csv.slice(1).trim().split("\r\n").slice(1).map((row) => row.split(","));
   expect(new Set(rows.map((row) => row[0])).size).toBe(52);
   expect(rows.reduce((sum, row) => sum + Number(row[6]), 0)).toBe(350);
-  await expect(page.getByText("Descarga del CSV iniciada.", { exact: true })).toBeVisible();
+  await expect(page.getByText("CSV descargado", { exact: true })).toBeVisible();
 
   const pngPending = page.waitForEvent("download");
   await page.getByRole("button", { name: "Descargar PNG", exact: true }).click();
@@ -49,7 +49,7 @@ test("downloads the shared scenario as CSV and PNG on a narrow screen", async ({
   const drawnText = await page.evaluate(() => window.__exportDrawnText?.join("") ?? "");
   expect(drawnText).toContain(page.url());
   await pngDownload.saveAs(test.info().outputPath("hemicycle.png"));
-  await expect(page.getByText("Descarga del PNG iniciada.", { exact: true })).toBeVisible();
+  await expect(page.getByText("PNG descargado", { exact: true })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   const box = await csvButton.boundingBox();
   expect(box!.height).toBeGreaterThanOrEqual(44);
@@ -62,7 +62,7 @@ test("reports PNG failures and allows retry", async ({ page }) => {
   });
   await page.goto(`/simulator?e=${SHARED}`);
   await page.getByRole("button", { name: "Descargar PNG", exact: true }).click();
-  await expect(page.getByText("No se ha podido descargar el PNG. Vuelve a intentarlo.", { exact: true })).toBeVisible();
+  await expect(page.getByText("No se ha podido descargar el PNG", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Descargar PNG", exact: true })).toBeEnabled();
   await expect(page.getByRole("button", { name: "Descargar CSV", exact: true })).toBeEnabled();
 });

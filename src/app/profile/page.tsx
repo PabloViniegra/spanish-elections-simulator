@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/home/site-header";
+import { sectionTitle } from "@/components/home/type";
 import { ProfileDetails } from "@/components/profile/profile-details";
 import { SimulationList } from "@/components/profile/simulation-list";
 import { requireSession } from "@/lib/auth/session";
@@ -17,16 +18,18 @@ const savedAt = (date: Date) => `${longDate(date)}, a las ${date.toLocaleTimeStr
 export default async function ProfilePage() {
   const { user } = await requireSession("/profile");
   const saved = await listSimulations(user.id);
+  const username = user.displayUsername ?? user.username ?? user.name;
   return (
     <>
       <SiteHeader username={user.name} current="profile" />
       <main id="contenido" className="flex-1">
-        <div className="bg-canvas-parchment">
-          <div className="mx-auto max-w-content px-5 py-10 sm:px-8">
-            <h1 className="text-display-lg text-balance">Mi perfil</h1>
+        <div className="bg-surface-black text-on-dark">
+          <div className="mx-auto flex max-w-content flex-col gap-3 px-5 pt-14 pb-12 sm:px-8 lg:pt-20 lg:pb-16">
+            <h1 className={`hero-rise [--c:0] ${sectionTitle}`}>Mi perfil</h1>
+            <p className="hero-rise text-lead-airy break-words text-on-dark-muted [--c:1]">{username}</p>
           </div>
         </div>
-        <div className="mx-auto grid max-w-content grid-cols-[minmax(0,1fr)] gap-10 px-5 py-10 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-start lg:gap-16">
+        <div className="mx-auto grid max-w-content grid-cols-[minmax(0,1fr)] gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-start lg:gap-16 lg:py-16">
           <SimulationList
             simulations={saved.map(({ id, name, scenario, createdAt }) => ({
               id,
@@ -37,7 +40,7 @@ export default async function ProfilePage() {
             }))}
           />
           <ProfileDetails
-            username={user.displayUsername ?? user.username ?? user.name}
+            username={username}
             email={user.email}
             province={provinces.find(({ code }) => code === user.province)?.name}
             usageProfile={usageProfileLabels[usageProfile.catch("citizen").parse(user.usageProfile)]}
