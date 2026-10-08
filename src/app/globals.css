@@ -123,6 +123,23 @@
   }
 }
 
+/* Frosted bar over scrolling content (DESIGN.md backdrop blur). Opaque when
+   the blur is missing or transparency is unwanted. Safari lacks
+   prefers-reduced-transparency, so glass is the default, not the opt-in. */
+@utility glass {
+  background-color: var(--color-canvas);
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    background-color: rgb(255 255 255 / 0.8);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    backdrop-filter: saturate(180%) blur(20px);
+    @media (prefers-reduced-transparency: reduce), (forced-colors: active) {
+      background-color: var(--color-canvas);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+}
+
 @layer base {
   ::selection {
     @apply bg-primary text-on-primary;

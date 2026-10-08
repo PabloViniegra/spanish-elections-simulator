@@ -36,7 +36,7 @@ export function summaryOf(ranked: ResultsStripProps["ranked"], selected: Readonl
 export function ResultsStrip({ ranked, stale = false, selected }: ResultsStripProps) {
   const { picked, summary } = summaryOf(ranked, selected);
   return (
-    <a href={`#${RESULTS_ID}`} className="sticky top-0 z-10 block h-15 border-b border-hairline bg-canvas lg:hidden">
+    <a href={`#${RESULTS_ID}`} className="glass sticky top-0 z-10 block h-15 border-b border-hairline lg:hidden">
       <span className="sr-only">Ver el reparto de escaños</span>
       <div aria-hidden="true" className={`mx-auto flex h-full max-w-content flex-col justify-center gap-1.5 px-5 transition-opacity duration-150 sm:px-8 ${stale ? "opacity-65" : ""}`}>
         <div className="relative flex h-3 overflow-hidden rounded-full bg-hairline">
