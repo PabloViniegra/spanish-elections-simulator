@@ -1,4 +1,5 @@
 import { baseById } from "@/lib/elections/bases";
+import { rankedBlocs, scenarioBlocs } from "@/lib/scenario/blocs";
 import { restoreScenario } from "@/lib/scenario/restore";
 import { simulate } from "@/lib/scenario/simulate";
 import { seats2026 } from "@/lib/seats-2026";
@@ -9,10 +10,7 @@ export function summarizeSimulation(param: string) {
   const scenario = restoreScenario(param);
   const base = scenario && baseById(scenario.baseElectionId);
   if (!scenario || !base) return null;
-  const { seats } = simulate(scenario, base.election, base.blocs, seats2026);
-  const ranked = base.blocs
-    .map((bloc) => ({ ...bloc, seats: seats.get(bloc.id) ?? 0 }))
-    .filter((bloc) => bloc.seats > 0)
-    .sort((a, b) => b.seats - a.seats);
-  return { baseLabel: base.label, ranked };
+  const blocs = scenarioBlocs(scenario, base);
+  const { seats } = simulate(scenario, base.election, blocs, seats2026);
+  return { baseLabel: base.label, ranked: rankedBlocs(blocs, seats) };
 }

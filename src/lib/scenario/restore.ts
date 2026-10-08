@@ -7,5 +7,9 @@ const provinceCodes = new Set(provinces.map(({ code }) => code));
 
 // A shared link fits the base election it names, or none (FR-01, FR-10).
 export function restoreScenario(param: string) {
-  return bases.map((base) => decodeScenario(param, baselineOf(base).scenario, provinceCodes)).find(Boolean) ?? null;
+  return (
+    bases
+      .map((base) => decodeScenario(param, baselineOf(base).scenario, provinceCodes, new Set(base.election.candidacies.map(({ id }) => id))))
+      .find(Boolean) ?? null
+  );
 }

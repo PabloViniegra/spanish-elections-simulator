@@ -1,10 +1,11 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { baseById, bases, defaultBase } from "@/lib/elections/bases";
 import { dhondtDetail } from "@/lib/engine/last-seat";
-import { baselineOf } from "@/lib/scenario/baselines";
+import { baselineFor, baselineOf } from "@/lib/scenario/baselines";
+import { rankedBlocs, scenarioBlocs } from "@/lib/scenario/blocs";
 import { minimalWinningCoalitions } from "@/lib/scenario/coalitions";
 import { adjustBlank, adjustShare, rebalance } from "@/lib/scenario/rebalance";
 import { fitsInFull, othersShare, provinceSeats, provinceShares, simulate } from "@/lib/scenario/simulate";
@@ -14,6 +15,7 @@ import { encodeScenario, SCENARIO_PARAM, simulatorHref } from "@/lib/scenario/ur
 import { provinces } from "@/lib/provinces";
 import { seats2026 } from "@/lib/seats-2026";
 import { BaseSelect } from "./base-select";
+import { BlocManagerContainer } from "./bloc-manager-container";
 import { CoalitionCalculator } from "./coalition-calculator";
 import { DHONDT_ID, DhondtDetail } from "./dhondt-detail";
 import { ExportResultsContainer } from "./export-results-container";
@@ -30,6 +32,7 @@ import { ShareLink } from "./share-link";
 import { SharedResults } from "./shared-results";
 import { UndoNotice } from "./undo-notice";
 import { useScenario } from "./use-scenario";
+import { useScenarioAddress } from "./use-scenario-address";
 
 const baseOptions = bases.map(({ election, label }) => ({ id: election.id, label }));
 // Anchor field for the blank vote, apart from any bloc id.
@@ -46,8 +49,11 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
   const [brokenLink] = useState(Boolean(shared) && !restored);
   const { scenario, valid, notice, update, discard, undo } = useScenario(restored ?? baselineOf(defaultBase).scenario);
   const base = baseById(valid.baseElectionId) ?? defaultBase;
-  const { blocs } = base;
-  const baseline = baselineOf(base);
+  // Results follow the blocs of the last valid scenario, the inputs those
+  // being edited (FR-11).
+  const blocs = scenarioBlocs(valid, base);
+  const editBlocs = scenarioBlocs(scenario, base);
+  const baseline = baselineFor(base, blocs);
   const scenarioParam = valid === baselineOf(defaultBase).scenario ? null : encodeScenario(valid);
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [mode, setMode] = useState<InputMode>("national");
@@ -71,17 +77,17 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
     setAnchor(null);
     discard(next, message);
   };
+  // Edits that change what the anchored shares refer to start a fresh one.
+  const updateUnanchored = (next: Scenario) => {
+    setAnchor(null);
+    update(next);
+  };
   const reset = () => restart(baseline.scenario, `Escenario restablecido a los resultados de ${base.label}.`);
   const changeBase = (id: string) => {
     const next = baseById(id);
     if (next) restart(baselineOf(next).scenario, `Votos de partida: generales de ${next.label}.`);
   };
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    if (scenarioParam === null) url.searchParams.delete(SCENARIO_PARAM);
-    else url.searchParams.set(SCENARIO_PARAM, scenarioParam);
-    window.history.replaceState(null, "", url);
-  }, [scenarioParam]);
+  useScenarioAddress(scenarioParam);
 
   const stale = !fitsInFull(scenario);
   const simulation = simulate(valid, base.election, blocs, seats2026);
@@ -91,9 +97,9 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
   const projected = provinceShares(simulation.provinces.get(code)!, blocs);
   const province = scenario.provinces?.[code] ?? projected;
   // Regional blocs only appear where they ran in the base election (P-05) or
-  // the user gave them votes.
-  const provinceBlocs = blocs.filter(
-    (bloc) => (baseline.simulation.provinces.get(code)?.get(bloc.id) ?? 0) > 0 || (province.shares[bloc.id] ?? 0) > 0,
+  // the user gave them votes; blocs without candidacies run everywhere.
+  const provinceBlocs = editBlocs.filter((bloc) =>
+    bloc.candidacyIds.length === 0 || (baseline.simulation.provinces.get(code)?.get(bloc.id) ?? 0) > 0 || (province.shares[bloc.id] ?? 0) > 0,
   );
   const editProvince = (next: ProvinceShares) => update({ ...scenario, provinces: { ...scenario.provinces, [code]: next } });
   const unlockProvince = () => {
@@ -116,10 +122,7 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
     if (!next.delete(blocId)) next.add(blocId);
     setSelected(next);
   };
-  const ranked = blocs
-    .map((bloc) => ({ ...bloc, seats: simulation.seats.get(bloc.id) ?? 0 }))
-    .filter((bloc) => bloc.seats > 0)
-    .sort((a, b) => b.seats - a.seats);
+  const ranked = rankedBlocs(blocs, simulation.seats);
 
   return (
     <>
@@ -138,7 +141,7 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
                 <div key={mode} className="settle">
                   {mode === "national" ? (
                     <NationalInputs
-                      blocs={blocs}
+                      blocs={editBlocs}
                       base={base}
                       shares={scenario.shares}
                       blank={scenario.blank}
@@ -154,10 +157,7 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
                         update(edit(scenario, blocId, (base) => adjustShare(base, blocId, value), { ...scenario, shares: { ...scenario.shares, [blocId]: value } }))
                       }
                       onBlankChange={(blank) => update(edit(scenario, BLANK_FIELD, (base) => adjustBlank(base, blank), { ...scenario, blank }))}
-                      onRebalance={() => {
-                        setAnchor(null);
-                        update(rebalance(scenario, baseline.others, keptField));
-                      }}
+                      onRebalance={() => updateUnanchored(rebalance(scenario, baseline.others, keptField))}
                       onReset={reset}
                     />
                   ) : (
@@ -192,6 +192,12 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
                     />
                   )}
                 </div>
+                <BlocManagerContainer
+                  base={base}
+                  scenario={scenario}
+                  onChange={updateUnanchored}
+                  onRestart={restart}
+                />
               </>
             ) : (
               <SharedResults blocs={blocs} baseLabel={base.label} shares={scenario.shares} blank={scenario.blank} others={othersShare(scenario)} seats={simulation.seats} baseSeats={baseline.simulation.seats} next={shared ? simulatorHref(shared) : "/simulator"} />

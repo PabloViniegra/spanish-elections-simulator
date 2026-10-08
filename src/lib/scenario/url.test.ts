@@ -9,6 +9,7 @@ import { decodeScenario, encodeScenario, exceedsShareUrlLimit, SHARE_URL_LIMIT, 
 
 const base = baseScenario(election2023, blocs2023);
 const codes = new Set(election2023.constituencies.map(({ code }) => code));
+const candidacies = new Set(election2023.candidacies.map(({ id }) => id));
 const link = (data: Omit<Scenario, "schemaVersion"> & { schemaVersion: number }) => `v1.${compressToEncodedURIComponent(JSON.stringify(data))}`;
 // A v1 link (PP 35%, PSOE 29.74%) frozen when the format shipped (NFR-10).
 const V1_FIXTURE =
@@ -34,7 +35,7 @@ describe("scenario URL (FR-10)", () => {
       });
     fc.assert(
       fc.property(scenarios, (scenario) => {
-        expect(decodeScenario(encodeScenario(scenario), base, codes)).toEqual(scenario);
+        expect(decodeScenario(encodeScenario(scenario), base, codes, candidacies)).toEqual(scenario);
       }),
     );
   });
@@ -58,32 +59,46 @@ describe("scenario URL (FR-10)", () => {
   });
 
   it("decodes links from every shipped schema version", () => {
-    expect(decodeScenario(V1_FIXTURE, base, codes)).toEqual({ ...base, shares: { ...base.shares, pp: 3500, psoe: 2974 } });
+    expect(decodeScenario(V1_FIXTURE, base, codes, candidacies)).toEqual({ ...base, shares: { ...base.shares, pp: 3500, psoe: 2974 } });
   });
 
   it("restores locked provinces", () => {
     const scenario = { ...base, provinces: { "28": { shares: { pp: 4500, psoe: 2500 }, blank: 80 } } };
-    expect(decodeScenario(encodeScenario(scenario), base, codes)).toEqual(scenario);
+    expect(decodeScenario(encodeScenario(scenario), base, codes, candidacies)).toEqual(scenario);
   });
 
   it("rejects locked provinces that do not fit", () => {
     const province = { shares: { pp: 4000 }, blank: 100 };
-    expect(decodeScenario(link({ ...base, provinces: { "99": province } }), base, codes)).toBeNull();
-    expect(decodeScenario(link({ ...base, provinces: { "28": { ...province, shares: { ciudadanos: 100 } } } }), base, codes)).toBeNull();
-    expect(decodeScenario(link({ ...base, provinces: { "28": { ...province, shares: { pp: 9950 } } } }), base, codes)).toBeNull();
+    expect(decodeScenario(link({ ...base, provinces: { "99": province } }), base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(link({ ...base, provinces: { "28": { ...province, shares: { ciudadanos: 100 } } } }), base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(link({ ...base, provinces: { "28": { ...province, shares: { pp: 9950 } } } }), base, codes, candidacies)).toBeNull();
+  });
+
+  it("restores edited blocs and rejects lists that do not fit the election (FR-11)", () => {
+    const blocs = [...blocs2023.slice(0, -1), { id: "n1", name: "Nuevo", colour: "#123abc", candidacyIds: ["74"] }];
+    const { upn: _, ...shares } = base.shares;
+    const edited = { ...base, shares: { ...shares, n1: 50 }, blocs };
+    expect(decodeScenario(encodeScenario(edited), base, codes, candidacies)).toEqual(edited);
+    const reject = (changed: Partial<Scenario>) => expect(decodeScenario(link({ ...edited, ...changed }), base, codes, candidacies)).toBeNull();
+    reject({ shares: { ...edited.shares, upn: 10 } });
+    reject({ blocs: [...blocs, { ...blocs[0], candidacyIds: [] }] });
+    reject({ blocs: [...blocs.slice(1), { ...blocs[0], id: "pp2" }, { id: "x", name: "X", colour: "#000000", candidacyIds: ["5"] }] });
+    reject({ blocs: [...blocs, { id: "x", name: "X", colour: "#000000", candidacyIds: ["9999"] }] });
+    reject({ blocs: [...blocs, { id: "x", name: " ", colour: "#000000", candidacyIds: [] }] });
+    reject({ blocs: [...blocs, { id: "x", name: "X", colour: "red;", candidacyIds: [] }] });
   });
 
   it("rejects broken, unknown-version and mismatched links", () => {
     // A link that skips encodeScenario, so it can carry an unsupported version.
-    expect(decodeScenario("garbage", base, codes)).toBeNull();
-    expect(decodeScenario("v1.%%%", base, codes)).toBeNull();
-    expect(decodeScenario(`v1.${compressToEncodedURIComponent("{not json")}`, base, codes)).toBeNull();
-    expect(decodeScenario(V1_FIXTURE.replace("v1.", "v2."), base, codes)).toBeNull();
-    expect(decodeScenario(link({ ...base, schemaVersion: 2 }), base, codes)).toBeNull();
-    expect(decodeScenario(link({ ...base, baseElectionId: "2019-11" }), base, codes)).toBeNull();
-    expect(decodeScenario(link({ ...base, shares: { ...base.shares, ciudadanos: 100 } }), base, codes)).toBeNull();
-    expect(decodeScenario(link({ ...base, shares: { ...base.shares, constructor: 100 } }), base, codes)).toBeNull();
-    expect(decodeScenario(link({ ...base, shares: { ...base.shares, pp: 9000 } }), base, codes)).toBeNull();
-    expect(decodeScenario(link({ ...base, blank: 1.5 }), base, codes)).toBeNull();
+    expect(decodeScenario("garbage", base, codes, candidacies)).toBeNull();
+    expect(decodeScenario("v1.%%%", base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(`v1.${compressToEncodedURIComponent("{not json")}`, base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(V1_FIXTURE.replace("v1.", "v2."), base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(link({ ...base, schemaVersion: 2 }), base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(link({ ...base, baseElectionId: "2019-11" }), base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(link({ ...base, shares: { ...base.shares, ciudadanos: 100 } }), base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(link({ ...base, shares: { ...base.shares, constructor: 100 } }), base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(link({ ...base, shares: { ...base.shares, pp: 9000 } }), base, codes, candidacies)).toBeNull();
+    expect(decodeScenario(link({ ...base, blank: 1.5 }), base, codes, candidacies)).toBeNull();
   });
 });
