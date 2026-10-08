@@ -1,3 +1,4 @@
+import { SiteFooter } from "../layout/site-footer";
 import { CtaLinks } from "./cta-links";
 import { closingTitle } from "./type";
 
@@ -19,14 +20,10 @@ export function HomeClosing() {
           </div>
         </div>
       </section>
-      <footer className="bg-surface-black text-on-dark-muted">
-        <div className="mx-auto max-w-content px-5 py-6 sm:px-8">
-          <p className="max-w-prose text-fine-print">
-            Escaños del 29 de noviembre de 2026 según el Real Decreto 806/2026. Es una simulación,
-            no una previsión, y no favorece a ningún partido.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter>
+        Escaños del 29 de noviembre de 2026 según el Real Decreto 806/2026. Es una simulación, no una previsión, y no favorece a
+        ningún partido.
+      </SiteFooter>
     </>
   );
 }

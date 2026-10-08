@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/home/site-header";
+import { SiteFooter } from "@/components/layout/site-footer";
 import { SimulatorContainer } from "@/components/simulator/simulator-container";
 import { JsonLd } from "@/components/seo/json-ld";
 import { withNext } from "@/lib/auth/next-path";
@@ -52,6 +53,10 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
         </div>
         <SimulatorContainer signedIn={Boolean(session)} />
       </main>
+      <SiteFooter>
+        Escaños del 29 de noviembre de 2026 según el Real Decreto 806/2026. Es una simulación, no una previsión, y no favorece a
+        ningún partido.
+      </SiteFooter>
     </>
   );
 }

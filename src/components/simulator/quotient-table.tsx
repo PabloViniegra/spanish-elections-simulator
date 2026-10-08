@@ -22,7 +22,7 @@ export function QuotientTable({ caption, rows, blocs, last, runnerUp }: Quotient
   return (
     <>
       {columns > 6 && <p className="mb-1 text-fine-print text-ink-muted-80">Desliza de lado para ver todos los divisores.</p>}
-      <div role="region" aria-label={caption} tabIndex={0} className="relative overflow-x-auto focus-visible:outline-offset-2">
+      <div role="region" aria-label={caption} tabIndex={0} className="scroll-slim relative overflow-x-auto focus-visible:outline-offset-2">
         <table className="w-full border-collapse text-caption tabular-nums">
           <caption className="sr-only">{caption}</caption>
           <thead>

@@ -327,6 +327,13 @@
   }
 }
 
+/* Scrollable regions (wide tables) get the page's slim scrollbar, not the
+   browser's arrowed one. */
+.scroll-slim {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-ink-muted-48) transparent;
+}
+
 /* Share slider: browsers paint the unfilled track depending on the accent
    luminance, which turns it dark for light party colours. Drawing the track
    keeps every row identical; --fill and --slider-colour come from the input. */

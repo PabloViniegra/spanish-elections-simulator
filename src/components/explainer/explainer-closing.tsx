@@ -1,3 +1,4 @@
+import { SiteFooter } from "../layout/site-footer";
 import { CtaLinks } from "../home/cta-links";
 import { closingTitle } from "../home/type";
 
@@ -19,17 +20,13 @@ export function ExplainerClosing() {
           </div>
         </div>
       </section>
-      <footer className="bg-surface-black text-on-dark-muted">
-        <div className="mx-auto max-w-content px-5 py-6 sm:px-8">
-          <p className="max-w-prose text-fine-print">
-            Basado en la{" "}
-            <a href="https://www.boe.es/buscar/act.php?id=BOE-A-1985-11672" className="underline underline-offset-2">
-              Ley Orgánica del Régimen Electoral General
-            </a>{" "}
-            (artículos 96, 162 y 163) y en el Real Decreto 806/2026. Es una explicación divulgativa y no favorece a ningún partido.
-          </p>
-        </div>
-      </footer>
+      <SiteFooter>
+        Basado en la{" "}
+        <a href="https://www.boe.es/buscar/act.php?id=BOE-A-1985-11672" className="underline underline-offset-2">
+          Ley Orgánica del Régimen Electoral General
+        </a>{" "}
+        (artículos 96, 162 y 163) y en el Real Decreto 806/2026. Es una explicación divulgativa y no favorece a ningún partido.
+      </SiteFooter>
     </>
   );
 }

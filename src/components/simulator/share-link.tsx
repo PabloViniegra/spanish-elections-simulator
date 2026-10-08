@@ -58,20 +58,20 @@ export function ShareLink({ brokenLink, scenarioParam }: { brokenLink: boolean; 
     }
   };
   return (
-    <div className="flex flex-col gap-2">
+    <div className="contents">
       {brokenLink && (
-        <p role="status" className="rounded-sm border border-error p-3 text-caption">
+        <p role="status" className="w-full rounded-sm border border-error p-3 text-caption">
           El enlace no es válido o es de otra versión. Se muestran los resultados de 2023.
         </p>
       )}
-      <p role="status" aria-live="polite" className={longUrl ? "rounded-sm border border-hairline p-3 text-caption text-ink-muted-80" : "sr-only"}>
+      <p role="status" aria-live="polite" className={longUrl ? "w-full rounded-sm border border-hairline p-3 text-caption text-ink-muted-80" : "sr-only"}>
         {longUrl ? "El enlace supera los 2.000 caracteres. Algunas plataformas podrían recortarlo; comprueba que se haya compartido completo." : ""}
       </p>
       <button
         type="button"
         onClick={copy}
         data-copied={copied}
-        className="self-start group inline-flex min-h-13 items-center justify-center gap-2 rounded-full bg-primary px-7 text-[1.0625rem] leading-none font-semibold tracking-[-0.01em] text-on-primary transition-[background-color,scale] duration-200 ease-snappy hover:bg-primary-focus focus-visible:outline-offset-[3px] active:scale-[0.96] data-[copied=true]:bg-ink"
+        className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-caption leading-none font-semibold text-on-primary transition-[background-color,scale] duration-200 ease-snappy hover:bg-primary-focus active:scale-[0.96] data-[copied=true]:bg-ink"
       >
         <span aria-hidden="true" className="relative size-[18px] flex-none">
           <LinkIcon className="absolute inset-0 transition-[opacity,scale,rotate] duration-300 ease-snappy group-data-[copied=true]:-rotate-45 group-data-[copied=true]:scale-50 group-data-[copied=true]:opacity-0 motion-reduce:transition-none" />

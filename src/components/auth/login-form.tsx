@@ -33,9 +33,6 @@ export function LoginForm({ state, action, pending, next }: LoginFormProps) {
         required
         error={state?.fieldErrors?.password}
       />
-      <p className="px-1 text-caption text-ink-muted-80">
-        ¿Has olvidado tu contraseña? La recuperación todavía no está disponible.
-      </p>
       <FormAlert message={state?.error} />
       <SubmitButton pending={pending} label="Iniciar sesión" pendingLabel="Iniciando sesión…" />
     </form>

@@ -1,5 +1,6 @@
 import type { Bloc } from "@/lib/elections/types";
 import { MAJORITY } from "@/lib/hemicycle-layout";
+import { CoalitionBar } from "./coalition-bar";
 
 type CoalitionCalculatorProps = {
   ranked: readonly (Bloc & { seats: number })[];
@@ -11,7 +12,8 @@ type CoalitionCalculatorProps = {
 // FR-08: the user picks blocs and sees their sum against 176, plus every
 // minimal combination that reaches it.
 export function CoalitionCalculator({ ranked, selected, onToggle, coalitions }: CoalitionCalculatorProps) {
-  const total = ranked.filter((bloc) => selected.has(bloc.id)).reduce((sum, bloc) => sum + bloc.seats, 0);
+  const pickedBlocs = ranked.filter((bloc) => selected.has(bloc.id));
+  const total = pickedBlocs.reduce((sum, bloc) => sum + bloc.seats, 0);
   const gap = MAJORITY - total;
   const nameOf = new Map(ranked.map((bloc) => [bloc.id, bloc.name]));
   return (
@@ -34,16 +36,19 @@ export function CoalitionCalculator({ ranked, selected, onToggle, coalitions }: 
           ))}
         </div>
       </fieldset>
-      <p aria-live="polite" className="text-body">
-        <span key={total} className="tick inline-block text-lead font-semibold tabular-nums">
-          {total}
-        </span> escaños.{" "}
-        {total === 0
-          ? `La mayoría absoluta son ${MAJORITY}.`
-          : gap > 0
-            ? `Faltan ${gap} para la mayoría absoluta.`
-            : `Mayoría absoluta, con ${-gap} de margen.`}
-      </p>
+      <div className="flex flex-col gap-3 rounded-lg bg-canvas-parchment p-4">
+        <p aria-live="polite" className="text-body">
+          <span key={total} className="tick inline-block text-lead font-semibold tabular-nums">
+            {total}
+          </span> escaños.{" "}
+          {total === 0
+            ? `La mayoría absoluta son ${MAJORITY}.`
+            : gap > 0
+              ? `Faltan ${gap} para la mayoría absoluta.`
+              : `Mayoría absoluta, con ${-gap} de margen.`}
+        </p>
+        <CoalitionBar picked={pickedBlocs} total={total} />
+      </div>
       <details className="text-caption">
         <summary className="min-h-11 cursor-pointer py-3">Combinaciones mínimas que llegan a {MAJORITY} ({coalitions.length})</summary>
         <p className="mb-2 text-ink-muted-80">Cada una pierde la mayoría si sale cualquiera de sus partidos.</p>

@@ -37,7 +37,7 @@ const columnClass = (d: number) =>
 export function DhondtExample() {
   return (
     <section aria-labelledby="dhondt-title" className="bg-canvas">
-      <div className="mx-auto grid max-w-content gap-10 px-5 py-section sm:px-8 xl:grid-cols-[5fr_6fr] xl:items-center xl:gap-16 xl:py-32">
+      <div className="mx-auto grid max-w-content gap-10 px-5 py-section sm:px-8 xl:grid-cols-[5fr_6fr] xl:items-start xl:gap-16 xl:py-32">
         <div className="rise-scope flex max-w-[44rem] flex-col gap-4">
           <h2 id="dhondt-title" className={`rise [--c:0] ${sectionTitle}`}>
             Cada escaño tiene su cociente.

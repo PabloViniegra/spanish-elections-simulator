@@ -11,3 +11,6 @@ export function withNext(path: string, next: string) {
   if (next === "/") return path;
   return `${path}${path.includes("?") ? "&" : "?"}next=${encodeURIComponent(next)}`;
 }
+
+// Whether signing in is the way into the simulator, rather than a plain visit.
+export const leadsToSimulator = (next: string) => next === "/simulator" || next.startsWith("/simulator?");

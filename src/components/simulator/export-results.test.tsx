@@ -7,7 +7,7 @@ describe("ExportResults", () => {
   it("disables downloads while inputs are invalid", () => {
     const html = renderToStaticMarkup(<ExportResults {...handlers} stale busy={false} />);
     expect(html.match(/disabled=""/g)).toHaveLength(2);
-    expect(html).toContain('role="status" class="text-caption">Ajusta los porcentajes');
+    expect(html).toContain('role="status" class="w-full text-caption">Ajusta los porcentajes');
   });
   it("shows progress and prevents duplicate downloads", () => {
     const html = renderToStaticMarkup(<ExportResults {...handlers} stale={false} busy />);

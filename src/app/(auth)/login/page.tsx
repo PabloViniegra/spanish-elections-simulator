@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { LoginFormContainer } from "@/components/auth/login-form-container";
-import { safeNextPath, withNext } from "@/lib/auth/next-path";
+import { SimulatorGate } from "@/components/auth/simulator-gate";
+import { leadsToSimulator, safeNextPath, withNext } from "@/lib/auth/next-path";
 
 export const metadata: Metadata = { title: "Iniciar sesión" };
 
@@ -13,10 +14,12 @@ type LoginPageProps = {
 export default async function LoginPage({ searchParams }: LoginPageProps) {
   const { verified, error, next: nextParam } = await searchParams;
   const next = safeNextPath(nextParam);
+  const gated = leadsToSimulator(next);
   return (
     <AuthCard
-      title="Inicia sesión"
+      title={gated ? "Inicia sesión para simular" : "Inicia sesión"}
       description="Accede con tu usuario o tu correo electrónico."
+      notice={gated ? <SimulatorGate /> : undefined}
       footer={
         <>
           ¿No tienes cuenta?{" "}

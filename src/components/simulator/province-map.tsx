@@ -10,7 +10,7 @@ const CITY_HIT_RADIUS = 24;
 // the provinces a bloc leads outright stay the loudest thing on the map. Who is
 // tied is read in the province's seats, not guessed from stripe colours.
 const TIE_PATTERN = "map-tie";
-const STRIPE_GAP = 4;
+const STRIPE_GAP = 5;
 const STRIPE_LINE = 1;
 // Padlock for provinces locked by hand, centred on the origin.
 const LOCK_BODY = "M-3.5,-0.5h7v5.5h-7z";
@@ -83,7 +83,7 @@ export function ProvinceMap({ leaders, active, selected, lockedCodes, label, onA
       <defs>
         <pattern id={TIE_PATTERN} patternUnits="userSpaceOnUse" width={STRIPE_GAP} height={STRIPE_GAP} patternTransform="rotate(45)">
           <rect width={STRIPE_GAP} height={STRIPE_GAP} fill="var(--color-canvas-parchment)" />
-          <rect width={STRIPE_LINE} height={STRIPE_GAP} fill="var(--color-ink-muted-48)" />
+          <rect width={STRIPE_LINE} height={STRIPE_GAP} fill="var(--color-ink-muted-48)" fillOpacity={0.55} />
         </pattern>
       </defs>
       <path d={map.inset} fill="none" stroke="var(--color-hairline)" strokeWidth={1} />
