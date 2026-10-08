@@ -120,7 +120,7 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
           )}
         </div>
         <p className="max-w-prose text-caption text-ink-muted-80">
-          Las rayas finas marcan un empate en escaños. El tamaño no refleja los escaños: {largest.name} elige {largest.deputies} y {smallest.name},{" "}
+          Las rayas grises marcan un empate en escaños; el reparto de cada provincia dice entre quiénes. El tamaño no refleja los escaños: {largest.name} elige {largest.deputies} y {smallest.name},{" "}
           {smallest.deputies}.{lockedCodes.length > 0 && " El candado marca las provincias fijadas a mano."}
         </p>
         <ProvinceSeats

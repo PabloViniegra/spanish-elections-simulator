@@ -38,8 +38,8 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
       <SiteHeader username={session?.user.name} current="simulator" />
       <main id="contenido" className="flex-1">
         <div className="bg-canvas-parchment">
-          <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-10 sm:px-8">
-            <h1 className="text-display-lg text-balance">
+          <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-6 sm:px-8 sm:py-10">
+            <h1 className="text-display-lg text-balance max-sm:text-[1.75rem]">
               {session ? "Cambia el voto y mira los 350 escaños del 29 de noviembre" : "Así quedarían los 350 escaños del 29 de noviembre con este escenario"}
             </h1>
             <p className="max-w-xl text-body text-pretty text-ink-muted-80">

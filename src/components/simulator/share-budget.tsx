@@ -9,7 +9,7 @@ export function ShareBudget({ others, onRebalance }: { others: number; onRebalan
   const over = others < 0;
   return (
     <div
-      role={over ? "alert" : undefined}
+      role={over ? "status" : undefined}
       className={`sticky top-15 z-9 flex items-baseline justify-between gap-4 border-b bg-canvas py-2 text-caption lg:top-0 ${over ? "border-error text-error" : "border-hairline"}`}
     >
       {over ? (

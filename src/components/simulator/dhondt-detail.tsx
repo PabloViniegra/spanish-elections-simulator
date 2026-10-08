@@ -46,7 +46,7 @@ export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, 
         onChange={(event) => onSelect(event.target.value)}
         options={provinces.map((option) => ({ value: option.code, label: option.name }))}
       />
-      <div className={`flex flex-col gap-4 transition-opacity duration-150 ${stale ? "opacity-40" : ""}`}>
+      <div className={`flex flex-col gap-4 transition-opacity duration-150 ${stale ? "opacity-65" : ""}`}>
         {lastSeat ? (
           <dl className="grid gap-x-6 gap-y-3 text-caption sm:grid-cols-2">
             <div>

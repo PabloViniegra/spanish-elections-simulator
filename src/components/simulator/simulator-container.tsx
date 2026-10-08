@@ -22,11 +22,11 @@ import { type InputMode, ModeSwitch } from "./mode-switch";
 import { NationalInputs } from "./national-inputs";
 import { ProvinceInputs } from "./province-inputs";
 import { ProvinceMapContainer } from "./province-map-container";
-import { ReadOnlyNotice } from "./read-only-notice";
-import { ResultsHemicycle } from "./results-hemicycle";
+import { ResultsOverview } from "./results-overview";
 import { RESULTS_ID, ResultsStrip } from "./results-strip";
 import { SaveSimulationContainer } from "./save-simulation-container";
 import { ShareLink } from "./share-link";
+import { SharedResults } from "./shared-results";
 import { UndoNotice } from "./undo-notice";
 import { useScenario } from "./use-scenario";
 
@@ -197,16 +197,16 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
               </div>
             </>
           ) : (
-            <ReadOnlyNotice baseLabel={base.label} next={shared ? simulatorHref(shared) : "/simulator"} />
+            <SharedResults blocs={blocs} baseLabel={base.label} shares={scenario.shares} blank={scenario.blank} others={othersShare(scenario)} seats={simulation.seats} baseSeats={baseline.simulation.seats} next={shared ? simulatorHref(shared) : "/simulator"} />
           )}
         </div>
-        {/* Below the inputs on narrow screens so the seats come right after them. */}
-        <div id={RESULTS_ID} className="flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+        {/* Below the inputs on narrow screens so the seats come right after them; a shared link has none, so its seats lead. */}
+        <div id={RESULTS_ID} className={`${signedIn ? "" : "max-lg:order-first "}flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1`}>
+          <ResultsOverview ranked={ranked} stale={stale} selected={picked} baseLabel={base.label} />
           <ShareLink brokenLink={brokenLink} scenarioParam={scenarioParam} />
           {signedIn && <SaveSimulationContainer key={encodeScenario(valid)} scenario={valid} ranked={ranked} stale={stale} />}
-          <ResultsHemicycle ranked={ranked} stale={stale} selected={picked} baseLabel={base.label} />
           <ExportResultsContainer results={simulation.results} blocs={blocs} ranked={ranked} scenario={valid} baseId={base.election.id} baseLabel={base.label} stale={stale} />
-          <div className={`transition-opacity duration-150 ${stale ? "opacity-40" : ""}`}>
+          <div className={`transition-opacity duration-150 ${stale ? "opacity-65" : ""}`}>
             <CoalitionCalculator
               ranked={ranked}
               selected={picked}

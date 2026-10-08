@@ -12,7 +12,7 @@ export function HowSeatsWork() {
           de cada candidatura se dividen entre 1, 2, 3… y los escaños van a los cocientes más altos.
         </p>
         <p>
-          <Link href="/how-it-works" className="text-ink underline underline-offset-2">
+          <Link href="/how-it-works" className="inline-flex min-h-11 items-center text-ink underline underline-offset-2">
             Cómo funciona el sistema, paso a paso
           </Link>
         </p>

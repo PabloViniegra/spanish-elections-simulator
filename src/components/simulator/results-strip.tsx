@@ -13,8 +13,18 @@ type ResultsStripProps = {
 };
 
 // How far a seat count stands from the 176 line.
-function versusMajority(seats: number) {
+export function versusMajority(seats: number) {
   return seats >= MAJORITY ? `mayoría (${MAJORITY})` : `faltan ${MAJORITY - seats} para ${MAJORITY}`;
+}
+
+// The picked coalition, or the largest bloc, against the 176 line.
+export function summaryOf(ranked: ResultsStripProps["ranked"], selected: ReadonlySet<string>) {
+  const picked = ranked.filter((bloc) => selected.has(bloc.id));
+  const coalition = picked.reduce((sum, bloc) => sum + bloc.seats, 0);
+  const leader = ranked[0];
+  const summary =
+    picked.length > 0 ? `Coalición ${coalition} · ${versusMajority(coalition)}` : leader && `${leader.name} ${leader.seats} · ${versusMajority(leader.seats)}`;
+  return { picked, summary };
 }
 
 // Narrow screens only: the hemicycle scrolls out of view while the sliders are
@@ -24,15 +34,11 @@ function versusMajority(seats: number) {
 // Its height is fixed (h-15) because the share budget pins itself right below
 // it with the same value (top-15); change both together.
 export function ResultsStrip({ ranked, stale = false, selected }: ResultsStripProps) {
-  const picked = ranked.filter((bloc) => selected.has(bloc.id));
-  const coalition = picked.reduce((sum, bloc) => sum + bloc.seats, 0);
-  const leader = ranked[0];
-  const summary =
-    picked.length > 0 ? `Coalición ${coalition} · ${versusMajority(coalition)}` : leader && `${leader.name} ${leader.seats} · ${versusMajority(leader.seats)}`;
+  const { picked, summary } = summaryOf(ranked, selected);
   return (
     <a href={`#${RESULTS_ID}`} className="sticky top-0 z-10 block h-15 border-b border-hairline bg-canvas lg:hidden">
       <span className="sr-only">Ver el reparto de escaños</span>
-      <div aria-hidden="true" className={`mx-auto flex h-full max-w-content flex-col justify-center gap-1.5 px-5 transition-opacity duration-150 sm:px-8 ${stale ? "opacity-40" : ""}`}>
+      <div aria-hidden="true" className={`mx-auto flex h-full max-w-content flex-col justify-center gap-1.5 px-5 transition-opacity duration-150 sm:px-8 ${stale ? "opacity-65" : ""}`}>
         <div className="relative flex h-3 overflow-hidden rounded-full bg-hairline">
           {ranked.map((bloc) => (
             <span

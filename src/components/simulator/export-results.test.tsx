@@ -21,9 +21,9 @@ describe("ExportResults", () => {
 
   it("explains the CSV contents and percentage denominator", () => {
     const html = renderToStaticMarkup(<ExportResults {...handlers} stale={false} busy={false} />);
-    expect(html).toContain("por provincia y bloque");
+    expect(html).toContain("por provincia y partido");
     expect(html).toContain("voto válido");
     expect(html).toContain("voto en blanco y «Otros»");
-    expect(html).not.toContain("por provincia y partido");
+    expect(html).not.toContain("por provincia y bloque");
   });
 });

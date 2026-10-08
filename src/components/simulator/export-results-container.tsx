@@ -40,7 +40,7 @@ export function ExportResultsContainer({ results, blocs, ranked, scenario, baseI
     if (stale || busy) return;
     try {
       download(new Blob([resultsCsv(results, blocs)], { type: "text/csv;charset=utf-8" }), `simulacion-${filename}.csv`);
-      notify.success({ title: "CSV descargado", description: "Resultados por provincia y bloque." });
+      notify.success({ title: "CSV descargado", description: "Resultados por provincia y partido." });
     } catch {
       notify.error({ title: "No se ha podido descargar el CSV", description: "Vuelve a intentarlo." });
     }

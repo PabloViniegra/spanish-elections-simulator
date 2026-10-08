@@ -38,7 +38,7 @@ export function ShareRows(props: ShareRowsProps) {
               <span aria-hidden="true" className="size-3 shrink-0 rounded-full" style={{ backgroundColor: bloc.colour }} />
               {bloc.name}
             </label>
-            <p className={`flex items-baseline justify-end gap-2 text-right tabular-nums transition-opacity duration-150 sm:row-span-2 sm:block ${stale ? "opacity-40" : ""}`}>
+            <p className={`flex items-baseline justify-end gap-2 text-right tabular-nums transition-opacity duration-150 sm:row-span-2 sm:block ${stale ? "opacity-65" : ""}`}>
               <span key={`seats-${blocSeats}`} className="tick text-tagline sm:block">
                 {blocSeats}
               </span>

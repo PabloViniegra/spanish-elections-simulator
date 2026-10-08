@@ -6,17 +6,15 @@ import type { Bloc } from "@/lib/elections/types";
 // invisible circle to take the tap: 24 px across on a 360 px phone.
 export const CITY_CODES = new Set(["51", "52"]);
 const CITY_HIT_RADIUS = 24;
-// Ties: thin lines of each tied colour over a pale ground, so the provinces a
-// bloc leads outright stay the loudest thing on the map.
+// Ties: thin grey lines over a pale ground, the same swatch as the legend, so
+// the provinces a bloc leads outright stay the loudest thing on the map. Who is
+// tied is read in the province's seats, not guessed from stripe colours.
+const TIE_PATTERN = "map-tie";
 const STRIPE_GAP = 4;
-const STRIPE_LINE = 1.5;
+const STRIPE_LINE = 1;
 // Padlock for provinces locked by hand, centred on the origin.
 const LOCK_BODY = "M-3.5,-0.5h7v5.5h-7z";
 const LOCK_SHACKLE = "M-2,-0.5v-2a2,2 0 0 1 4,0v2";
-
-// One pattern per set of tied blocs, whatever their order in each province.
-const sortedIds = (blocs: readonly Bloc[]) => blocs.map((bloc) => bloc.id).sort();
-const tieId = (blocs: readonly Bloc[]) => `map-tie-${sortedIds(blocs).join("-")}`;
 
 type ProvinceMapProps = {
   // Blocs tied for the most seats in each province, by code.
@@ -37,21 +35,14 @@ type ProvinceMapProps = {
 
 // FR-07: the 52 constituencies, Canary Islands in an inset. A mouse shows the
 // province under it and clears it on leaving it; a tap pins it, and in
-// national mode a second tap clears it. Seat ties are striped with the colours of the tied
-// blocs, so no bloc wins a province by votes alone.
+// national mode a second tap clears it. Seat ties are striped in grey, so no
+// bloc wins a province by votes alone.
 export function ProvinceMap({ leaders, active, selected, lockedCodes, label, onActive, onPick, onDetail }: ProvinceMapProps) {
   const pointer = useRef("mouse");
-  const ties = [
-    ...new Map(
-      [...leaders.values()]
-        .filter((blocs) => blocs.length > 1)
-        .map((blocs) => [tieId(blocs), sortedIds(blocs).flatMap((id) => blocs.filter((bloc) => bloc.id === id))]),
-    ).entries(),
-  ];
   const fill = (code: string) => {
     const blocs = leaders.get(code) ?? [];
     if (blocs.length === 0) return "var(--color-hairline)";
-    return blocs.length === 1 ? blocs[0].colour : `url(#${tieId(blocs)})`;
+    return blocs.length === 1 ? blocs[0].colour : `url(#${TIE_PATTERN})`;
   };
   const leave = (event: PointerEvent) => {
     if (event.pointerType === "mouse") onActive(null);
@@ -90,14 +81,10 @@ export function ProvinceMap({ leaders, active, selected, lockedCodes, label, onA
   return (
     <svg viewBox={`0 0 ${map.width} ${map.height}`} role="img" aria-label={label} className="w-full touch-manipulation">
       <defs>
-        {ties.map(([id, blocs]) => (
-          <pattern key={id} id={id} patternUnits="userSpaceOnUse" width={STRIPE_GAP * blocs.length} height={STRIPE_GAP} patternTransform="rotate(45)">
-            <rect width={STRIPE_GAP * blocs.length} height={STRIPE_GAP} fill="var(--color-canvas-parchment)" />
-            {blocs.map((bloc, index) => (
-              <rect key={bloc.id} x={index * STRIPE_GAP} width={STRIPE_LINE} height={STRIPE_GAP} fill={bloc.colour} />
-            ))}
-          </pattern>
-        ))}
+        <pattern id={TIE_PATTERN} patternUnits="userSpaceOnUse" width={STRIPE_GAP} height={STRIPE_GAP} patternTransform="rotate(45)">
+          <rect width={STRIPE_GAP} height={STRIPE_GAP} fill="var(--color-canvas-parchment)" />
+          <rect width={STRIPE_LINE} height={STRIPE_GAP} fill="var(--color-ink-muted-48)" />
+        </pattern>
       </defs>
       <path d={map.inset} fill="none" stroke="var(--color-hairline)" strokeWidth={1} />
       {/* Under the provinces, so the wide tap circles only take taps at sea. */}

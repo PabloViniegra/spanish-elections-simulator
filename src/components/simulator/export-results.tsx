@@ -14,7 +14,7 @@ export function ExportResults({ stale, busy, onCsv, onPng }: ExportResultsProps)
         <button type="button" onClick={onPng} disabled={stale || busy} className={buttonClass}>{busy ? "Preparando PNG…" : "Descargar PNG"}</button>
       </div>
       <p className="text-caption text-ink-muted-80">
-        CSV por provincia y bloque; porcentaje del voto válido, incluido el voto en blanco y «Otros». PNG con el reparto completo, sin resaltar coaliciones.
+        CSV por provincia y partido; porcentaje del voto válido, incluido el voto en blanco y «Otros». PNG con el reparto completo, sin resaltar coaliciones.
       </p>
       {stale && <p role="status" className="text-caption">Ajusta los porcentajes para descargar los resultados.</p>}
     </div>

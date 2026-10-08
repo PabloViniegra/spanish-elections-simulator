@@ -5,9 +5,9 @@
    so only the documented grammar is available. */
 @theme {
   --color-*: initial;
-  --color-primary: #0066cc;
-  --color-primary-focus: #0071e3;
-  --color-primary-on-dark: #2997ff;
+  --color-primary: #1d1d1f;
+  --color-primary-focus: #48484a;
+  --color-primary-on-dark: #ffffff;
 
   --color-canvas: #ffffff;
   --color-canvas-parchment: #f5f5f7;
