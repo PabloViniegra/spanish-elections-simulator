@@ -88,12 +88,11 @@ Store and shop surfaces retain the same chassis but switch modes. The product co
 - **Weight 500 is deliberately absent.** The ladder is 300 / 400 / 600 / 700. Mid-weight readings always use 600.
 
 ### Note on Font Substitutes
-SF Pro is Apple's proprietary system font. When building off-system:
+The site sets its type in **Hanken Grotesk** (variable, weights 100–900, via `@fontsource-variable/hanken-grotesk`), a neutral, clean grotesque close to SF Pro in tone but far less common than Inter. It replaces the SF Pro / Inter pairing the tokens were first drawn for.
 
-- Use `system-ui, -apple-system, BlinkMacSystemFont` as the first stack entry — on macOS/iOS/Safari this resolves to the real SF Pro.
-- For non-Apple platforms, **Inter** (Google Fonts, variable) is the closest open-source equivalent. Inter at weight 600 with `font-feature-settings: "ss03"` approximates SF Pro's rounded "a" character.
-- Nudge `letter-spacing` down by `-0.01em` on display sizes to re-create the Apple tight feel; Inter's default tracking runs slightly wider than SF Pro.
-- For body text, tighten line-height by `0.03` (from 1.47 → 1.44) when substituting Inter — Inter's taller x-height needs less leading.
+- Weights: 300 airy tokens, 400 body, 600 headlines and emphasis.
+- Tracking is tighter than Hanken's default only at display sizes (-0.02em to -0.025em); body and captions stay near neutral, since the face already sets narrower than SF Pro.
+- The Open Graph image embeds a static SemiBold instance (`src/assets/fonts/hanken-grotesk-latin-600.ttf`), because the renderer reads neither woff2 nor variable fonts.
 
 ## Layout
 

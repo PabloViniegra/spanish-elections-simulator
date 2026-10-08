@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "@fontsource-variable/inter/opsz.css";
+@import "@fontsource-variable/hanken-grotesk/wght.css";
 
 /* Design tokens from DESIGN.md. Default palette, radii and shadows are reset
    so only the documented grammar is available. */
@@ -31,22 +31,22 @@
   /* Not in DESIGN.md (no validation states documented); AA on white. */
   --color-error: #d70015;
 
-  /* SF Pro substitute: Inter with the optical-size axis (Display/Text cuts). */
-  --font-sans: "Inter Variable", system-ui, sans-serif;
+  /* Hanken Grotesk: a neutral, clean grotesque; variable 100-900. */
+  --font-sans: "Hanken Grotesk Variable", system-ui, sans-serif;
 
-  /* Letter-spacing converted from px to em; display sizes carry the extra
-     -0.01em and body the 1.44 leading that DESIGN.md prescribes for Inter. */
+  /* Letter-spacing in em, retuned for Hanken Grotesk: it sets narrower than
+     SF Pro, so tracking tightens less than DESIGN.md's px values. */
   --text-hero-display: 3.5rem;
   --text-hero-display--line-height: 1.07;
-  --text-hero-display--letter-spacing: -0.015em;
+  --text-hero-display--letter-spacing: -0.025em;
   --text-hero-display--font-weight: 600;
   --text-display-lg: 2.5rem;
   --text-display-lg--line-height: 1.1;
-  --text-display-lg--letter-spacing: -0.01em;
+  --text-display-lg--letter-spacing: -0.02em;
   --text-display-lg--font-weight: 600;
   --text-display-md: 2.125rem;
   --text-display-md--line-height: 1.47;
-  --text-display-md--letter-spacing: -0.021em;
+  --text-display-md--letter-spacing: -0.02em;
   --text-display-md--font-weight: 600;
   --text-lead: 1.75rem;
   --text-lead--line-height: 1.14;
@@ -60,7 +60,7 @@
   --text-tagline--font-weight: 600;
   --text-body: 1.0625rem;
   --text-body--line-height: 1.44;
-  --text-body--letter-spacing: -0.022em;
+  --text-body--letter-spacing: -0.008em;
   --text-dense-link: 1.0625rem;
   --text-dense-link--line-height: 2.41;
   --text-button-lg: 1.125rem;
@@ -68,13 +68,13 @@
   --text-button-lg--font-weight: 300;
   --text-caption: 0.875rem;
   --text-caption--line-height: 1.43;
-  --text-caption--letter-spacing: -0.016em;
+  --text-caption--letter-spacing: -0.005em;
   --text-fine-print: 0.75rem;
   --text-fine-print--line-height: 1.3;
-  --text-fine-print--letter-spacing: -0.01em;
+  --text-fine-print--letter-spacing: 0em;
   --text-micro-legal: 0.625rem;
   --text-micro-legal--line-height: 1.3;
-  --text-micro-legal--letter-spacing: -0.008em;
+  --text-micro-legal--letter-spacing: 0.005em;
 
   --radius-*: initial;
   --radius-xs: 5px;

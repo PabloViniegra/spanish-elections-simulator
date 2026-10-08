@@ -14,9 +14,9 @@ export const alt = "350 escaños. 52 repartos. Hemiciclo del Congreso con la may
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-// Static SemiBold cut of the site's Inter: the image renderer reads neither
+// Static SemiBold cut of the site's Hanken Grotesk: the image renderer reads neither
 // woff2 nor variable fonts.
-const inter = await readFile(join(process.cwd(), "src/assets/fonts/inter-latin-600.ttf"));
+const font = await readFile(join(process.cwd(), "src/assets/fonts/hanken-grotesk-latin-600.ttf"));
 
 // The hero's finished count, without the motion.
 const { x: cx, y: cy } = HEMICYCLE_CENTER;
@@ -37,7 +37,7 @@ export default function Image() {
         padding: "64px 64px 48px",
         background: "#000000",
         color: "#ffffff",
-        fontFamily: "Inter",
+        fontFamily: "Hanken Grotesk",
       }}
     >
       <div style={{ fontSize: 88, letterSpacing: "-0.035em", lineHeight: 1 }}>350 escaños. 52 repartos.</div>
@@ -49,6 +49,6 @@ export default function Image() {
         <span>Es una simulación, no una previsión.</span>
       </div>
     </div>,
-    { ...size, fonts: [{ name: "Inter", data: inter, style: "normal", weight: 600 }] },
+    { ...size, fonts: [{ name: "Hanken Grotesk", data: font, style: "normal", weight: 600 }] },
   );
 }

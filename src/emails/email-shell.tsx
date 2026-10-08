@@ -39,7 +39,7 @@ export function EmailShell({ preview, footer, children }: EmailShellProps) {
             borderRadius: 12,
             maxWidth: 480,
             padding: 32,
-            fontFamily: "Inter, Helvetica, Arial, sans-serif",
+            fontFamily: "Hanken Grotesk, Helvetica, Arial, sans-serif",
             color: colors.ink,
           }}
         >
