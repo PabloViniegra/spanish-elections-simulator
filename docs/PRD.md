@@ -219,7 +219,7 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 - [x] Product name: Simulador de Elecciones.
 - [ ] Custom domain (production currently uses the Vercel URL).
 - [x] Analytics provider: Vercel Web Analytics; remove the complete query string from every event URL because shared scenarios are encoded there. Use a strict-origin referrer policy so same-origin requests cannot transmit scenario queries in the Referer header either.
-- [ ] Enable Web Analytics in the Vercel project settings. The Hobby plan includes 50,000 events/month; after its grace period, collection pauses without overage billing.
+- [x] Web Analytics enabled in Vercel project settings. The Hobby plan includes 50,000 events/month; after its grace period, collection pauses without overage billing.
 
 **Risks**
 
