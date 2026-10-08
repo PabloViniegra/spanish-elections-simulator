@@ -12,7 +12,7 @@ const PAD = 12;
 // The title lifts away faster than the hemicycle, which sinks behind it.
 export function ExplainerHero() {
   return (
-    <section aria-labelledby="explainer-title" className="lift-scope overflow-clip bg-surface-black text-on-dark">
+    <section aria-labelledby="explainer-title" className="lift-scope focus-on-dark overflow-clip bg-surface-black text-on-dark">
       <div className="mx-auto flex max-w-content flex-col items-center gap-12 px-5 pt-14 pb-16 text-center sm:px-8 lg:min-h-[calc(100svh-2.75rem)] lg:justify-between lg:pt-20">
         <div className="lift-away flex flex-col items-center gap-6">
           <h1 id="explainer-title" className={`hero-rise [--c:0] ${pageTitle}`}>

@@ -32,7 +32,7 @@ function Destinations({ current, variant }: { current: NavPage; variant: "bar" |
 export function SiteHeader({ username, current }: { username?: string; current: NavPage }) {
   const pill = current !== "simulator";
   return (
-    <header className="relative bg-surface-black text-on-dark [&_:focus-visible]:outline-primary-on-dark">
+    <header className="focus-on-dark relative bg-surface-black text-on-dark">
       <a
         href="#contenido"
         className="sr-only focus:not-sr-only focus:absolute focus:left-5 focus:top-1 focus:z-50 focus:rounded-full focus:bg-on-dark focus:px-4 focus:py-2 focus:text-caption focus:text-ink"

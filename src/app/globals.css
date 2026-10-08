@@ -116,6 +116,13 @@
   }
 }
 
+/* primary-focus is 2.3:1 on black; dark surfaces need a white ring (WCAG 1.4.11). */
+@utility focus-on-dark {
+  & :focus-visible {
+    outline-color: var(--color-primary-on-dark);
+  }
+}
+
 @layer base {
   ::selection {
     @apply bg-primary text-on-primary;

@@ -16,7 +16,7 @@ const linkClass = "inline-flex min-h-11 items-center underline-offset-2 hover:te
 // the destinations and the official sources are the same everywhere.
 export function SiteFooter({ children }: { children: ReactNode }) {
   return (
-    <footer className="bg-surface-black text-on-dark-muted">
+    <footer className="focus-on-dark bg-surface-black text-on-dark-muted">
       <div className="mx-auto flex max-w-content flex-col gap-6 px-5 py-8 sm:px-8">
         <div className="grid gap-6 text-caption sm:grid-cols-3">
           <nav aria-label="Pie de página" className="flex flex-col">

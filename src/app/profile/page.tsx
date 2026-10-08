@@ -23,7 +23,7 @@ export default async function ProfilePage() {
     <>
       <SiteHeader username={user.name} current="profile" />
       <main id="contenido" className="flex-1">
-        <div className="bg-surface-black text-on-dark">
+        <div className="focus-on-dark bg-surface-black text-on-dark">
           <div className="mx-auto flex max-w-content flex-col gap-3 px-5 pt-14 pb-12 sm:px-8 lg:pt-20 lg:pb-16">
             <h1 className={`hero-rise [--c:0] ${sectionTitle}`}>Mi perfil</h1>
             <p className="hero-rise text-lead-airy break-words text-on-dark-muted [--c:1]">{username}</p>

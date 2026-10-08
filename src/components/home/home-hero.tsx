@@ -5,7 +5,7 @@ import { pageTitle } from "./type";
 
 export function HomeHero({ username }: { username?: string }) {
   return (
-    <section aria-labelledby="home-title" className="bg-surface-black text-on-dark">
+    <section aria-labelledby="home-title" className="focus-on-dark bg-surface-black text-on-dark">
       <div className="mx-auto flex max-w-content flex-col items-center gap-14 px-5 pt-12 pb-6 lg:min-h-[calc(100svh-2.75rem)] lg:justify-between lg:gap-8 text-center sm:px-8 lg:pt-16">
         <div className="flex flex-col items-center gap-6">
           <h1 id="home-title" className={`hero-rise [--c:0] ${pageTitle}`}>

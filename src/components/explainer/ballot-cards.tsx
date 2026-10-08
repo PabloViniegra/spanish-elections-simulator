@@ -34,7 +34,7 @@ function Paper({ paper }: { paper: PaperKind }) {
 
 export function BallotCards() {
   return (
-    <section aria-labelledby="ballots-title" className="depth-scope overflow-clip bg-surface-tile-1 text-on-dark">
+    <section aria-labelledby="ballots-title" className="depth-scope focus-on-dark overflow-clip bg-surface-tile-1 text-on-dark">
       <div className="mx-auto flex max-w-content flex-col gap-14 px-5 py-section sm:px-8 lg:py-40">
         <div className="rise-scope flex max-w-[44rem] flex-col gap-5">
           <h2 id="ballots-title" className={`rise [--c:0] ${sectionTitle}`}>

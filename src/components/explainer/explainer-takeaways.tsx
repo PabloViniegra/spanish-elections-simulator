@@ -58,7 +58,7 @@ const takeaways = [
 
 export function ExplainerTakeaways() {
   return (
-    <section aria-labelledby="takeaways-title" className="depth-scope overflow-clip bg-surface-black text-on-dark">
+    <section aria-labelledby="takeaways-title" className="depth-scope focus-on-dark overflow-clip bg-surface-black text-on-dark">
       <div className="mx-auto flex max-w-content flex-col gap-12 px-5 py-section sm:px-8 lg:py-40">
         <h2 id="takeaways-title" className={`max-w-[48rem] ${sectionTitle}`}>
           Por eso un porcentaje no es un número de escaños.
