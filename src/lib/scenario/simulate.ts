@@ -126,3 +126,9 @@ export function simulate(scenario: Scenario, election: Election, blocs: readonly
     offTarget,
   };
 }
+
+// Seats per bloc in one province of a simulation.
+export function provinceSeats(results: ReturnType<typeof simulate>["results"], code: string) {
+  const result = results.find((constituency) => constituency.code === code);
+  return new Map(result?.candidacies.map(({ id, seats }) => [id, seats]));
+}

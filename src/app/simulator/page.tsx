@@ -39,16 +39,15 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
       <SiteHeader username={session?.user.name} current="simulator" />
       <main id="contenido" className="flex-1">
         <div className="bg-canvas-parchment">
-          <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-6 sm:px-8 sm:py-10">
+          <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-6 sm:px-8 sm:py-8">
             <h1 className="text-display-lg text-balance max-sm:text-[1.75rem]">
               {session ? "Cambia el voto y mira los 350 escaños del 29 de noviembre" : "Así quedarían los 350 escaños del 29 de noviembre con este escenario"}
             </h1>
             <p className="max-w-xl text-body text-pretty text-ink-muted-80">
-              Partimos de los votos de 2023, provincia a provincia, con los escaños del Real Decreto 806/2026. También puedes
-              partir de las generales de 2016 o de 2019. Si cambias un partido, su voto varía en la misma proporción en cada
-              provincia.
+              Votos reales de unas generales con los escaños de 2026. Si cambias un partido, su voto varía en la misma proporción
+              en cada provincia.{" "}
+              <span className="font-semibold text-ink">Es una simulación, no una previsión.</span>
             </p>
-            <p className="max-w-xl text-caption font-semibold">Es una simulación, no una previsión.</p>
           </div>
         </div>
         <SimulatorContainer signedIn={Boolean(session)} />

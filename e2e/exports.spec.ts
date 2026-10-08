@@ -23,6 +23,7 @@ test("downloads the shared scenario as CSV and PNG on a narrow screen", async ({
   page.on("pageerror", (error) => errors.push(error.message));
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto(`/simulator?e=${SHARED}`);
+  await page.getByRole("button", { name: "Descargar", exact: true }).click();
   const csvButton = page.getByRole("button", { name: "Descargar CSV", exact: true });
   await csvButton.focus();
   await expect(csvButton).toBeFocused();
@@ -61,6 +62,7 @@ test("reports PNG failures and allows retry", async ({ page }) => {
     HTMLCanvasElement.prototype.toBlob = function (callback) { callback(null); };
   });
   await page.goto(`/simulator?e=${SHARED}`);
+  await page.getByRole("button", { name: "Descargar", exact: true }).click();
   await page.getByRole("button", { name: "Descargar PNG", exact: true }).click();
   await expect(page.getByText("No se ha podido descargar el PNG", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Descargar PNG", exact: true })).toBeEnabled();

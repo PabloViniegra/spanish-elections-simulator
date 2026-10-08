@@ -33,8 +33,8 @@ test("the simulator asks to sign in and comes back afterwards", async ({ page })
 test("a shared link shows its results read-only when signed out", async ({ page }) => {
   await page.goto(`/simulator?e=${SHARED}`);
   await expect(page.getByRole("heading", { name: "Escenario compartido sobre las generales de julio de 2023" })).toBeVisible();
-  await expect(page.getByRole("group", { name: "Votos de partida" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Guardar en mi perfil" })).toHaveCount(0);
+  await expect(page.getByRole("combobox", { name: "Votos de partida" })).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Guardar", exact: true })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Copiar enlace" })).toBeVisible();
   await expect(page.getByText("El enlace supera los 2.000 caracteres.", { exact: false })).toHaveCount(0);
   const login = page.getByRole("main").getByRole("link", { name: "Iniciar sesión" });
