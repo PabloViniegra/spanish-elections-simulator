@@ -24,7 +24,7 @@ Faithful and explainable: the engine reproduces official results seat for seat f
 
 ## Operating Context
 
-- Users register with email or username and password (Better Auth); scenarios still live entirely in the URL and are shared on social media and messaging apps (with Open Graph hemicycle previews).
+- Users register with email or username and password (Better Auth) to edit simulations or save them to a profile; shared scenarios remain public and read-only through their URL (with Open Graph hemicycle previews).
 - Base election: July 2023 general election by default; 2019 (Apr, Nov) and 2016 bundled as alternatives and validation fixtures.
 - Two input modes: national shares projected to provinces by proportional swing, and per-province overrides that lock a province.
 - Reference data comes from official sources (Ministerio del Interior/Infoelectoral, BOE, INE, CNIG).

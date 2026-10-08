@@ -215,7 +215,7 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 
 - [x] Default bloc mapping for 2023: regional lists of PSOE, PP and Sumar (Compromís included) count with their national party; every other candidacy with a seat is its own bloc.
 - [ ] Should the URL also carry provincial overrides, or should heavily edited scenarios warn that the link will be long?
-- [ ] Which features require an account, and does the simulator stay usable without one?
+- [x] Account access: an account is required to edit or save simulations; shared scenarios remain public and read-only.
 - [ ] Product name and domain.
 - [ ] Analytics: Vercel Analytics or another cookieless option such as Plausible?
 
