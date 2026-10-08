@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SiteAnalytics } from "@/components/analytics/site-analytics";
 import { Toaster } from "@/components/feedback/toaster";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         {children}
         <Toaster />
+        <SiteAnalytics />
       </body>
     </html>
   );

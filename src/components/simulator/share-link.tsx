@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { notify } from "@/components/feedback/notify";
+import { exceedsShareUrlLimit, withScenarioParam } from "@/lib/scenario/url";
 
 const iconProps = {
   "aria-hidden": true,
@@ -35,16 +36,21 @@ function CheckIcon({ className }: { className?: string }) {
 }
 
 // FR-10: copies the current address, which always holds the scenario.
-export function ShareLink({ brokenLink }: { brokenLink: boolean }) {
+export function ShareLink({ brokenLink, scenarioParam }: { brokenLink: boolean; scenarioParam: string | null }) {
   const [copied, setCopied] = useState(false);
+  const [longUrl, setLongUrl] = useState(false);
+  const currentShareUrl = () => withScenarioParam(window.location.href, scenarioParam);
   useEffect(() => {
     if (!copied) return;
     const timer = setTimeout(() => setCopied(false), 2600);
     return () => clearTimeout(timer);
   }, [copied]);
+  useEffect(() => {
+    setLongUrl(exceedsShareUrlLimit(currentShareUrl()));
+  }, [scenarioParam]);
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(currentShareUrl());
       setCopied(true);
       notify.success({ title: "Enlace copiado", description: "Quien lo abra verá esta misma simulación." });
     } catch {
@@ -58,6 +64,9 @@ export function ShareLink({ brokenLink }: { brokenLink: boolean }) {
           El enlace no es válido o es de otra versión. Se muestran los resultados de 2023.
         </p>
       )}
+      <p role="status" aria-live="polite" className={longUrl ? "rounded-sm border border-hairline p-3 text-caption text-ink-muted-80" : "sr-only"}>
+        {longUrl ? "El enlace supera los 2.000 caracteres. Algunas plataformas podrían recortarlo; comprueba que se haya compartido completo." : ""}
+      </p>
       <button
         type="button"
         onClick={copy}

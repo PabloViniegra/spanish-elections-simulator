@@ -38,7 +38,7 @@ Faithful and explainable: the engine reproduces official results seat for seat f
 - Spanish is the default locale; English UI is planned.
 - User profile: username, province (INE code) and usage profile (citizen, journalist, teacher). Political affiliation or voting intention is never stored.
 - Terminology: "bloc" is the user-facing party grouping of local candidacies; "Others" collects unmodelled votes and never wins seats.
-- Open: domain, analytics provider, default 2023 bloc mapping (e.g. Sumar and regional partners).
+- Open: custom domain. Vercel Web Analytics is selected; its project-level activation is pending.
 
 Full specification: `docs/PRD.md`.
 

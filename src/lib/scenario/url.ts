@@ -7,9 +7,21 @@ import { FULL_SHARE, type Scenario } from "./types";
 // A later schema bumps the prefix and migrates older links here.
 const PREFIX = "v1.";
 export const SCENARIO_PARAM = "e";
+export const SHARE_URL_LIMIT = 2000;
 
 // The simulator opened on an encoded scenario.
 export const simulatorHref = (param: string) => `/simulator?${SCENARIO_PARAM}=${encodeURIComponent(param)}`;
+
+export function withScenarioParam(currentHref: string, scenarioParam: string | null) {
+  const url = new URL(currentHref);
+  if (scenarioParam) url.searchParams.set(SCENARIO_PARAM, scenarioParam);
+  else url.searchParams.delete(SCENARIO_PARAM);
+  return url.href;
+}
+
+export function exceedsShareUrlLimit(href: string) {
+  return href.length > SHARE_URL_LIMIT;
+}
 
 const share = z.int().check(z.gte(0), z.lte(FULL_SHARE));
 const scenarioSchema = z.object({

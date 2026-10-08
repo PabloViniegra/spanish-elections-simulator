@@ -55,6 +55,7 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
   const base = baseById(valid.baseElectionId) ?? defaultBase;
   const { blocs } = base;
   const baseline = baselineOf(base);
+  const scenarioParam = valid === baselineOf(defaultBase).scenario ? null : encodeScenario(valid);
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [mode, setMode] = useState<InputMode>("national");
   const [code, setCode] = useState("28");
@@ -84,10 +85,10 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
   };
   useEffect(() => {
     const url = new URL(window.location.href);
-    if (valid === baselineOf(defaultBase).scenario) url.searchParams.delete(SCENARIO_PARAM);
-    else url.searchParams.set(SCENARIO_PARAM, encodeScenario(valid));
+    if (scenarioParam === null) url.searchParams.delete(SCENARIO_PARAM);
+    else url.searchParams.set(SCENARIO_PARAM, scenarioParam);
     window.history.replaceState(null, "", url);
-  }, [valid]);
+  }, [scenarioParam]);
 
   const stale = !fitsInFull(scenario);
   const simulation = simulate(valid, base.election, blocs, seats2026);
@@ -201,7 +202,7 @@ export function SimulatorContainer({ signedIn }: { signedIn: boolean }) {
         </div>
         {/* Below the inputs on narrow screens so the seats come right after them. */}
         <div id={RESULTS_ID} className="flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
-          <ShareLink brokenLink={brokenLink} />
+          <ShareLink brokenLink={brokenLink} scenarioParam={scenarioParam} />
           {signedIn && <SaveSimulationContainer key={encodeScenario(valid)} scenario={valid} ranked={ranked} stale={stale} />}
           <ResultsHemicycle ranked={ranked} stale={stale} selected={picked} baseLabel={base.label} />
           <ExportResultsContainer results={simulation.results} blocs={blocs} ranked={ranked} scenario={valid} baseId={base.election.id} baseLabel={base.label} stale={stale} />

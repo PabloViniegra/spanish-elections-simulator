@@ -5,7 +5,7 @@ import election2023 from "@/data/elections/2023-07.json";
 import { blocs2023 } from "@/lib/elections/blocs-2023";
 import { baseScenario } from "./simulate";
 import type { Scenario } from "./types";
-import { decodeScenario, encodeScenario } from "./url";
+import { decodeScenario, encodeScenario, exceedsShareUrlLimit, SHARE_URL_LIMIT, withScenarioParam } from "./url";
 
 const base = baseScenario(election2023, blocs2023);
 const codes = new Set(election2023.constituencies.map(({ code }) => code));
@@ -42,6 +42,19 @@ describe("scenario URL (FR-10)", () => {
   it("stays under 2,000 characters for a national scenario", () => {
     const busy = { ...base, shares: Object.fromEntries(Object.keys(base.shares).map((id) => [id, 777])), turnout: 7123 };
     expect(encodeScenario(busy).length).toBeLessThan(2000);
+  });
+
+  it("updates the scenario parameter in the share URL", () => {
+    const current = "https://example.test/simulator?ref=mail&e=old";
+    const updated = withScenarioParam(current, "v1.new-scenario");
+    expect(new URL(updated).searchParams.get("e")).toBe("v1.new-scenario");
+    expect(new URL(updated).searchParams.get("ref")).toBe("mail");
+    expect(new URL(withScenarioParam(updated, null)).searchParams.has("e")).toBe(false);
+  });
+
+  it("warns only when the full share URL exceeds 2,000 characters", () => {
+    expect(exceedsShareUrlLimit("x".repeat(SHARE_URL_LIMIT))).toBe(false);
+    expect(exceedsShareUrlLimit("x".repeat(SHARE_URL_LIMIT + 1))).toBe(true);
   });
 
   it("decodes links from every shipped schema version", () => {
