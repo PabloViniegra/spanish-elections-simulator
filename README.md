@@ -74,6 +74,7 @@ This simulator closes that gap:
 
 - Node.js 20+
 - [pnpm](https://pnpm.io) 11+
+- [Docker](https://docs.docker.com/get-docker/) with Compose, only for the end-to-end tests
 
 > [!NOTE]
 > Always use `pnpm` in this project.
@@ -111,7 +112,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the r
 | `pnpm typecheck` | Generate Next.js types and run `tsc --noEmit` |
 | `pnpm test` | Run unit tests with Vitest |
 | `pnpm test:coverage` | Run unit tests with coverage |
-| `pnpm test:e2e` | Run Playwright end-to-end tests (after `pnpm build`, with `docker compose -f compose.e2e.yml up -d --wait`) |
+| `pnpm test:e2e` | Run Playwright end-to-end tests (see [Testing](#testing)) |
 | `pnpm db:generate` | Generate Drizzle migrations |
 | `pnpm db:migrate` | Apply Drizzle migrations |
 | `pnpm db:studio` | Open Drizzle Studio |
@@ -160,7 +161,24 @@ Official per-province figures (seat counts, census, results) are preprocessed in
 ## Testing
 
 - **Unit** — Vitest with property-based testing ([fast-check](https://fast-check.dev)) covering the engine, projection and scenario logic.
-- **E2E** — Playwright journeys for home, simulator access, auth and exports, plus signed-in sessions, editing, saving and rate limits against a throwaway Postgres from `compose.e2e.yml` (`pnpm test:e2e`).
+- **E2E** — Playwright journeys for home, simulator access, auth and exports, plus signed-in sessions, editing, saving and rate limits (`pnpm test:e2e`).
+
+### End-to-end database
+
+The signed-in tests need a real database, so they never touch Neon or the one in `.env.local`. `compose.e2e.yml` starts a throwaway Postgres 17, kept in memory and built from the Drizzle migrations in `drizzle/`, behind [local-neon-http-proxy](https://github.com/TimoWilhelm/local-neon-http-proxy) on port 4444 so the Neon driver can talk to it unchanged.
+
+```bash
+docker compose -f compose.e2e.yml up -d --wait  # start the database
+pnpm build
+pnpm test:e2e
+docker compose -f compose.e2e.yml down          # throw it away
+```
+
+- Playwright points the server at `postgres://postgres:postgres@db.localtest.me:5432/main`. `db.localtest.me` resolves to `127.0.0.1`, and only that host switches the driver to the local proxy.
+- A setup project empties the database, registers an account, confirms its email in the database and signs in. The other tests reuse that session from `playwright/.auth/`, which is git-ignored.
+- The server always starts on port 3100 with a placeholder auth secret and no Resend key, so no email is ever sent. Port 3100 must be free; an already running server is never reused.
+- Postgres has no volume, so `down` discards every account and simulation. Re-running the tests without restarting it is fine: the setup resets the data.
+- CI starts the same containers before the end-to-end job.
 
 ## Documentation
 
