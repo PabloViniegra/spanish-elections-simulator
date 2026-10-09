@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { dhondtDetail } from "@/lib/engine/last-seat";
 import type { SimulatorInitialState } from "@/lib/scenario/initial";
+import type { SavedTarget } from "./save-simulation";
 import { othersShare } from "@/lib/scenario/simulate";
 import { encodeScenario, simulatorHref } from "@/lib/scenario/address";
 import { provinces } from "@/lib/provinces";
@@ -16,6 +17,7 @@ import { ResultsOverview } from "./results-overview";
 import { RESULTS_ID, ResultsStrip } from "./results-strip";
 import { ShareLinkContainer } from "./share-link-container";
 import { SharedResults } from "./shared-results";
+import { useSavedTarget } from "./use-saved-target";
 import { useSimulator } from "./use-simulator";
 
 const SimulatorInputs = dynamic(() => import("./simulator-inputs").then((module) => module.SimulatorInputs), { loading: () => <p role="status">Cargando controles del simulador…</p> });
@@ -26,8 +28,9 @@ const SaveSimulationContainer = dynamic(() => import("./save-simulation-containe
 // of a bundled election as the base (FR-01), 2026 seats. Results follow the
 // last scenario whose shares fit in 100%, which the address mirrors. Signed
 // out, a shared link shows its results without the inputs.
-export function SimulatorContainer({ signedIn, initial }: { signedIn: boolean; initial: SimulatorInitialState }) {
+export function SimulatorContainer({ signedIn, initial, saved }: { signedIn: boolean; initial: SimulatorInitialState; saved: SavedTarget | null }) {
   const state = useSimulator(initial);
+  const [target, keepTarget] = useSavedTarget(saved);
   const {
     shared, brokenLink, scenario, valid, scenarioParam, base, blocs, baseline, simulation, ranked, stale,
     mode, code, setCode, lockedCodes, result, picked, toggle, showDetail,
@@ -52,7 +55,7 @@ export function SimulatorContainer({ signedIn, initial }: { signedIn: boolean; i
             <ResultsActions
               share={<ShareLinkContainer brokenLink={brokenLink} scenarioParam={scenarioParam} />}
               downloads={<ExportResultsContainer results={simulation.results} blocs={blocs} ranked={ranked} scenario={valid} baseId={base.election.id} baseLabel={base.label} stale={stale} />}
-              save={signedIn && <SaveSimulationContainer key={encodeScenario(valid)} scenario={valid} ranked={ranked} stale={stale} />}
+              save={signedIn && <SaveSimulationContainer key={encodeScenario(valid)} scenario={valid} ranked={ranked} stale={stale} saved={target} onSaved={keepTarget} />}
             />
             <div className={`transition-opacity duration-150 ${stale ? "opacity-65" : ""}`}>
               <CoalitionCalculator

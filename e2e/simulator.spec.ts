@@ -95,20 +95,44 @@ test("the link to the current scenario is copied", async ({ page, context }) => 
   expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/\/simulator\?e=v1\./);
 });
 
-test("a saved simulation shows up in the profile and can be deleted", async ({ page }) => {
+test("a saved simulation shows up in the profile, can be updated, renamed and deleted", async ({ page, context }) => {
   const name = "Escenario de prueba";
   await page.getByRole("spinbutton", { name: "PP" }).fill("40");
   await page.getByRole("button", { name: "Guardar", exact: true }).click();
   await page.getByLabel("Nombre de la simulación").fill(name);
   await page.getByRole("button", { name: "Guardar en mi perfil" }).click();
   await expect(page.getByRole("status").filter({ hasText: `«${name}» ya está en tu perfil.` })).toHaveCount(1);
+  // Once saved, further edits can overwrite it.
+  await expect(page.getByRole("button", { name: "Guardar cambios" })).toBeVisible();
+  await expect(page).toHaveURL(/[?&]s=/);
 
   await page.goto("/profile");
   await page.getByRole("link", { name: `Abrir «${name}»` }).click();
   await expect(page.getByRole("spinbutton", { name: "PP" })).toHaveValue("40");
 
+  // Opened from the profile, it can be overwritten; the shared link leaves out which save it was.
+  await page.getByRole("spinbutton", { name: "PP" }).fill("38");
+  await page.getByRole("button", { name: "Guardar", exact: true }).click();
+  await expect(page.getByLabel("Nombre de la simulación")).toHaveValue(name);
+  await page.getByRole("button", { name: "Guardar cambios" }).click();
+  await expect(page.getByRole("status").filter({ hasText: `«${name}» ya está en tu perfil.` })).toHaveCount(1);
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await page.getByRole("button", { name: "Copiar enlace" }).click();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).not.toMatch(/[?&]s=/);
+
   await page.goto("/profile");
-  await page.getByRole("button", { name: `Eliminar «${name}»` }).click();
-  await page.getByRole("group", { name: `Confirmar eliminación de «${name}»` }).getByRole("button", { name: "Sí, eliminar" }).click();
+  await expect(page.getByText(/actualizada el/)).toBeVisible();
+  const renamed = "Escenario renombrado";
+  await page.getByRole("button", { name: `Renombrar «${name}»` }).click();
+  await page.getByLabel("Nuevo nombre").fill(renamed);
+  await page.getByRole("button", { name: "Guardar nombre" }).click();
+  await expect(page.getByRole("heading", { name: renamed })).toBeVisible();
+  await expect(page.getByRole("button", { name: `Renombrar «${renamed}»` })).toBeFocused();
+  await page.getByRole("link", { name: `Abrir «${renamed}»` }).click();
+  await expect(page.getByRole("spinbutton", { name: "PP" })).toHaveValue("38");
+
+  await page.goto("/profile");
+  await page.getByRole("button", { name: `Eliminar «${renamed}»` }).click();
+  await page.getByRole("group", { name: `Confirmar eliminación de «${renamed}»` }).getByRole("button", { name: "Sí, eliminar" }).click();
   await expect(page.getByText("Todavía no has guardado ninguna.")).toBeVisible();
 });

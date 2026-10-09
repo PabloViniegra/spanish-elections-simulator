@@ -4,6 +4,7 @@ import type { Bloc } from "@/lib/elections/types";
 import { MAJORITY } from "@/lib/hemicycle-layout";
 import { LIST_HEADING_ID } from "./delete-simulation";
 import { DeleteSimulationContainer } from "./delete-simulation-container";
+import { RenameSimulationContainer } from "./rename-simulation-container";
 import { SavedHemicycle } from "./saved-hemicycle";
 
 export type SavedSimulation = {
@@ -11,6 +12,8 @@ export type SavedSimulation = {
   name: string;
   href: string;
   savedOn: string;
+  // Absent until it is renamed or overwritten.
+  updatedOn?: string;
   // Null when the scenario no longer restores.
   summary: { baseLabel: string; ranked: readonly (Bloc & { seats: number })[] } | null;
 };
@@ -65,7 +68,7 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
         <>
           <p className="text-caption text-ink-muted-80">Es una simulación, no una previsión.</p>
           <ul className="mt-4 flex flex-col divide-y divide-hairline border-y border-hairline">
-            {simulations.map(({ id, name, href, savedOn, summary }, index) => (
+            {simulations.map(({ id, name, href, savedOn, updatedOn, summary }, index) => (
               <li key={id} className={row}>
                 {summary ? (
                   // The chamber opens the scenario too; the link below is the named one.
@@ -80,7 +83,10 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
                 <div className="flex min-w-0 flex-col gap-2">
                   <div className="flex flex-col gap-0.5">
                     <h3 className="text-tagline break-words">{name}</h3>
-                    <p className="text-caption text-ink-muted-80">Guardada el {savedOn}</p>
+                    <p className="text-caption text-ink-muted-80">
+                      Guardada el {savedOn}
+                      {updatedOn && ` · actualizada el ${updatedOn}`}
+                    </p>
                   </div>
                   {summary ? (
                     <Summary {...summary} />
@@ -89,12 +95,13 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
                       Se guardó con una versión anterior del simulador y ya no se puede abrir. Puedes eliminarla.
                     </p>
                   )}
-                  <div className="flex items-center gap-8">
+                  <div className="flex flex-wrap items-center gap-x-8">
                     {summary && (
                       <Link href={href} className="flex min-h-11 items-center text-caption font-semibold text-primary underline underline-offset-2">
                         Abrir<span className="sr-only"> «{name}»</span>
                       </Link>
                     )}
+                    <RenameSimulationContainer id={id} name={name} />
                     <DeleteSimulationContainer id={id} name={name} />
                   </div>
                 </div>

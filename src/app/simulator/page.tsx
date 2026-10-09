@@ -6,8 +6,9 @@ import { SimulatorContainer } from "@/components/simulator/simulator-container";
 import { JsonLd } from "@/components/seo/json-ld";
 import { withNext } from "@/lib/auth/next-path";
 import { getSession } from "@/lib/auth/session";
-import { SCENARIO_PARAM } from "@/lib/scenario/url";
+import { SAVED_PARAM, SCENARIO_PARAM } from "@/lib/scenario/url";
 import { simulatorInitialState } from "@/lib/scenario/initial";
+import { findSimulation } from "@/lib/simulations/queries";
 import { OG_SIZE, SITE_OPEN_GRAPH, SITE_URL } from "@/lib/site";
 
 const metadata: Metadata = {
@@ -16,18 +17,19 @@ const metadata: Metadata = {
   alternates: { canonical: "/simulator" },
 };
 
+type Param = typeof SCENARIO_PARAM | typeof SAVED_PARAM;
 type SimulatorPageProps = {
-  searchParams: Promise<Partial<Record<typeof SCENARIO_PARAM, string | string[]>>>;
+  searchParams: Promise<Partial<Record<Param, string | string[]>>>;
 };
 
-async function scenarioParamOf(searchParams: SimulatorPageProps["searchParams"]) {
-  const shared = (await searchParams)[SCENARIO_PARAM];
-  return Array.isArray(shared) ? shared[0] : shared;
+async function paramOf(searchParams: SimulatorPageProps["searchParams"], name: Param) {
+  const value = (await searchParams)[name];
+  return Array.isArray(value) ? value[0] : value;
 }
 
 // A shared link previews its own chamber.
 export async function generateMetadata({ searchParams }: SimulatorPageProps): Promise<Metadata> {
-  const param = await scenarioParamOf(searchParams);
+  const param = await paramOf(searchParams, SCENARIO_PARAM);
   if (!param) return metadata;
   const image = {
     url: `/simulator/og?${SCENARIO_PARAM}=${encodeURIComponent(param)}`,
@@ -40,8 +42,10 @@ export async function generateMetadata({ searchParams }: SimulatorPageProps): Pr
 // Simulating takes an account; a shared link stays public, read-only.
 export default async function SimulatorPage({ searchParams }: SimulatorPageProps) {
   const session = await getSession();
-  const param = await scenarioParamOf(searchParams);
+  const param = await paramOf(searchParams, SCENARIO_PARAM);
   if (!session && !param) redirect(withNext("/login", "/simulator"));
+  const savedId = await paramOf(searchParams, SAVED_PARAM);
+  const saved = session && param && savedId ? await findSimulation(session.user.id, savedId) : null;
   return (
     <>
       <JsonLd
@@ -69,7 +73,7 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
             </p>
           </div>
         </div>
-        <SimulatorContainer signedIn={Boolean(session)} initial={simulatorInitialState(param ?? null)} />
+        <SimulatorContainer signedIn={Boolean(session)} initial={simulatorInitialState(param ?? null)} saved={saved} />
       </main>
       <SiteFooter>
         Escaños del 29 de noviembre de 2026 según el Real Decreto 806/2026. Es una simulación, no una previsión, y no favorece a

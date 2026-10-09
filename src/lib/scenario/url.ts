@@ -6,7 +6,7 @@ import { FULL_SHARE, type Scenario } from "./types";
 import { SCENARIO_PREFIX } from "./address";
 
 // URL format: "v1." + the scenario as JSON compressed with lz-string (NFR-10).
-export { encodeScenario, exceedsShareUrlLimit, SCENARIO_PARAM, SHARE_URL_LIMIT, simulatorHref, withScenarioParam } from "./address";
+export { encodeScenario, exceedsShareUrlLimit, SAVED_PARAM, SCENARIO_PARAM, SHARE_URL_LIMIT, simulatorHref, withScenarioParam } from "./address";
 
 const share = z.int().check(z.gte(0), z.lte(FULL_SHARE));
 const bloc = z.object({

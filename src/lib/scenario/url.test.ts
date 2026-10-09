@@ -46,10 +46,11 @@ describe("scenario URL (FR-10)", () => {
   });
 
   it("updates the scenario parameter in the share URL", () => {
-    const current = "https://example.test/simulator?ref=mail&e=old";
+    const current = "https://example.test/simulator?ref=mail&e=old&s=saved-id";
     const updated = withScenarioParam(current, "v1.new-scenario");
     expect(new URL(updated).searchParams.get("e")).toBe("v1.new-scenario");
     expect(new URL(updated).searchParams.get("ref")).toBe("mail");
+    expect(new URL(updated).searchParams.has("s")).toBe(false);
     expect(new URL(withScenarioParam(updated, null)).searchParams.has("e")).toBe(false);
   });
 

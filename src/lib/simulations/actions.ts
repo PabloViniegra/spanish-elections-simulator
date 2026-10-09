@@ -7,12 +7,20 @@ import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db/client";
 import { simulation } from "@/lib/db/schema";
 import type { SaveState } from "./forms";
-import { insertSimulationIfRoom } from "./queries";
-import { saveSimulationAs } from "./save";
+import { insertSimulationIfRoom, updateOwnedSimulation } from "./queries";
+import { saveSimulationAs, updateSimulationAs } from "./save";
 
 export async function saveSimulation(_prev: SaveState, formData: FormData): Promise<SaveState> {
   const session = await getSession();
   const state = await saveSimulationAs(session?.user.id, formData, insertSimulationIfRoom);
+  if (state?.saved) revalidatePath("/profile");
+  return state;
+}
+
+// Renames a saved simulation, or overwrites it with the scenario sent.
+export async function updateSimulation(_prev: SaveState, formData: FormData): Promise<SaveState> {
+  const session = await getSession();
+  const state = await updateSimulationAs(session?.user.id, formData, updateOwnedSimulation);
   if (state?.saved) revalidatePath("/profile");
   return state;
 }

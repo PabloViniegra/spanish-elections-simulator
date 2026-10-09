@@ -32,11 +32,12 @@ export default async function ProfilePage() {
         </div>
         <div className="mx-auto grid max-w-content grid-cols-[minmax(0,1fr)] gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-start lg:gap-16 lg:py-16">
           <SimulationList
-            simulations={saved.map(({ id, name, scenario, createdAt }) => ({
+            simulations={saved.map(({ id, name, scenario, createdAt, updatedAt }) => ({
               id,
               name,
-              href: simulatorHref(scenario),
+              href: simulatorHref(scenario, id),
               savedOn: savedAt(createdAt),
+              updatedOn: updatedAt ? savedAt(updatedAt) : undefined,
               summary: summarizeSimulation(scenario),
             }))}
           />

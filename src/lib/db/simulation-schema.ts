@@ -15,6 +15,8 @@ export const simulation = pgTable(
     name: text("name").notNull(),
     scenario: text("scenario").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    // Null until it is renamed or its scenario overwritten.
+    updatedAt: timestamp("updated_at"),
   },
   (table) => [index("simulation_userId_idx").on(table.userId)],
 );

@@ -1,0 +1,1 @@
+ALTER TABLE "simulation" ADD COLUMN "updated_at" timestamp;
