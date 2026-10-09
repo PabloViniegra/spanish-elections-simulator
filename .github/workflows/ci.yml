@@ -47,6 +47,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
+      # Registries throttle anonymous pulls from shared runner addresses; retry.
+      - run: for attempt in 1 2 3; do docker compose -f compose.e2e.yml pull && break; [ "$attempt" = 3 ] && exit 1; sleep $((attempt * 15)); done
       - run: docker compose -f compose.e2e.yml up -d --wait
       - run: pnpm build
       - run: pnpm test:e2e
