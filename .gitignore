@@ -55,6 +55,7 @@ opencode.json
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/playwright/.auth/
 
 # local tooling output
 .playwright-mcp/

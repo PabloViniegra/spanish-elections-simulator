@@ -111,7 +111,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the r
 | `pnpm typecheck` | Generate Next.js types and run `tsc --noEmit` |
 | `pnpm test` | Run unit tests with Vitest |
 | `pnpm test:coverage` | Run unit tests with coverage |
-| `pnpm test:e2e` | Run Playwright end-to-end tests |
+| `pnpm test:e2e` | Run Playwright end-to-end tests (after `pnpm build`, with `docker compose -f compose.e2e.yml up -d --wait`) |
 | `pnpm db:generate` | Generate Drizzle migrations |
 | `pnpm db:migrate` | Apply Drizzle migrations |
 | `pnpm db:studio` | Open Drizzle Studio |
@@ -160,7 +160,7 @@ Official per-province figures (seat counts, census, results) are preprocessed in
 ## Testing
 
 - **Unit** — Vitest with property-based testing ([fast-check](https://fast-check.dev)) covering the engine, projection and scenario logic.
-- **E2E** — Playwright journeys for home, simulator access, auth and exports (`pnpm test:e2e`).
+- **E2E** — Playwright journeys for home, simulator access, auth and exports, plus signed-in sessions, editing, saving and rate limits against a throwaway Postgres from `compose.e2e.yml` (`pnpm test:e2e`).
 
 ## Documentation
 

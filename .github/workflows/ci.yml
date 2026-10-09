@@ -12,7 +12,8 @@ concurrency:
 permissions:
   contents: read
 
-# Placeholders so the app modules load at build time; CI never reaches a database.
+# Placeholders so the app modules load at build time. The end-to-end tests
+# point the server at the database from compose.e2e.yml instead.
 env:
   DATABASE_URI: postgresql://ci:ci@localhost/ci
   BETTER_AUTH_SECRET: ci-placeholder-secret-not-used-in-production
@@ -46,6 +47,7 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec playwright install --with-deps chromium
+      - run: docker compose -f compose.e2e.yml up -d --wait
       - run: pnpm build
       - run: pnpm test:e2e
       - uses: actions/upload-artifact@v4
