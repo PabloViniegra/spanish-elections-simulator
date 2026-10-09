@@ -7,6 +7,7 @@ import { JsonLd } from "@/components/seo/json-ld";
 import { withNext } from "@/lib/auth/next-path";
 import { getSession } from "@/lib/auth/session";
 import { SCENARIO_PARAM } from "@/lib/scenario/url";
+import { simulatorInitialState } from "@/lib/scenario/initial";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -22,7 +23,10 @@ type SimulatorPageProps = {
 // Simulating takes an account; a shared link stays public, read-only.
 export default async function SimulatorPage({ searchParams }: SimulatorPageProps) {
   const session = await getSession();
-  if (!session && !(await searchParams)[SCENARIO_PARAM]) redirect(withNext("/login", "/simulator"));
+  const params = await searchParams;
+  const shared = params[SCENARIO_PARAM];
+  const param = Array.isArray(shared) ? shared[0] : shared;
+  if (!session && !param) redirect(withNext("/login", "/simulator"));
   return (
     <>
       <JsonLd
@@ -50,7 +54,7 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
             </p>
           </div>
         </div>
-        <SimulatorContainer signedIn={Boolean(session)} />
+        <SimulatorContainer signedIn={Boolean(session)} initial={simulatorInitialState(param ?? null)} />
       </main>
       <SiteFooter>
         Escaños del 29 de noviembre de 2026 según el Real Decreto 806/2026. Es una simulación, no una previsión, y no favorece a

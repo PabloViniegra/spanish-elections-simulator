@@ -5,7 +5,7 @@ import { useActionState } from "react";
 import { notify } from "@/components/feedback/notify";
 import { useFocusOnError } from "@/components/forms/use-focus-on-error";
 import type { Scenario } from "@/lib/scenario/types";
-import { encodeScenario } from "@/lib/scenario/url";
+import { encodeScenario } from "@/lib/scenario/address";
 import { saveSimulation } from "@/lib/simulations/actions";
 import type { SaveState } from "@/lib/simulations/forms";
 import { SaveSimulation } from "./save-simulation";

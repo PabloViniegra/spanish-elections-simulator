@@ -1,6 +1,7 @@
 import { FormAlert } from "@/components/forms/form-alert";
 import { TextField } from "@/components/forms/text-field";
-import { NAME_MAX, type SaveState } from "@/lib/simulations/forms";
+import type { SaveState } from "@/lib/simulations/forms";
+import { NAME_MAX } from "@/lib/simulations/limits";
 
 type SaveSimulationProps = {
   state: SaveState;

@@ -1,15 +1,15 @@
 "use client";
 
-import { type PointerEvent, useState } from "react";
+import { useState } from "react";
 import type { ConstituencyResult } from "@/lib/engine/types";
 import type { Bloc } from "@/lib/elections/types";
 import { provinces } from "@/lib/provinces";
 import { provinceWinners } from "@/lib/scenario/province-winners";
-import { PROVINCE_INPUTS_ID } from "./province-inputs";
+import { PROVINCE_INPUTS_ID } from "./ids";
 import { CITY_CODES, ProvinceMap } from "./province-map";
 import { ProvinceSeats } from "./province-seats";
 import { ProvinceTable } from "./province-table";
-import { ProvinceTooltip } from "./province-tooltip";
+import { ProvinceMapInteraction } from "./province-map-interaction";
 
 const provinceCount = (count: number) => (count === 1 ? "1 provincia" : `${count} provincias`);
 
@@ -31,8 +31,7 @@ type ProvinceMapContainerProps = {
 // table for every province.
 export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCodes, onPick, onDetail }: ProvinceMapContainerProps) {
   const [active, setActive] = useState<string | null>(null);
-  // Mouse position over the map, for the tooltip; null for touch screens.
-  const [cursor, setCursor] = useState<{ x: number; y: number; width: number; height: number } | null>(null);
+  const [mouse, setMouse] = useState(false);
   const outcomes = provinceWinners(results);
   const blocOf = new Map(blocs.map((bloc) => [bloc.id, bloc]));
   const known = (ids: readonly string[]) => ids.flatMap((id) => blocOf.get(id) ?? []);
@@ -59,13 +58,8 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
   const smallest = mainland.reduce((least, row) => (row.deputies < least.deputies ? row : least));
   const summary = [...led.map(({ bloc, count }) => `${bloc.name} en ${provinceCount(count)}`), ...(ties > 0 ? [`empate en ${provinceCount(ties)}`] : [])].join(", ");
   // A mouse gets the tooltip; the panel keeps a tap, or the province edited.
-  const hovered = cursor && rows.find((row) => row.code === active);
-  const shown = (cursor ? null : active) ?? selected;
-  const track = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== "mouse") return;
-    const rect = event.currentTarget.getBoundingClientRect();
-    setCursor({ x: event.clientX - rect.left, y: event.clientY - rect.top, width: rect.width, height: rect.height });
-  };
+  const hovered = mouse ? rows.find((row) => row.code === active) ?? null : null;
+  const shown = (mouse ? null : active) ?? selected;
   // The inputs sit above the map, off-screen on a phone: bring them back.
   const edit = () => {
     const inputs = document.getElementById(PROVINCE_INPUTS_ID);
@@ -100,7 +94,7 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
             </li>
           )}
         </ul>
-        <div className="relative" onPointerMove={track} onPointerLeave={() => setCursor(null)}>
+        <ProvinceMapInteraction province={hovered} onMouseChange={setMouse} hint={onPick ? (hovered?.code === selected ? null : "Haz clic para editar esta provincia.") : "Haz clic para ver su reparto D’Hondt."}>
           <ProvinceMap
             leaders={new Map(rows.map((row) => [row.code, row.leaders]))}
             active={active}
@@ -111,14 +105,7 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
             onPick={onPick}
             onDetail={onDetail}
           />
-          {hovered && (
-            <ProvinceTooltip
-              province={hovered}
-              {...cursor}
-              hint={onPick ? (hovered.code === selected ? null : "Haz clic para editar esta provincia.") : "Haz clic para ver su reparto D’Hondt."}
-            />
-          )}
-        </div>
+        </ProvinceMapInteraction>
         <p className="max-w-prose text-caption text-ink-muted-80">
           Las rayas grises marcan un empate en escaños; el reparto de cada provincia dice entre quiénes. El tamaño no refleja los escaños: {largest.name} elige {largest.deputies} y {smallest.name},{" "}
           {smallest.deputies}.{lockedCodes.length > 0 && " El candado marca las provincias fijadas a mano."}

@@ -21,7 +21,20 @@ export function ResultsActions({ share, downloads, save }: ResultsActionsProps) 
   const panelId = useId();
   const panel = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    if (open === "save") panel.current?.querySelector<HTMLInputElement>("input:not([type=hidden])")?.focus();
+    const target = panel.current;
+    if (open !== "save" || !target) return;
+    const focusInput = () => {
+      const input = target.querySelector<HTMLInputElement>("input:not([type=hidden])");
+      if (!input) return false;
+      input.focus();
+      return true;
+    };
+    if (focusInput()) return;
+    const observer = new MutationObserver(() => {
+      if (focusInput()) observer.disconnect();
+    });
+    observer.observe(target, { childList: true, subtree: true });
+    return () => observer.disconnect();
   }, [open]);
   const toggle = (label: string, value: Panel) => (
     <button type="button" aria-expanded={open === value} aria-controls={open === value ? panelId : undefined} onClick={() => setOpen(open === value ? null : value)} className={toggleClass}>

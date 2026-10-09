@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import type { Bloc } from "@/lib/elections/types";
 import { MAJORITY } from "@/lib/hemicycle-layout";
 import { CoalitionBar } from "./coalition-bar";
@@ -6,16 +7,15 @@ type CoalitionCalculatorProps = {
   ranked: readonly (Bloc & { seats: number })[];
   selected: ReadonlySet<string>;
   onToggle: (blocId: string) => void;
-  coalitions: readonly { members: string[]; seats: number }[];
+  children: ReactNode;
 };
 
 // FR-08: the user picks blocs and sees their sum against 176, plus every
 // minimal combination that reaches it.
-export function CoalitionCalculator({ ranked, selected, onToggle, coalitions }: CoalitionCalculatorProps) {
+export function CoalitionCalculator({ ranked, selected, onToggle, children }: CoalitionCalculatorProps) {
   const pickedBlocs = ranked.filter((bloc) => selected.has(bloc.id));
   const total = pickedBlocs.reduce((sum, bloc) => sum + bloc.seats, 0);
   const gap = MAJORITY - total;
-  const nameOf = new Map(ranked.map((bloc) => [bloc.id, bloc.name]));
   return (
     <section aria-labelledby="coalition-title" className="flex flex-col gap-4">
       <h2 id="coalition-title" className="text-tagline">
@@ -49,18 +49,7 @@ export function CoalitionCalculator({ ranked, selected, onToggle, coalitions }: 
         </p>
         <CoalitionBar picked={pickedBlocs} total={total} />
       </div>
-      <details className="text-caption">
-        <summary className="min-h-11 cursor-pointer py-3">Combinaciones mínimas que llegan a {MAJORITY} ({coalitions.length})</summary>
-        <p className="mb-2 text-ink-muted-80">Cada una pierde la mayoría si sale cualquiera de sus partidos.</p>
-        <ul className="flex flex-col gap-1">
-          {coalitions.map(({ members, seats }) => (
-            <li key={members.join()} className="flex justify-between gap-4 border-b border-divider-soft py-1">
-              <span>{members.map((id) => nameOf.get(id)).join(" + ")}</span>
-              <span className="tabular-nums">{seats}</span>
-            </li>
-          ))}
-        </ul>
-      </details>
+      {children}
     </section>
   );
 }

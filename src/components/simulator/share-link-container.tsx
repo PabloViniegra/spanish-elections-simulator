@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { notify } from "@/components/feedback/notify";
-import { exceedsShareUrlLimit, withScenarioParam } from "@/lib/scenario/url";
+import { exceedsShareUrlLimit, withScenarioParam } from "@/lib/scenario/address";
 import { ShareLink } from "./share-link";
 
 // The address changes only with `scenarioParam`, which already re-renders.

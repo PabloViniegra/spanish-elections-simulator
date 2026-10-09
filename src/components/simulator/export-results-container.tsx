@@ -7,8 +7,7 @@ import type { ConstituencyResult } from "@/lib/engine/types";
 import type { Scenario } from "@/lib/scenario/types";
 import { exportScenarioId } from "@/lib/scenario/export-file-name";
 import { resultsCsv } from "@/lib/scenario/export-csv";
-import { encodeScenario, SCENARIO_PARAM } from "@/lib/scenario/url";
-import { hemicyclePng } from "@/lib/scenario/export-png";
+import { encodeScenario, SCENARIO_PARAM } from "@/lib/scenario/address";
 import { ExportResults } from "./export-results";
 
 function download(blob: Blob, filename: string) {
@@ -52,7 +51,7 @@ export function ExportResultsContainer({ results, blocs, ranked, scenario, baseI
     url.searchParams.set(SCENARIO_PARAM, encodeScenario(scenario));
     try {
       await notify.promise(
-        hemicyclePng(ranked, baseLabel, url.href).then((blob) => download(blob, `hemiciclo-${filename}.png`)),
+        import("@/lib/scenario/export-png").then(({ hemicyclePng }) => hemicyclePng(ranked, baseLabel, url.href)).then((blob) => download(blob, `hemiciclo-${filename}.png`)),
         {
           loading: { title: "Preparando PNG…" },
           success: { title: "PNG descargado", description: "El hemiciclo con el enlace a esta simulación." },

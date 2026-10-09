@@ -7,9 +7,8 @@ import { ExplainerHero } from "@/components/explainer/explainer-hero";
 import { ExplainerTakeaways } from "@/components/explainer/explainer-takeaways";
 import { SeatLadder } from "@/components/explainer/seat-ladder";
 import { ThresholdBars } from "@/components/explainer/threshold-bars";
-import { SiteHeader } from "@/components/home/site-header";
+import { SessionSiteHeader } from "@/components/home/session-site-header";
 import { JsonLd } from "@/components/seo/json-ld";
-import { getSession } from "@/lib/auth/session";
 import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -19,8 +18,7 @@ export const metadata: Metadata = {
 };
 
 // FR-14: the electoral system in plain language, in the order a vote travels.
-export default async function ExplainerPage() {
-  const session = await getSession();
+export default function ExplainerPage() {
   return (
     <>
       <JsonLd
@@ -34,7 +32,7 @@ export default async function ExplainerPage() {
         }}
       />
       <div aria-hidden="true" className="read-progress fixed inset-x-0 top-0 z-50 h-0.5 bg-primary" />
-      <SiteHeader username={session?.user.name} current="how-it-works" />
+      <SessionSiteHeader current="how-it-works" />
       <main id="contenido" className="flex-1">
         <ExplainerHero />
         <ConstituencyMap />

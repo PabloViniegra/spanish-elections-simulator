@@ -4,8 +4,7 @@ import type { Bloc } from "@/lib/elections/types";
 import type { dhondtDetail } from "@/lib/engine/last-seat";
 import { formatVotes } from "./format";
 import { QuotientTable } from "./quotient-table";
-
-export const DHONDT_ID = "reparto-dhondt";
+import { DHONDT_ID } from "./ids";
 
 type DhondtDetailProps = {
   blocs: readonly Bloc[];

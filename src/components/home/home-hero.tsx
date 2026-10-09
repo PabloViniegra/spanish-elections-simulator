@@ -2,8 +2,9 @@ import { CountReplay } from "./count-replay";
 import { CtaLinks } from "./cta-links";
 import { SeatCount } from "./seat-count";
 import { pageTitle } from "./type";
+import type { ReactNode } from "react";
 
-export function HomeHero({ username }: { username?: string }) {
+export function HomeHero({ actions }: { actions?: ReactNode }) {
   return (
     <section aria-labelledby="home-title" className="focus-on-dark bg-surface-black text-on-dark">
       <div className="mx-auto flex max-w-content flex-col items-center gap-14 px-5 pt-12 pb-6 lg:min-h-[calc(100svh-2.75rem)] lg:justify-between lg:gap-8 text-center sm:px-8 lg:pt-16">
@@ -17,7 +18,7 @@ export function HomeHero({ username }: { username?: string }) {
             estimación de voto y mira cómo queda el Congreso en las generales del 29 de noviembre.
           </p>
           <div className="hero-rise [--c:2]">
-            <CtaLinks tone="dark" withLogin={!username} />
+            {actions ?? <CtaLinks tone="dark" />}
           </div>
           <p className="hero-rise text-caption text-on-dark-muted [--c:3]">
             Es una simulación, no una previsión.

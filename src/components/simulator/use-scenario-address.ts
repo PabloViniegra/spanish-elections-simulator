@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { SCENARIO_PARAM } from "@/lib/scenario/url";
+import { SCENARIO_PARAM } from "@/lib/scenario/address";
 
 // The address mirrors the scenario without adding history entries; null
 // leaves it bare.

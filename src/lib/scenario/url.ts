@@ -1,28 +1,12 @@
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+import { decompressFromEncodedURIComponent } from "lz-string";
 import * as z from "zod/mini";
 import { BLOC_NAME_MAX, MAX_BLOCS } from "./blocs";
 import { fitsInFull } from "./simulate";
 import { FULL_SHARE, type Scenario } from "./types";
+import { SCENARIO_PREFIX } from "./address";
 
 // URL format: "v1." + the scenario as JSON compressed with lz-string (NFR-10).
-// A later schema bumps the prefix and migrates older links here.
-const PREFIX = "v1.";
-export const SCENARIO_PARAM = "e";
-export const SHARE_URL_LIMIT = 2000;
-
-// The simulator opened on an encoded scenario.
-export const simulatorHref = (param: string) => `/simulator?${SCENARIO_PARAM}=${encodeURIComponent(param)}`;
-
-export function withScenarioParam(currentHref: string, scenarioParam: string | null) {
-  const url = new URL(currentHref);
-  if (scenarioParam) url.searchParams.set(SCENARIO_PARAM, scenarioParam);
-  else url.searchParams.delete(SCENARIO_PARAM);
-  return url.href;
-}
-
-export function exceedsShareUrlLimit(href: string) {
-  return href.length > SHARE_URL_LIMIT;
-}
+export { encodeScenario, exceedsShareUrlLimit, SCENARIO_PARAM, SHARE_URL_LIMIT, simulatorHref, withScenarioParam } from "./address";
 
 const share = z.int().check(z.gte(0), z.lte(FULL_SHARE));
 const bloc = z.object({
@@ -41,15 +25,11 @@ const scenarioSchema = z.object({
   blocs: z.optional(z.array(bloc).check(z.minLength(1), z.maxLength(MAX_BLOCS))),
 });
 
-export function encodeScenario(scenario: Scenario) {
-  return PREFIX + compressToEncodedURIComponent(JSON.stringify(scenario));
-}
-
 // The scenario a link carries, or null when it is broken or from another
 // schema version. Decompressing is the costly step, so it runs once per link.
 export function parseScenarioParam(param: string): Scenario | null {
-  if (!param.startsWith(PREFIX)) return null;
-  const json = decompressFromEncodedURIComponent(param.slice(PREFIX.length));
+  if (!param.startsWith(SCENARIO_PREFIX)) return null;
+  const json = decompressFromEncodedURIComponent(param.slice(SCENARIO_PREFIX.length));
   if (!json) return null;
   let data: unknown;
   try {

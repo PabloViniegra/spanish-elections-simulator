@@ -1,18 +1,18 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { baseById, defaultBase } from "@/lib/elections/bases";
+import { useState, useTransition } from "react";
+import { notify } from "@/components/feedback/notify";
+import { loadBase } from "@/lib/elections/load-base";
 import { baselineFor, baselineOf } from "@/lib/scenario/baselines";
 import { rankedBlocs, scenarioBlocs } from "@/lib/scenario/blocs";
 import { adjustBlank, adjustShare, rebalance } from "@/lib/scenario/rebalance";
 import { fitsInFull, othersShare, provinceShares, simulate } from "@/lib/scenario/simulate";
 import type { ProvinceShares, Scenario } from "@/lib/scenario/types";
-import { restoreScenario } from "@/lib/scenario/restore";
-import { encodeScenario, SCENARIO_PARAM } from "@/lib/scenario/url";
+import type { SimulatorInitialState } from "@/lib/scenario/initial";
+import { encodeScenario } from "@/lib/scenario/address";
 import { provinces } from "@/lib/provinces";
 import { seats2026 } from "@/lib/seats-2026";
-import { DHONDT_ID } from "./dhondt-detail";
+import { DHONDT_ID } from "./ids";
 import type { InputMode } from "./mode-switch";
 import { useScenario } from "./use-scenario";
 import { useScenarioAddress } from "./use-scenario-address";
@@ -28,19 +28,17 @@ function found<T>(value: T | undefined, code: string): T {
 
 // The simulator's state: the scenario being edited, the last one that fits in
 // 100% (which the results and the address follow), and the province in view.
-export function useSimulator() {
-  const shared = useSearchParams().get(SCENARIO_PARAM);
-  // Read once: the address changes with every edit afterwards.
-  const [restored] = useState(() => (shared ? restoreScenario(shared) : null));
-  const [brokenLink] = useState(Boolean(shared) && !restored);
-  const { scenario, valid, notice, update, discard, undo } = useScenario(restored ?? baselineOf(defaultBase).scenario);
-  const base = baseById(valid.baseElectionId) ?? defaultBase;
+export function useSimulator(initial: SimulatorInitialState) {
+  const [loadedBases, setLoadedBases] = useState(() => new Map([[initial.base.election.id, initial.base]]));
+  const [changingBase, startBaseChange] = useTransition();
+  const { scenario, valid, notice, update, discard, undo } = useScenario(initial.scenario ?? baselineOf(initial.base).scenario);
+  const base = loadedBases.get(valid.baseElectionId) ?? initial.base;
   // Results follow the blocs of the last valid scenario, the inputs those
   // being edited (FR-11).
   const blocs = scenarioBlocs(valid, base);
   const editBlocs = scenarioBlocs(scenario, base);
   const baseline = baselineFor(base, blocs);
-  const scenarioParam = valid === baselineOf(defaultBase).scenario ? null : encodeScenario(valid);
+  const scenarioParam = base.election.id === "2023-07" && valid === baselineOf(base).scenario ? null : encodeScenario(valid);
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [mode, setMode] = useState<InputMode>("national");
   const [code, setCode] = useState("28");
@@ -81,8 +79,16 @@ export function useSimulator() {
   };
   const reset = () => restart(baseline.scenario, `Escenario restablecido a los resultados de ${base.label}.`);
   const changeBase = (id: string) => {
-    const next = baseById(id);
-    if (next) restart(baselineOf(next).scenario, `Votos de partida: generales de ${next.label}.`);
+    startBaseChange(async () => {
+      try {
+        const next = loadedBases.get(id) ?? await loadBase(id);
+        if (!next) return;
+        setLoadedBases((loaded) => new Map(loaded).set(id, next));
+        restart(baselineOf(next).scenario, `Votos de partida: generales de ${next.label}.`);
+      } catch {
+        notify.error({ title: "No se ha podido cargar la elección", description: "Vuelve a seleccionarla para intentarlo de nuevo." });
+      }
+    });
   };
 
   const stale = !fitsInFull(scenario);
@@ -123,8 +129,9 @@ export function useSimulator() {
   };
 
   return {
-    shared,
-    brokenLink,
+    shared: initial.shared,
+    brokenLink: initial.brokenLink,
+    changingBase,
     scenario,
     valid,
     scenarioParam,

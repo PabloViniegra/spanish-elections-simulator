@@ -5,9 +5,7 @@ import { AdjustToggle } from "./adjust-toggle";
 import { OffTargetWarning } from "./off-target-warning";
 import { ShareBudget } from "./share-budget";
 import { ShareRows } from "./share-rows";
-
-// Target of the map's "edit this province" link, below the sticky strip.
-export const PROVINCE_INPUTS_ID = "voto-por-provincia";
+import { PROVINCE_INPUTS_ID } from "./ids";
 
 type ProvinceInputsProps = {
   blocs: readonly Bloc[];

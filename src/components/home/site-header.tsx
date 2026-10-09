@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { signOut } from "@/lib/auth/actions";
 import { MobileMenu } from "./mobile-menu";
 import { NavLink, type NavPage } from "./nav-link";
@@ -26,11 +27,30 @@ function Destinations({ current, variant }: { current: NavPage; variant: "bar" |
   );
 }
 
+export function AccountLinks({ username, current, variant }: { username?: string; current: NavPage; variant: "bar" | "row" }) {
+  const bar = variant === "bar";
+  return username ? (
+    <>
+      <NavLink href="/profile" page="profile" current={current} variant={variant}>
+        {bar ? <span className="sr-only">Mi perfil: </span> : "Mi perfil · "}
+        <span className={bar ? "max-w-40 truncate" : "truncate"} title={username}>{username}</span>
+      </NavLink>
+      <SignOut className={bar ? "flex min-h-11 items-center" : "flex min-h-12 items-center"} />
+    </>
+  ) : (
+    <>
+      <Link href="/login" className={bar ? "flex min-h-11 items-center" : "flex min-h-12 items-center"}>Iniciar sesión</Link>
+      <Link href="/register" className={bar ? "group flex min-h-11 items-center" : "flex min-h-12 items-center text-primary-on-dark"}>
+        <span className={bar && current !== "simulator" ? "rounded-full bg-primary px-[15px] py-2 text-on-primary transition-transform duration-150 ease-snappy group-active:scale-[0.97]" : undefined}>Crear cuenta</span>
+      </Link>
+    </>
+  );
+}
+
 // `current` marks the page in the nav. The sign-up pill is the loudest thing
 // on the bar, so it only appears where signing up is the point (home and
 // explainer); inside the simulator it drops to a plain link.
-export function SiteHeader({ username, current }: { username?: string; current: NavPage }) {
-  const pill = current !== "simulator";
+export function SiteHeader({ username, current, accountBar, accountRows }: { username?: string; current: NavPage; accountBar?: ReactNode; accountRows?: ReactNode }) {
   return (
     <header className="focus-on-dark relative bg-surface-black text-on-dark">
       <a
@@ -63,55 +83,12 @@ export function SiteHeader({ username, current }: { username?: string; current: 
           <Destinations current={current} variant="bar" />
         </div>
         <div className="hidden items-center gap-5 sm:flex">
-          {username ? (
-            <>
-              <NavLink href="/profile" page="profile" current={current} variant="bar">
-                <span className="sr-only">Mi perfil: </span>
-                <span className="max-w-40 truncate" title={username}>
-                  {username}
-                </span>
-              </NavLink>
-              <SignOut className="flex min-h-11 items-center" />
-            </>
-          ) : (
-            <>
-              <Link href="/login" className="flex min-h-11 items-center">
-                Iniciar sesión
-              </Link>
-              <Link href="/register" className="group flex min-h-11 items-center">
-                <span
-                  className={
-                    pill
-                      ? "rounded-full bg-primary px-[15px] py-2 text-on-primary transition-transform duration-150 ease-snappy group-active:scale-[0.97]"
-                      : undefined
-                  }
-                >
-                  Crear cuenta
-                </span>
-              </Link>
-            </>
-          )}
+          {accountBar ?? <AccountLinks username={username} current={current} variant="bar" />}
         </div>
         <MobileMenu>
           <Destinations current={current} variant="row" />
           <div className="mt-1 border-t border-white/15 pt-1">
-            {username ? (
-              <>
-                <NavLink href="/profile" page="profile" current={current} variant="row">
-                  <span className="truncate">Mi perfil · {username}</span>
-                </NavLink>
-                <SignOut className="flex min-h-12 items-center" />
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="flex min-h-12 items-center">
-                  Iniciar sesión
-                </Link>
-                <Link href="/register" className="flex min-h-12 items-center text-primary-on-dark">
-                  Crear cuenta
-                </Link>
-              </>
-            )}
+            {accountRows ?? <AccountLinks username={username} current={current} variant="row" />}
           </div>
         </MobileMenu>
       </nav>
