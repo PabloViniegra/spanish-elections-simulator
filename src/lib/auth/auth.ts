@@ -14,11 +14,20 @@ import { provinceCode, usageProfile, usageProfiles } from "./user-fields";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg", schema }),
-  // Over HTTP a fresh session could delete without the password or the
-  // deleteAccount rate limit, and resets would skip their per-email limits;
-  // server calls through auth.api still work. The emailed reset link
-  // (/reset-password/:token) stays open.
-  disabledPaths: ["/delete-user", "/delete-user/callback", "/request-password-reset", "/reset-password"],
+  // Only the forms, which count per-account and per-email limits, may sign in,
+  // sign up, mail someone or delete an account: over HTTP those limits would
+  // be skipped. Server calls through auth.api still work, and so do the
+  // emailed links (/verify-email, /reset-password/:token).
+  disabledPaths: [
+    "/sign-in/email",
+    "/sign-in/username",
+    "/sign-up/email",
+    "/send-verification-email",
+    "/request-password-reset",
+    "/reset-password",
+    "/delete-user",
+    "/delete-user/callback",
+  ],
   emailAndPassword: {
     enabled: true,
     requireEmailVerification: true,
