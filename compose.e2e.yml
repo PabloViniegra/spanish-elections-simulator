@@ -2,7 +2,7 @@
 # the Drizzle migrations, behind the HTTP proxy the Neon driver talks to.
 services:
   postgres:
-    image: postgres:17
+    image: public.ecr.aws/docker/library/postgres:17
     tmpfs: /var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgres
