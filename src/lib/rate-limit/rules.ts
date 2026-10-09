@@ -1,4 +1,8 @@
-import type { RateRule } from "./store";
+// At most `max` attempts per `window` seconds.
+export type RateRule = { window: number; max: number };
+export type Limit = readonly [key: string, rule: RateRule];
+// Counts one attempt against `key`; `retryAfter` is null while it is allowed.
+export type Consume = (key: string, rule: RateRule) => Promise<{ retryAfter: number | null }>;
 
 // Per address, to slow down one client; per account, to slow down guessing a
 // password or mailing someone from many addresses.
@@ -21,4 +25,29 @@ export function clientIp(requestHeaders: Headers) {
 export function tooManyAttempts(retryAfter: number) {
   const minutes = Math.ceil(retryAfter / 60);
   return `Demasiados intentos. Vuelve a probar dentro de ${minutes} ${minutes === 1 ? "minuto" : "minutos"}.`;
+}
+
+// Keys are lower-cased so changing the case does not open a fresh bucket.
+export function signInLimits(ip: string, identifier: string): Limit[] {
+  return [
+    [`sign-in|ip|${ip}`, signInRules.ip],
+    [`sign-in|account|${identifier.toLowerCase()}`, signInRules.account],
+  ];
+}
+
+export function signUpLimits(ip: string, email: string): Limit[] {
+  return [
+    [`sign-up|ip|${ip}`, signUpRules.ip],
+    [`sign-up|email|${email.toLowerCase()}`, signUpRules.email],
+  ];
+}
+
+// Seconds until the first exhausted limit frees up, or null when all allow the
+// attempt. Later limits are not counted once one blocks.
+export async function firstBlocked(limits: readonly Limit[], consume: Consume) {
+  for (const [key, rule] of limits) {
+    const { retryAfter } = await consume(key, rule);
+    if (retryAfter !== null) return retryAfter;
+  }
+  return null;
 }

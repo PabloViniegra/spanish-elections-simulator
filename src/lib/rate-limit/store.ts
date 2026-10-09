@@ -2,9 +2,7 @@ import { lt, sql } from "drizzle-orm";
 import { after } from "next/server";
 import { db } from "@/lib/db/client";
 import { rateLimit } from "@/lib/db/schema";
-
-// At most `max` attempts per `window` seconds.
-export type RateRule = { window: number; max: number };
+import type { RateRule } from "./rules";
 
 // Counts one attempt against `key` in a single statement, so concurrent
 // attempts cannot all pass on a stale count. Shaped like Better Auth's
@@ -29,14 +27,4 @@ export async function consume(key: string, rule: RateRule) {
   if (row.count === 1) after(() => db.delete(rateLimit).where(lt(rateLimit.windowStart, sql`now() - interval '1 day'`)));
   const allowed = row.count <= rule.max;
   return { allowed, retryAfter: allowed ? null : Math.max(row.retryAfter, 1) };
-}
-
-// Seconds until the first exhausted limit frees up, or null when all allow the
-// attempt. Later limits are not counted once one blocks.
-export async function firstBlocked(limits: readonly (readonly [key: string, rule: RateRule])[]) {
-  for (const [key, rule] of limits) {
-    const { retryAfter } = await consume(key, rule);
-    if (retryAfter !== null) return retryAfter;
-  }
-  return null;
 }
