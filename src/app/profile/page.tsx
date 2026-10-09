@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/home/site-header";
 import { sectionTitle } from "@/components/home/type";
+import { DeleteAccountContainer } from "@/components/profile/delete-account-container";
 import { ProfileDetails } from "@/components/profile/profile-details";
 import { SimulationList } from "@/components/profile/simulation-list";
 import { requireSession } from "@/lib/auth/session";
@@ -39,13 +40,16 @@ export default async function ProfilePage() {
               summary: summarizeSimulation(scenario),
             }))}
           />
-          <ProfileDetails
-            username={username}
-            email={user.email}
-            province={provinces.find(({ code }) => code === user.province)?.name}
-            usageProfile={usageProfileLabels[usageProfile.catch("citizen").parse(user.usageProfile)]}
-            memberSince={longDate(user.createdAt)}
-          />
+          <div className="flex flex-col gap-12 lg:sticky lg:top-8">
+            <ProfileDetails
+              username={username}
+              email={user.email}
+              province={provinces.find(({ code }) => code === user.province)?.name}
+              usageProfile={usageProfileLabels[usageProfile.catch("citizen").parse(user.usageProfile)]}
+              memberSince={longDate(user.createdAt)}
+            />
+            <DeleteAccountContainer />
+          </div>
         </div>
       </main>
     </>

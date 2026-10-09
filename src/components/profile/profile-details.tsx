@@ -15,7 +15,7 @@ export function ProfileDetails({ username, email, province, usageProfile, member
     ["En el simulador desde", memberSince],
   ];
   return (
-    <section aria-labelledby="datos" className="flex flex-col gap-4 lg:sticky lg:top-8">
+    <section aria-labelledby="datos" className="flex flex-col gap-4">
       <h2 id="datos" className="text-tagline">
         Tus datos
       </h2>

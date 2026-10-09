@@ -47,8 +47,8 @@ export function PrivacyData() {
       <LegalSection id="finalidades" title="3. Para qué y con qué base legal">
         <ul>
           <li>
-            <strong>Darte la cuenta y guardar tus simulaciones</strong>, incluido el correo para verificar tu dirección. Base:
-            la ejecución del servicio que solicitas (art. 6.1.b del RGPD).
+            <strong>Darte la cuenta y guardar tus simulaciones</strong>, incluidos el correo para verificar tu dirección y el
+            que confirma que has borrado la cuenta. Base: la ejecución del servicio que solicitas (art. 6.1.b del RGPD).
           </li>
           <li>
             <strong>Mantener la web segura</strong> frente a abusos y accesos indebidos. Base: interés legítimo (art. 6.1.f

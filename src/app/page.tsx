@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FlashToast } from "@/components/feedback/flash-toast";
 import { DhondtExample } from "@/components/home/dhondt-example";
 import { HomeClosing } from "@/components/home/home-closing";
 import { HomeHero } from "@/components/home/home-hero";
@@ -15,8 +16,9 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-export default async function Home() {
+export default async function Home({ searchParams }: PageProps<"/">) {
   const session = await getSession();
+  const { "account-deleted": accountDeleted } = await searchParams;
   const username = session?.user.name;
   return (
     <>
@@ -28,6 +30,9 @@ export default async function Home() {
         <DhondtExample />
         <HomeClosing />
       </main>
+      {accountDeleted && (
+        <FlashToast title="Cuenta eliminada" description="Hemos borrado tus datos y te hemos enviado un correo de confirmación." />
+      )}
     </>
   );
 }

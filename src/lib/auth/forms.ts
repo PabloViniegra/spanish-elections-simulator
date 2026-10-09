@@ -18,6 +18,10 @@ export const signInSchema = z.object({
   password: z.string().min(1, "Introduce tu contraseña."),
 });
 
+export const deleteAccountSchema = z.object({
+  password: z.string().min(1, "Introduce tu contraseña para confirmar."),
+});
+
 // Limits mirror Better Auth's defaults for the username plugin and passwords.
 export const signUpSchema = z.object({
   username: z
@@ -58,6 +62,7 @@ const authErrorMessages = new Map([
   ["USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL", "Ya existe una cuenta con ese correo electrónico."],
   ["EMAIL_NOT_VERIFIED", "Confirma tu correo electrónico. Te hemos reenviado el enlace."],
   ["USERNAME_IS_ALREADY_TAKEN", "Ese nombre de usuario ya está en uso."],
+  ["INVALID_PASSWORD", "La contraseña no es correcta."],
 ]);
 
 export function authErrorMessage(code: string | undefined): string {

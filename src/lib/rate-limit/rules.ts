@@ -42,6 +42,11 @@ export function signUpLimits(ip: string, email: string): Limit[] {
   ];
 }
 
+// The password check before deleting an account is another chance to guess it.
+export function deleteAccountLimits(userId: string): Limit[] {
+  return [[`delete-account|user|${userId}`, signInRules.account]];
+}
+
 // Seconds until the first exhausted limit frees up, or null when all allow the
 // attempt. Later limits are not counted once one blocks.
 export async function firstBlocked(limits: readonly Limit[], consume: Consume) {

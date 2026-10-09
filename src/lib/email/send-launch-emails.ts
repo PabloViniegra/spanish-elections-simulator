@@ -1,7 +1,7 @@
 import { type CreateBatchOptions, Resend } from "resend";
 import { LaunchEmail } from "@/emails/launch-email";
+import { EMAIL_FROM } from "./sender";
 
-const from = "Simulador de Elecciones <no-reply@send.pabloviniegra.dev>";
 // Resend accepts at most 100 emails per batch request.
 const BATCH_SIZE = 100;
 
@@ -25,7 +25,7 @@ export async function sendLaunchEmails(
 ) {
   for (let start = 0; start < recipients.length; start += BATCH_SIZE) {
     const batch = recipients.slice(start, start + BATCH_SIZE).map(({ email, name }) => ({
-      from,
+      from: EMAIL_FROM,
       to: email,
       subject: "El simulador ya está abierto",
       react: LaunchEmail({ username: name, url }),

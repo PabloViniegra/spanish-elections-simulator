@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { CONTACT_EMAIL } from "@/lib/legal";
 import { LegalSection } from "./legal-section";
 
@@ -8,8 +9,8 @@ export function PrivacyRights() {
       <LegalSection id="conservacion" title="5. Cuánto tiempo los guardamos">
         <ul>
           <li>
-            <strong>Cuenta y simulaciones:</strong> hasta que nos pidas borrarlas. Al borrar la cuenta se eliminan también
-            sus simulaciones.
+            <strong>Cuenta y simulaciones:</strong> hasta que las borres. Puedes eliminar tu cuenta cuando quieras desde{" "}
+            <Link href="/profile">tu perfil</Link>, y con ella se eliminan al momento tus simulaciones y sesiones.
           </li>
           <li>
             <strong>Sesiones:</strong> caducan a los 7 días sin actividad o al cerrar sesión.
@@ -59,8 +60,9 @@ export function PrivacyRights() {
       <LegalSection id="derechos" title="7. Tus derechos">
         <p>
           Puedes acceder a tus datos, rectificarlos, pedir que los borremos, oponerte a su tratamiento o limitarlo y
-          solicitar su portabilidad. Escribe a <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> desde el correo de
-          tu cuenta indicando qué derecho quieres ejercer. Te responderemos en el plazo máximo de un mes.
+          solicitar su portabilidad. Tus datos están en tu perfil y desde allí puedes borrar la cuenta. Para lo demás,
+          escribe a <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a> desde el correo de tu cuenta indicando qué
+          derecho quieres ejercer. Te responderemos en el plazo máximo de un mes.
         </p>
         <p>
           Si crees que no hemos atendido bien tu solicitud, puedes reclamar ante la{" "}

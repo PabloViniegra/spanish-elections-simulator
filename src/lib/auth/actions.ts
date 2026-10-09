@@ -2,12 +2,12 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { clientIp, signInLimits, signUpLimits } from "@/lib/rate-limit/rules";
+import { clientIp, deleteAccountLimits, signInLimits, signUpLimits } from "@/lib/rate-limit/rules";
 import { consume } from "@/lib/rate-limit/store";
 import { attemptAuth } from "./attempt";
 import { auth } from "./auth";
 import { safeNextPath, withNext } from "./next-path";
-import { fieldErrorsOf, formValues, signInSchema, signUpSchema, type FormState } from "./forms";
+import { deleteAccountSchema, fieldErrorsOf, formValues, signInSchema, signUpSchema, type FormState } from "./forms";
 
 // The confirmation link lands on the login page, which then goes on to `next`.
 const verifiedRedirect = (next: string) => withNext("/login?verified=1", next);
@@ -53,4 +53,20 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
 export async function signOut() {
   await auth.api.signOut({ headers: await headers() });
   redirect("/");
+}
+
+// Removes the account, its sessions and (by cascade) its saved simulations.
+export async function deleteAccount(_prev: FormState, formData: FormData): Promise<FormState> {
+  const requestHeaders = await headers();
+  const session = await auth.api.getSession({ headers: requestHeaders });
+  if (!session) redirect("/login");
+  const parsed = deleteAccountSchema.safeParse(formValues(formData, ["password"]));
+  if (!parsed.success) return { fieldErrors: fieldErrorsOf(parsed.error) };
+
+  const failure = await attemptAuth({}, deleteAccountLimits(session.user.id), consume, async () => {
+    await auth.api.deleteUser({ body: { password: parsed.data.password }, headers: requestHeaders });
+  });
+  if (failure) return failure;
+  // The home page confirms it with a toast.
+  redirect("/?account-deleted=1");
 }
