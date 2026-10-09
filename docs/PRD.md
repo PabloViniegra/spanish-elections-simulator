@@ -216,7 +216,7 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 **Open questions**
 
 - [x] Default bloc mapping for 2023: regional lists of PSOE, PP and Sumar (Compromís included) count with their national party; every other candidacy with a seat is its own bloc.
-- [x] Long links: URLs carry provincial overrides; show a warning when the complete share URL exceeds 2,000 characters. National-only scenarios stay under that limit.
+- [x] Long links: URLs carry provincial overrides; the copy button shares a short link (`/l/<id>`) stored in the database, and falls back to the full URL if it cannot store one.
 - [x] Account access: an account is required to edit or save simulations; shared scenarios remain public and read-only.
 - [x] Product name: Simulador de Elecciones.
 - [ ] Custom domain (production currently uses the Vercel URL).
@@ -230,7 +230,7 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 | A new general election is called before launch (**materialised 5 Oct 2026**, election on 29 Nov 2026) | Seat table per province and default base change | Seats live in data, not code; add the decree's table, checked against the engine's R-03 apportionment, and default to it. |
 | Official data formats change between elections | Build script breaks | Golden tests fail loudly; the parser is isolated per election year. |
 | Users read projections as forecasts | Reputational | Persistent "this is a simulation, not a forecast" notice, and no default poll data. |
-| URL length with many overrides | Broken links on some platforms | URLs are compressed and warn above 2,000 characters; short links can be added later with a store. |
+| URL length with many overrides | Broken links on some platforms | URLs are compressed and shared as short links that redirect to them. |
 
 **Roadmap**
 
@@ -239,4 +239,4 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 3. **M2 – Launch before the campaign (13 Nov 2026). Done.** National mode on 2023 votes and 2026 seats, hemicycle, coalition calculator, URL sharing, "simulation, not a forecast" notice, accessibility of the shipped views, Spanish UI, Vercel production.
 4. **M3 – Depth, after 29N. In progress.** Provincial mode with locks (FR-03), map (FR-07) and D'Hondt detail (FR-09) are implemented; bundle official 29 November 2026 results after election day.
 5. **M4 – Completion. In progress.** Explainer page implemented; remaining: full accessibility pass and English UI.
-6. **Later.** Saved scenario history, Senado, autonómicas, population what-ifs (R-03), short links.
+6. **Later.** Saved scenario history, Senado, autonómicas, population what-ifs (R-03).

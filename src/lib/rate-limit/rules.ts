@@ -60,6 +60,11 @@ export function deleteAccountLimits(userId: string): Limit[] {
   return [[`delete-account|user|${userId}`, signInRules.account]];
 }
 
+// Each new short link is a row anyone can add, so one address adds a few.
+export function shortLinkLimits(ip: string): Limit[] {
+  return [[`short-link|ip|${ip}`, { window: 60 * 60, max: 60 }]];
+}
+
 // Seconds until the first exhausted limit frees up, or null when all allow the
 // attempt. Later limits are not counted once one blocks.
 export async function firstBlocked(limits: readonly Limit[], consume: Consume) {

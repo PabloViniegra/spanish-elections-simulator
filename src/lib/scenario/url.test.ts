@@ -5,7 +5,7 @@ import election2023 from "@/data/elections/2023-07.json";
 import { blocs2023 } from "@/lib/elections/blocs-2023";
 import { baseScenario } from "./simulate";
 import type { Scenario } from "./types";
-import { decodeScenario, encodeScenario, exceedsShareUrlLimit, SHARE_URL_LIMIT, withScenarioParam } from "./url";
+import { decodeScenario, encodeScenario, withScenarioParam } from "./url";
 
 const base = baseScenario(election2023, blocs2023);
 const codes = new Set(election2023.constituencies.map(({ code }) => code));
@@ -52,11 +52,6 @@ describe("scenario URL (FR-10)", () => {
     expect(new URL(updated).searchParams.get("ref")).toBe("mail");
     expect(new URL(updated).searchParams.has("s")).toBe(false);
     expect(new URL(withScenarioParam(updated, null)).searchParams.has("e")).toBe(false);
-  });
-
-  it("warns only when the full share URL exceeds 2,000 characters", () => {
-    expect(exceedsShareUrlLimit("x".repeat(SHARE_URL_LIMIT))).toBe(false);
-    expect(exceedsShareUrlLimit("x".repeat(SHARE_URL_LIMIT + 1))).toBe(true);
   });
 
   it("decodes links from every shipped schema version", () => {

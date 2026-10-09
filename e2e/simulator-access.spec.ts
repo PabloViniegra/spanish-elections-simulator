@@ -36,7 +36,6 @@ test("a shared link shows its results read-only when signed out", async ({ page 
   await expect(page.getByRole("combobox", { name: "Votos de partida" })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Guardar", exact: true })).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Copiar enlace" })).toBeVisible();
-  await expect(page.getByText("El enlace supera los 2.000 caracteres.", { exact: false })).toHaveCount(0);
   const login = page.getByRole("main").getByRole("link", { name: "Iniciar sesión" });
   await expect(login).toHaveAttribute("href", `/login?next=${encodeURIComponent(`/simulator?e=${SHARED}`)}`);
 });
@@ -60,11 +59,18 @@ test("a shared link previews its own chamber, and a broken one the site's", asyn
   expect(site.headers()["content-type"]).toBe("image/png");
 });
 
-test("warns when a shared provincial scenario has a long URL", async ({ page }) => {
+test("a long provincial scenario is copied as a short link that opens it", async ({ page, context, request }) => {
   expect(LONG_SHARED.length).toBeGreaterThan(2000);
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
   await page.goto(`/simulator?e=${encodeURIComponent(LONG_SHARED)}`);
-  await expect(page.getByRole("status").filter({ hasText: "El enlace supera los 2.000 caracteres." })).toBeVisible();
-  await expect(page.getByRole("button", { name: "Copiar enlace" })).toBeVisible();
+  await page.getByRole("button", { name: "Copiar enlace" }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Enlace copiado." })).toHaveCount(1);
+  const link = await page.evaluate(() => navigator.clipboard.readText());
+  expect(link).toMatch(/\/l\/[\w-]{10}$/);
+
+  await page.goto(link);
+  expect(new URL(page.url()).searchParams.get("e")).toBe(LONG_SHARED);
+  expect((await request.get("/l/desconocido")).status()).toBe(404);
 });
 
 test("the profile page asks to sign in", async ({ page }) => {

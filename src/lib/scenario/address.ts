@@ -6,7 +6,6 @@ export const SCENARIO_PREFIX = "v1.";
 export const SCENARIO_PARAM = "e";
 // The saved simulation the scenario was opened from, so it can be overwritten.
 export const SAVED_PARAM = "s";
-export const SHARE_URL_LIMIT = 2000;
 
 export const simulatorHref = (param: string, savedId?: string) =>
   `/simulator?${SCENARIO_PARAM}=${encodeURIComponent(param)}${savedId ? `&${SAVED_PARAM}=${encodeURIComponent(savedId)}` : ""}`;
@@ -18,10 +17,6 @@ export function withScenarioParam(currentHref: string, scenarioParam: string | n
   if (scenarioParam) url.searchParams.set(SCENARIO_PARAM, scenarioParam);
   else url.searchParams.delete(SCENARIO_PARAM);
   return url.href;
-}
-
-export function exceedsShareUrlLimit(href: string) {
-  return href.length > SHARE_URL_LIMIT;
 }
 
 export function encodeScenario(scenario: Scenario) {

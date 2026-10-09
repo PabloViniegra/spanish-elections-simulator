@@ -92,7 +92,7 @@ test("the link to the current scenario is copied", async ({ page, context }) => 
   await page.getByRole("spinbutton", { name: "PP" }).fill("40");
   await page.getByRole("button", { name: "Copiar enlace" }).click();
   await expect(page.getByRole("status").filter({ hasText: "Enlace copiado." })).toHaveCount(1);
-  expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/\/simulator\?e=v1\./);
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toMatch(/\/l\/[\w-]{10}$/);
 });
 
 test("a saved simulation shows up in the profile, can be updated, renamed and deleted", async ({ page, context }) => {

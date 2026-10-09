@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clientIp, type Consume, deleteAccountLimits, firstBlocked, newPasswordLimits, passwordResetLimits, signInLimits, signInRules, signUpLimits, signUpRules, tooManyAttempts } from "./rules";
+import { clientIp, type Consume, deleteAccountLimits, firstBlocked, newPasswordLimits, passwordResetLimits, shortLinkLimits, signInLimits, signInRules, signUpLimits, signUpRules, tooManyAttempts } from "./rules";
 
 describe("clientIp", () => {
   it("prefers the address the proxy sets", () => {
@@ -42,6 +42,10 @@ describe("attempt limits", () => {
 
   it("limit password checks before deleting an account per user", () => {
     expect(deleteAccountLimits("user-1")).toEqual([["delete-account|user|user-1", signInRules.account]]);
+  });
+
+  it("limit new short links per address", () => {
+    expect(shortLinkLimits("1.2.3.4")).toEqual([["short-link|ip|1.2.3.4", { window: 3600, max: 60 }]]);
   });
 });
 

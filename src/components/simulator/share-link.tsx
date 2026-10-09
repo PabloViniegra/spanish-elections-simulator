@@ -29,9 +29,9 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
-type ShareLinkProps = { brokenLink: boolean; longUrl: boolean; copied: boolean; onCopy: () => void };
+type ShareLinkProps = { brokenLink: boolean; copied: boolean; onCopy: () => void };
 
-export function ShareLink({ brokenLink, longUrl, copied, onCopy }: ShareLinkProps) {
+export function ShareLink({ brokenLink, copied, onCopy }: ShareLinkProps) {
   return (
     <div className="contents">
       {brokenLink && (
@@ -39,9 +39,6 @@ export function ShareLink({ brokenLink, longUrl, copied, onCopy }: ShareLinkProp
           El enlace no es válido o es de otra versión. Se muestran los resultados de 2023.
         </p>
       )}
-      <p role="status" aria-live="polite" className={longUrl ? "w-full rounded-sm border border-hairline p-3 text-caption text-ink-muted-80" : "sr-only"}>
-        {longUrl ? "El enlace supera los 2.000 caracteres. Algunas plataformas podrían recortarlo; comprueba que se haya compartido completo." : ""}
-      </p>
       <button
         type="button"
         onClick={onCopy}

@@ -3,3 +3,4 @@
 export * from "./auth-schema";
 export * from "./rate-limit-schema";
 export * from "./simulation-schema";
+export * from "./short-link-schema";
