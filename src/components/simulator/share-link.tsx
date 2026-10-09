@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { notify } from "@/components/feedback/notify";
 import { exceedsShareUrlLimit, withScenarioParam } from "@/lib/scenario/url";
 
@@ -35,19 +35,20 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
+// The address changes only with `scenarioParam`, which already re-renders.
+const subscribeNever = () => () => {};
+
 // FR-10: copies the current address, which always holds the scenario.
 export function ShareLink({ brokenLink, scenarioParam }: { brokenLink: boolean; scenarioParam: string | null }) {
   const [copied, setCopied] = useState(false);
-  const [longUrl, setLongUrl] = useState(false);
   const currentShareUrl = () => withScenarioParam(window.location.href, scenarioParam);
+  // The address is only known in the browser; the server renders no warning.
+  const longUrl = useSyncExternalStore(subscribeNever, () => exceedsShareUrlLimit(currentShareUrl()), () => false);
   useEffect(() => {
     if (!copied) return;
     const timer = setTimeout(() => setCopied(false), 2600);
     return () => clearTimeout(timer);
   }, [copied]);
-  useEffect(() => {
-    setLongUrl(exceedsShareUrlLimit(currentShareUrl()));
-  }, [scenarioParam]);
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(currentShareUrl());

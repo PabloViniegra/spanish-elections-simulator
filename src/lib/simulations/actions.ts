@@ -1,12 +1,12 @@
 "use server";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { fieldErrorsOf, formValues } from "@/lib/auth/forms";
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db/client";
-import { simulation } from "@/lib/db/schema";
+import { simulation, user } from "@/lib/db/schema";
 import { MAX_SIMULATIONS, saveSimulationSchema, type SaveState } from "./forms";
 
 const signedOut = "Tu sesión ha caducado. Inicia sesión de nuevo para guardar.";
@@ -16,11 +16,22 @@ export async function saveSimulation(_prev: SaveState, formData: FormData): Prom
   if (!session) return { error: signedOut };
   const parsed = saveSimulationSchema.safeParse(formValues(formData, ["name", "scenario"]));
   if (!parsed.success) return { fieldErrors: fieldErrorsOf(parsed.error) };
-  if ((await db.$count(simulation, eq(simulation.userId, session.user.id))) >= MAX_SIMULATIONS) {
+  const userId = session.user.id;
+  // One transaction: locking the owner row queues concurrent saves, and the
+  // insert's fresh snapshot then counts the saves committed before it.
+  const [, inserted] = await db.batch([
+    db.select({ id: user.id }).from(user).where(eq(user.id, userId)).for("update"),
+    db.execute(sql`
+      insert into ${simulation} (id, user_id, name, scenario)
+      select ${crypto.randomUUID()}, ${userId}, ${parsed.data.name}, ${parsed.data.scenario}
+      where (select count(*) from ${simulation} where ${simulation.userId} = ${userId}) < ${MAX_SIMULATIONS}
+      returning id
+    `),
+  ]);
+  if (inserted.rows.length === 0) {
     return { error: `Ya tienes ${MAX_SIMULATIONS} simulaciones guardadas. Borra alguna desde tu perfil para guardar otra.` };
   }
 
-  await db.insert(simulation).values({ userId: session.user.id, name: parsed.data.name, scenario: parsed.data.scenario });
   revalidatePath("/profile");
   return { saved: parsed.data.name };
 }
