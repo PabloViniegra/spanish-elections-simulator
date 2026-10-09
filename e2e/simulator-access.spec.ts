@@ -41,6 +41,22 @@ test("a shared link shows its results read-only when signed out", async ({ page 
   await expect(login).toHaveAttribute("href", `/login?next=${encodeURIComponent(`/simulator?e=${SHARED}`)}`);
 });
 
+test("a shared link previews its own chamber, and a broken one the site's", async ({ page, request }) => {
+  await page.goto(`/simulator?e=${SHARED}`);
+  const image = page.locator('meta[property="og:image"]');
+  await expect(image).toHaveAttribute("content", new RegExp(`/simulator/og\\?e=${SHARED.replace(/\./g, "\\.")}$`));
+  await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute("content", /\/simulator\/og\?e=/);
+
+  const preview = await request.get(`/simulator/og?e=${SHARED}`);
+  expect(preview.status()).toBe(200);
+  expect(preview.headers()["content-type"]).toBe("image/png");
+  expect(preview.headers()["cache-control"]).toContain("s-maxage=");
+
+  const broken = await request.get("/simulator/og?e=v1.roto");
+  expect(broken.status()).toBe(200);
+  expect(broken.headers()["content-type"]).toBe("image/png");
+});
+
 test("warns when a shared provincial scenario has a long URL", async ({ page }) => {
   expect(LONG_SHARED.length).toBeGreaterThan(2000);
   await page.goto(`/simulator?e=${encodeURIComponent(LONG_SHARED)}`);

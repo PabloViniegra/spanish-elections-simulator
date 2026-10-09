@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import { SiteAnalytics } from "@/components/analytics/site-analytics";
 import { Toaster } from "@/components/feedback/toaster";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { SITE_NAME, SITE_OPEN_GRAPH, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
   description: "Convierte una estimación de voto en el reparto de escaños del Congreso de los Diputados.",
-  openGraph: { siteName: SITE_NAME, locale: "es_ES", type: "website" },
+  openGraph: SITE_OPEN_GRAPH,
   twitter: { card: "summary_large_image" },
 };
 

@@ -8,9 +8,9 @@ import { withNext } from "@/lib/auth/next-path";
 import { getSession } from "@/lib/auth/session";
 import { SCENARIO_PARAM } from "@/lib/scenario/url";
 import { simulatorInitialState } from "@/lib/scenario/initial";
-import { SITE_URL } from "@/lib/site";
+import { OG_SIZE, SITE_OPEN_GRAPH, SITE_URL } from "@/lib/site";
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "Simulador",
   description: "Cambia el porcentaje de voto de cada partido y mira el reparto de los 350 escaños del 29 de noviembre de 2026.",
   alternates: { canonical: "/simulator" },
@@ -20,12 +20,27 @@ type SimulatorPageProps = {
   searchParams: Promise<Partial<Record<typeof SCENARIO_PARAM, string | string[]>>>;
 };
 
+async function scenarioParamOf(searchParams: SimulatorPageProps["searchParams"]) {
+  const shared = (await searchParams)[SCENARIO_PARAM];
+  return Array.isArray(shared) ? shared[0] : shared;
+}
+
+// A shared link previews its own chamber.
+export async function generateMetadata({ searchParams }: SimulatorPageProps): Promise<Metadata> {
+  const param = await scenarioParamOf(searchParams);
+  if (!param) return metadata;
+  const image = {
+    url: `/simulator/og?${SCENARIO_PARAM}=${encodeURIComponent(param)}`,
+    ...OG_SIZE,
+    alt: "Hemiciclo del Congreso con el reparto de los 350 escaños en este escenario.",
+  };
+  return { ...metadata, openGraph: { ...SITE_OPEN_GRAPH, images: [image] }, twitter: { card: "summary_large_image", images: [image] } };
+}
+
 // Simulating takes an account; a shared link stays public, read-only.
 export default async function SimulatorPage({ searchParams }: SimulatorPageProps) {
   const session = await getSession();
-  const params = await searchParams;
-  const shared = params[SCENARIO_PARAM];
-  const param = Array.isArray(shared) ? shared[0] : shared;
+  const param = await scenarioParamOf(searchParams);
   if (!session && !param) redirect(withNext("/login", "/simulator"));
   return (
     <>
