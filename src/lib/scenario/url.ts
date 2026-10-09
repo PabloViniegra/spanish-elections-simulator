@@ -45,16 +45,9 @@ export function encodeScenario(scenario: Scenario) {
   return PREFIX + compressToEncodedURIComponent(JSON.stringify(scenario));
 }
 
-// The shared scenario, or null when the link is broken, from another schema
-// version, or does not fit the base scenario (other election, unknown bloc,
-// shares over 100%, unknown province, a bloc list that repeats an id or a
-// candidacy, or names one the election does not have).
-export function decodeScenario(
-  param: string,
-  base: Scenario,
-  provinceCodes: ReadonlySet<string>,
-  candidacyIds: ReadonlySet<string>,
-): Scenario | null {
+// The scenario a link carries, or null when it is broken or from another
+// schema version. Decompressing is the costly step, so it runs once per link.
+export function parseScenarioParam(param: string): Scenario | null {
   if (!param.startsWith(PREFIX)) return null;
   const json = decompressFromEncodedURIComponent(param.slice(PREFIX.length));
   if (!json) return null;
@@ -65,8 +58,18 @@ export function decodeScenario(
     return null;
   }
   const parsed = scenarioSchema.safeParse(data);
-  if (!parsed.success) return null;
-  const scenario = parsed.data;
+  return parsed.success ? parsed.data : null;
+}
+
+// Whether a parsed scenario fits the base scenario: same election, no unknown
+// bloc, shares within 100%, no unknown province, and a bloc list that neither
+// repeats an id or a candidacy nor names one the election does not have.
+export function fitsBase(
+  scenario: Scenario,
+  base: Scenario,
+  provinceCodes: ReadonlySet<string>,
+  candidacyIds: ReadonlySet<string>,
+) {
   const blocIds = scenario.blocs ? new Set(scenario.blocs.map(({ id }) => id)) : new Set(Object.keys(base.shares));
   const mapped = scenario.blocs?.flatMap((bloc) => bloc.candidacyIds) ?? [];
   const blocsFit =
@@ -75,11 +78,22 @@ export function decodeScenario(
     mapped.every((id) => candidacyIds.has(id));
   const knownBlocs = ({ shares }: { shares: Record<string, number> }) => Object.keys(shares).every((blocId) => blocIds.has(blocId));
   const provinces = Object.entries(scenario.provinces ?? {});
-  const fits =
+  return (
     scenario.baseElectionId === base.baseElectionId &&
     blocsFit &&
     knownBlocs(scenario) &&
     provinces.every(([code, province]) => provinceCodes.has(code) && knownBlocs(province)) &&
-    fitsInFull(scenario);
-  return fits ? scenario : null;
+    fitsInFull(scenario)
+  );
+}
+
+// The shared scenario, or null when the link is broken or does not fit the base.
+export function decodeScenario(
+  param: string,
+  base: Scenario,
+  provinceCodes: ReadonlySet<string>,
+  candidacyIds: ReadonlySet<string>,
+): Scenario | null {
+  const scenario = parseScenarioParam(param);
+  return scenario && fitsBase(scenario, base, provinceCodes, candidacyIds) ? scenario : null;
 }

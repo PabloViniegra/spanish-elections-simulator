@@ -5,6 +5,7 @@ import { after } from "next/server";
 import { username } from "better-auth/plugins";
 import { db } from "@/lib/db/client";
 import { sendVerificationEmail } from "@/lib/email/send-verification-email";
+import { consume } from "@/lib/rate-limit/store";
 import * as schema from "@/lib/db/schema";
 import { provinceCode, usageProfile, usageProfiles } from "./user-fields";
 
@@ -38,5 +39,7 @@ export const auth = betterAuth({
       },
     },
   },
+  // In the database, as in-memory counts reset with each serverless instance.
+  rateLimit: { customStorage: { consume } },
   plugins: [username(), nextCookies()],
 });

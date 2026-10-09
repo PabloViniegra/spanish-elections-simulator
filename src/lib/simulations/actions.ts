@@ -7,7 +7,7 @@ import { fieldErrorsOf, formValues } from "@/lib/auth/forms";
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db/client";
 import { simulation } from "@/lib/db/schema";
-import { saveSimulationSchema, type SaveState } from "./forms";
+import { MAX_SIMULATIONS, saveSimulationSchema, type SaveState } from "./forms";
 
 const signedOut = "Tu sesión ha caducado. Inicia sesión de nuevo para guardar.";
 
@@ -16,6 +16,9 @@ export async function saveSimulation(_prev: SaveState, formData: FormData): Prom
   if (!session) return { error: signedOut };
   const parsed = saveSimulationSchema.safeParse(formValues(formData, ["name", "scenario"]));
   if (!parsed.success) return { fieldErrors: fieldErrorsOf(parsed.error) };
+  if ((await db.$count(simulation, eq(simulation.userId, session.user.id))) >= MAX_SIMULATIONS) {
+    return { error: `Ya tienes ${MAX_SIMULATIONS} simulaciones guardadas. Borra alguna desde tu perfil para guardar otra.` };
+  }
 
   await db.insert(simulation).values({ userId: session.user.id, name: parsed.data.name, scenario: parsed.data.scenario });
   revalidatePath("/profile");

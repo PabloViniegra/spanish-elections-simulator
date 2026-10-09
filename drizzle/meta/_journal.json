@@ -15,6 +15,13 @@
       "when": 1791379651054,
       "tag": "0001_brief_swarm",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791535727384,
+      "tag": "0002_thin_wiccan",
+      "breakpoints": true
     }
   ]
 }

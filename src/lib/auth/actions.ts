@@ -3,6 +3,8 @@
 import { APIError } from "better-auth/api";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { clientIp, signInRules, signUpRules, tooManyAttempts } from "@/lib/rate-limit/rules";
+import { firstBlocked } from "@/lib/rate-limit/store";
 import { auth } from "./auth";
 import { safeNextPath, withNext } from "./next-path";
 import {
@@ -25,8 +27,14 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
   const { identifier, password } = parsed.data;
   const next = safeNextPath(formValues(formData, ["next"]).next);
   const callbackURL = verifiedRedirect(next);
+  const requestHeaders = await headers();
+  // Server actions call Better Auth directly, past its per-request rate limit.
+  const blocked = await firstBlocked([
+    [`sign-in|ip|${clientIp(requestHeaders)}`, signInRules.ip],
+    [`sign-in|account|${identifier.toLowerCase()}`, signInRules.account],
+  ]);
+  if (blocked !== null) return { values, error: tooManyAttempts(blocked) };
   try {
-    const requestHeaders = await headers();
     if (identifier.includes("@")) {
       await auth.api.signInEmail({ body: { email: identifier, password, callbackURL }, headers: requestHeaders });
     } else {
@@ -49,6 +57,12 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
   if (!parsed.success) return { values, fieldErrors: fieldErrorsOf(parsed.error) };
 
   const { username, email, password, province, usageProfile } = parsed.data;
+  const requestHeaders = await headers();
+  const blocked = await firstBlocked([
+    [`sign-up|ip|${clientIp(requestHeaders)}`, signUpRules.ip],
+    [`sign-up|email|${email.toLowerCase()}`, signUpRules.email],
+  ]);
+  if (blocked !== null) return { values, error: tooManyAttempts(blocked) };
   try {
     await auth.api.signUpEmail({
       body: {
@@ -60,7 +74,7 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
         usageProfile,
         callbackURL: verifiedRedirect(safeNextPath(formValues(formData, ["next"]).next)),
       },
-      headers: await headers(),
+      headers: requestHeaders,
     });
   } catch (error) {
     if (!(error instanceof APIError)) throw error;

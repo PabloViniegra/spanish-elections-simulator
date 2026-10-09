@@ -2,6 +2,8 @@ import { z } from "zod";
 import { restoreScenario } from "@/lib/scenario/restore";
 
 export const NAME_MAX = 80;
+// Saved simulations per account, so one account cannot fill the database.
+export const MAX_SIMULATIONS = 100;
 
 export const saveSimulationSchema = z.object({
   name: z.string().trim().min(1, "Ponle un nombre a la simulación.").max(NAME_MAX, `El nombre no puede superar los ${NAME_MAX} caracteres.`),

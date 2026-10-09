@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { z } from "zod";
 import { AuthCard } from "@/components/auth/auth-card";
 
 export const metadata: Metadata = { title: "Revisa tu correo" };
@@ -9,7 +10,8 @@ type CheckEmailPageProps = {
 };
 
 export default async function CheckEmailPage({ searchParams }: CheckEmailPageProps) {
-  const { email } = await searchParams;
+  // Only an address is echoed back, so a crafted link cannot put other text here.
+  const email = z.email().safeParse((await searchParams).email).data;
   return (
     <AuthCard
       title="Revisa tu correo"
