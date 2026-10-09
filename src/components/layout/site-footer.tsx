@@ -69,6 +69,11 @@ export function SiteFooter({ children }: { children: ReactNode }) {
                 </Link>
               </li>
               <li>
+                <Link href="/privacy" className={linkClass}>
+                  Privacidad
+                </Link>
+              </li>
+              <li>
                 <a href={REPO_URL} className={linkClass}>
                   Código en GitHub
                   <ExternalArrow />

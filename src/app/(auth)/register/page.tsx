@@ -24,6 +24,12 @@ export default async function RegisterPage({ searchParams }: RegisterPageProps) 
           <Link href={withNext("/login", next)} className="text-primary underline">
             Inicia sesión
           </Link>
+          <br />
+          Consulta cómo tratamos tus datos en la{" "}
+          <Link href="/privacy" className="text-primary underline">
+            política de privacidad
+          </Link>
+          .
         </>
       }
     >
