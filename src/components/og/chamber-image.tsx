@@ -8,7 +8,6 @@ import {
   HEMICYCLE_OUTER_RADIUS,
   HEMICYCLE_WIDTH,
   hemicycleSeats,
-  TOTAL_SEATS,
 } from "@/lib/hemicycle-layout";
 import { OG_SIZE } from "@/lib/site";
 
@@ -24,8 +23,6 @@ function hemicycleSvg(fills: readonly string[]) {
   const dots = seats.map(({ x, y }, index) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.7" fill="${fills[index] ?? "#333333"}"/>`);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 ${HEMICYCLE_WIDTH + 24} ${HEMICYCLE_HEIGHT + 12}">${dots.join("")}<path d="M${cx} -12V${cy - HEMICYCLE_OUTER_RADIUS - 5}M${cx} ${cy - HEMICYCLE_INNER_RADIUS + 5}V${HEMICYCLE_HEIGHT}" fill="none" stroke="#2997ff" stroke-width="0.6" stroke-dasharray="1.5 1.5"/></svg>`;
 }
-
-export const allSeats = (colour: string) => Array<string>(TOTAL_SEATS).fill(colour);
 
 type ChamberImageProps = {
   title: string;

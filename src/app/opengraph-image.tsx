@@ -1,4 +1,5 @@
-import { allSeats, chamberImage } from "@/components/og/chamber-image";
+import { chamberImage } from "@/components/og/chamber-image";
+import { TOTAL_SEATS } from "@/lib/hemicycle-layout";
 import { OG_SIZE } from "@/lib/site";
 
 export const alt = "350 escaños. 52 repartos. Hemiciclo del Congreso con la mayoría absoluta en 176.";
@@ -7,5 +8,5 @@ export const contentType = "image/png";
 
 // The hero's finished count, without the motion.
 export default function Image() {
-  return chamberImage({ title: "350 escaños. 52 repartos.", fills: allSeats("#ffffff") });
+  return chamberImage({ title: "350 escaños. 52 repartos.", fills: Array<string>(TOTAL_SEATS).fill("#ffffff") });
 }

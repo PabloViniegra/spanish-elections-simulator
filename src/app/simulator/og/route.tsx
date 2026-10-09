@@ -1,6 +1,7 @@
-import type { NextRequest } from "next/server";
-import { allSeats, chamberImage } from "@/components/og/chamber-image";
+import { type NextRequest, NextResponse } from "next/server";
+import { chamberImage } from "@/components/og/chamber-image";
 import { SCENARIO_PARAM } from "@/lib/scenario/url";
+import { SCENARIO_MAX } from "@/lib/simulations/limits";
 import { summarizeSimulation } from "@/lib/simulations/summary";
 
 const LEGEND_MAX = 6;
@@ -8,11 +9,12 @@ const LEGEND_MAX = 6;
 const headers = { "cache-control": "public, max-age=3600, s-maxage=31536000" };
 
 // The preview of a shared scenario (opengraph-image files get no search params).
-// A broken link gets the site's own image.
+// A broken link is sent to the site's own image, already rendered, and an
+// oversized one is not decompressed at all.
 export function GET(request: NextRequest) {
   const param = request.nextUrl.searchParams.get(SCENARIO_PARAM);
-  const summary = param ? summarizeSimulation(param) : null;
-  if (!summary) return chamberImage({ title: "350 escaños. 52 repartos.", fills: allSeats("#ffffff") }, headers);
+  const summary = param && param.length <= SCENARIO_MAX ? summarizeSimulation(param) : null;
+  if (!summary) return NextResponse.redirect(new URL("/opengraph-image", request.url), 308);
 
   // Largest first, the smallest blocs grouped so the legend fits.
   const { ranked } = summary;

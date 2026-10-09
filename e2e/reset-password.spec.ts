@@ -43,3 +43,12 @@ test("a forgotten password can be replaced through the emailed link", async ({ p
   await page.goto(`/api/auth/reset-password/${token}?callbackURL=%2Freset-password`);
   await expect(page.getByText(/no es válido o ha caducado/)).toBeVisible();
 });
+
+// Only the forms, with their per-email limits, can ask for or use a reset.
+test("the reset endpoints are not open over HTTP", async ({ request }) => {
+  const headers = { origin: "http://localhost:3100" };
+  const ask = await request.post("/api/auth/request-password-reset", { headers, data: { email: "nadie@example.com" } });
+  expect(ask.status()).toBe(404);
+  const reset = await request.post("/api/auth/reset-password", { headers, data: { token: "x", newPassword: "contraseña-nueva" } });
+  expect(reset.status()).toBe(404);
+});

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { restoreScenario } from "@/lib/scenario/restore";
-import { NAME_MAX } from "./limits";
+import { NAME_MAX, SCENARIO_MAX } from "./limits";
 
 export { NAME_MAX, MAX_SIMULATIONS } from "./limits";
 
@@ -8,7 +8,7 @@ const name = z.string().trim().min(1, "Ponle un nombre a la simulación.").max(N
 // The scenario as its URL parameter; it must restore like a shared link.
 const scenario = z
   .string()
-  .max(20_000)
+  .max(SCENARIO_MAX)
   .refine((param) => restoreScenario(param) !== null, "El escenario no es válido.");
 
 export const saveSimulationSchema = z.object({ name, scenario });

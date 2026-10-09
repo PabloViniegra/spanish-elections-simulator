@@ -52,9 +52,12 @@ test("a shared link previews its own chamber, and a broken one the site's", asyn
   expect(preview.headers()["content-type"]).toBe("image/png");
   expect(preview.headers()["cache-control"]).toContain("s-maxage=");
 
-  const broken = await request.get("/simulator/og?e=v1.roto");
-  expect(broken.status()).toBe(200);
-  expect(broken.headers()["content-type"]).toBe("image/png");
+  // A broken one is sent to the site image without rendering another.
+  const broken = await request.get("/simulator/og?e=v1.roto", { maxRedirects: 0 });
+  expect(broken.status()).toBe(308);
+  expect(new URL(broken.headers().location ?? "", "http://x").pathname).toBe("/opengraph-image");
+  const site = await request.get("/simulator/og?e=v1.roto");
+  expect(site.headers()["content-type"]).toBe("image/png");
 });
 
 test("warns when a shared provincial scenario has a long URL", async ({ page }) => {
