@@ -1,9 +1,3 @@
-"use client";
-
-import { useEffect, useState, useSyncExternalStore } from "react";
-import { notify } from "@/components/feedback/notify";
-import { exceedsShareUrlLimit, withScenarioParam } from "@/lib/scenario/url";
-
 const iconProps = {
   "aria-hidden": true,
   viewBox: "0 0 20 20",
@@ -35,29 +29,9 @@ function CheckIcon({ className }: { className?: string }) {
   );
 }
 
-// The address changes only with `scenarioParam`, which already re-renders.
-const subscribeNever = () => () => {};
+type ShareLinkProps = { brokenLink: boolean; longUrl: boolean; copied: boolean; onCopy: () => void };
 
-// FR-10: copies the current address, which always holds the scenario.
-export function ShareLink({ brokenLink, scenarioParam }: { brokenLink: boolean; scenarioParam: string | null }) {
-  const [copied, setCopied] = useState(false);
-  const currentShareUrl = () => withScenarioParam(window.location.href, scenarioParam);
-  // The address is only known in the browser; the server renders no warning.
-  const longUrl = useSyncExternalStore(subscribeNever, () => exceedsShareUrlLimit(currentShareUrl()), () => false);
-  useEffect(() => {
-    if (!copied) return;
-    const timer = setTimeout(() => setCopied(false), 2600);
-    return () => clearTimeout(timer);
-  }, [copied]);
-  const copy = async () => {
-    try {
-      await navigator.clipboard.writeText(currentShareUrl());
-      setCopied(true);
-      notify.success({ title: "Enlace copiado", description: "Quien lo abra verá esta misma simulación." });
-    } catch {
-      notify.error({ title: "No se ha podido copiar", description: "Copia la dirección desde la barra del navegador." });
-    }
-  };
+export function ShareLink({ brokenLink, longUrl, copied, onCopy }: ShareLinkProps) {
   return (
     <div className="contents">
       {brokenLink && (
@@ -70,7 +44,7 @@ export function ShareLink({ brokenLink, scenarioParam }: { brokenLink: boolean; 
       </p>
       <button
         type="button"
-        onClick={copy}
+        onClick={onCopy}
         data-copied={copied}
         className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-caption leading-none font-semibold text-on-primary transition-[background-color,scale] duration-200 ease-snappy hover:bg-primary-focus active:scale-[0.96] data-[copied=true]:bg-ink"
       >

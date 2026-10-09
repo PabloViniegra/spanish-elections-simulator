@@ -2,7 +2,8 @@ import Link from "next/link";
 import { HemicycleMark } from "@/components/brand/hemicycle-mark";
 import type { Bloc } from "@/lib/elections/types";
 import { MAJORITY } from "@/lib/hemicycle-layout";
-import { DeleteSimulation, LIST_HEADING_ID } from "./delete-simulation";
+import { LIST_HEADING_ID } from "./delete-simulation";
+import { DeleteSimulationContainer } from "./delete-simulation-container";
 import { SavedHemicycle } from "./saved-hemicycle";
 
 export type SavedSimulation = {
@@ -94,7 +95,7 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
                         Abrir<span className="sr-only"> «{name}»</span>
                       </Link>
                     )}
-                    <DeleteSimulation id={id} name={name} />
+                    <DeleteSimulationContainer id={id} name={name} />
                   </div>
                 </div>
               </li>
