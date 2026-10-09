@@ -2,12 +2,21 @@
 
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { clientIp, deleteAccountLimits, signInLimits, signUpLimits } from "@/lib/rate-limit/rules";
+import { clientIp, deleteAccountLimits, newPasswordLimits, passwordResetLimits, signInLimits, signUpLimits } from "@/lib/rate-limit/rules";
 import { consume } from "@/lib/rate-limit/store";
 import { attemptAuth } from "./attempt";
 import { auth } from "./auth";
 import { safeNextPath, withNext } from "./next-path";
-import { deleteAccountSchema, fieldErrorsOf, formValues, signInSchema, signUpSchema, type FormState } from "./forms";
+import {
+  deleteAccountSchema,
+  fieldErrorsOf,
+  formValues,
+  requestPasswordResetSchema,
+  resetPasswordSchema,
+  signInSchema,
+  signUpSchema,
+  type FormState,
+} from "./forms";
 
 // The confirmation link lands on the login page, which then goes on to `next`.
 const verifiedRedirect = (next: string) => withNext("/login?verified=1", next);
@@ -48,6 +57,35 @@ export async function signUp(_prev: FormState, formData: FormData): Promise<Form
   });
   if (failure) return failure;
   redirect(`/register/check-email?email=${encodeURIComponent(email)}`);
+}
+
+// Unknown addresses get the same answer, so the form does not reveal accounts.
+export async function requestPasswordReset(_prev: FormState, formData: FormData): Promise<FormState> {
+  const values = formValues(formData, ["email"]);
+  const parsed = requestPasswordResetSchema.safeParse(values);
+  if (!parsed.success) return { values, fieldErrors: fieldErrorsOf(parsed.error) };
+
+  const { email } = parsed.data;
+  const requestHeaders = await headers();
+  const failure = await attemptAuth(values, passwordResetLimits(clientIp(requestHeaders), email), consume, async () => {
+    // The emailed link checks the token, then lands on this page with it.
+    await auth.api.requestPasswordReset({ body: { email, redirectTo: "/reset-password" }, headers: requestHeaders });
+  });
+  if (failure) return failure;
+  redirect("/forgot-password?sent=1");
+}
+
+export async function resetPassword(_prev: FormState, formData: FormData): Promise<FormState> {
+  const parsed = resetPasswordSchema.safeParse(formValues(formData, ["token", "password"]));
+  if (!parsed.success) return { fieldErrors: fieldErrorsOf(parsed.error) };
+
+  const { token, password } = parsed.data;
+  const requestHeaders = await headers();
+  const failure = await attemptAuth({}, newPasswordLimits(clientIp(requestHeaders)), consume, async () => {
+    await auth.api.resetPassword({ body: { token, newPassword: password }, headers: requestHeaders });
+  });
+  if (failure) return failure;
+  redirect("/login?reset=1");
 }
 
 export async function signOut() {

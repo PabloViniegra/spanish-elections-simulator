@@ -5,6 +5,7 @@ import { after } from "next/server";
 import { username } from "better-auth/plugins";
 import { db } from "@/lib/db/client";
 import { sendGoodbyeEmail } from "@/lib/email/send-goodbye-email";
+import { sendResetPasswordEmail } from "@/lib/email/send-reset-password-email";
 import { sendVerificationEmail } from "@/lib/email/send-verification-email";
 import { consume } from "@/lib/rate-limit/store";
 import * as schema from "@/lib/db/schema";
@@ -16,7 +17,20 @@ export const auth = betterAuth({
   // Over HTTP a fresh session could delete without the password or the
   // deleteAccount rate limit; server calls through auth.api still work.
   disabledPaths: ["/delete-user", "/delete-user/callback"],
-  emailAndPassword: { enabled: true, requireEmailVerification: true },
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true,
+    // Whoever had the old password is signed out everywhere.
+    revokeSessionsOnPasswordReset: true,
+    sendResetPassword: async ({ user, url }) => {
+      // Sent after the response, as unknown addresses get no email at all.
+      after(() =>
+        sendResetPasswordEmail(user.email, user.name, url).catch((error) => {
+          console.error("Password reset email failed", error);
+        }),
+      );
+    },
+  },
   emailVerification: {
     sendOnSignIn: true,
     sendVerificationEmail: async ({ user, url }) => {

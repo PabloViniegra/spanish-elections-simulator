@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clientIp, type Consume, deleteAccountLimits, firstBlocked, signInLimits, signInRules, signUpLimits, signUpRules, tooManyAttempts } from "./rules";
+import { clientIp, type Consume, deleteAccountLimits, firstBlocked, newPasswordLimits, passwordResetLimits, signInLimits, signInRules, signUpLimits, signUpRules, tooManyAttempts } from "./rules";
 
 describe("clientIp", () => {
   it("prefers the address the proxy sets", () => {
@@ -30,6 +30,14 @@ describe("attempt limits", () => {
       ["sign-up|ip|1.2.3.4", signUpRules.ip],
       ["sign-up|email|ana@example.com", signUpRules.email],
     ]);
+  });
+
+  it("limit password reset emails per address and per email, and new passwords per address", () => {
+    expect(passwordResetLimits("1.2.3.4", "Ana@Example.com")).toEqual([
+      ["password-reset|ip|1.2.3.4", signUpRules.ip],
+      ["password-reset|email|ana@example.com", signUpRules.email],
+    ]);
+    expect(newPasswordLimits("1.2.3.4")).toEqual([["new-password|ip|1.2.3.4", signInRules.ip]]);
   });
 
   it("limit password checks before deleting an account per user", () => {

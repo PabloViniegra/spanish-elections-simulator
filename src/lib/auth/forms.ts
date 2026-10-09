@@ -22,7 +22,22 @@ export const deleteAccountSchema = z.object({
   password: z.string().min(1, "Introduce tu contraseña para confirmar."),
 });
 
-// Limits mirror Better Auth's defaults for the username plugin and passwords.
+// Limits mirror Better Auth's defaults for passwords.
+const newPassword = z
+  .string()
+  .min(8, "La contraseña debe tener al menos 8 caracteres.")
+  .max(128, "La contraseña no puede superar los 128 caracteres.");
+
+export const requestPasswordResetSchema = z.object({
+  email: z.email("Introduce un correo electrónico válido."),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1),
+  password: newPassword,
+});
+
+// Limits mirror Better Auth's defaults for the username plugin.
 export const signUpSchema = z.object({
   username: z
     .string()
@@ -31,10 +46,7 @@ export const signUpSchema = z.object({
     .max(30, "El usuario no puede superar los 30 caracteres.")
     .regex(/^[a-zA-Z0-9_.]+$/, "Usa solo letras, números, punto o guion bajo."),
   email: z.email("Introduce un correo electrónico válido."),
-  password: z
-    .string()
-    .min(8, "La contraseña debe tener al menos 8 caracteres.")
-    .max(128, "La contraseña no puede superar los 128 caracteres."),
+  password: newPassword,
   province: z.union([z.literal("").transform(() => undefined), provinceCode], {
     error: "Elige una provincia de la lista.",
   }),
@@ -63,6 +75,7 @@ const authErrorMessages = new Map([
   ["EMAIL_NOT_VERIFIED", "Confirma tu correo electrónico. Te hemos reenviado el enlace."],
   ["USERNAME_IS_ALREADY_TAKEN", "Ese nombre de usuario ya está en uso."],
   ["INVALID_PASSWORD", "La contraseña no es correcta."],
+  ["INVALID_TOKEN", "El enlace para cambiar la contraseña no es válido o ha caducado. Pide uno nuevo."],
 ]);
 
 export function authErrorMessage(code: string | undefined): string {

@@ -8,11 +8,11 @@ import { leadsToSimulator, safeNextPath, withNext } from "@/lib/auth/next-path";
 export const metadata: Metadata = { title: "Iniciar sesión" };
 
 type LoginPageProps = {
-  searchParams: Promise<{ verified?: string; error?: string; next?: string }>;
+  searchParams: Promise<{ verified?: string; reset?: string; error?: string; next?: string }>;
 };
 
 export default async function LoginPage({ searchParams }: LoginPageProps) {
-  const { verified, error, next: nextParam } = await searchParams;
+  const { verified, reset, error, next: nextParam } = await searchParams;
   const next = safeNextPath(nextParam);
   const gated = leadsToSimulator(next);
   return (
@@ -32,6 +32,11 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       {verified && (
         <p role="status" className="mb-5 rounded-sm border border-primary px-4 py-3 text-caption text-primary">
           Correo confirmado. Ya puedes iniciar sesión.
+        </p>
+      )}
+      {reset && (
+        <p role="status" className="mb-5 rounded-sm border border-primary px-4 py-3 text-caption text-primary">
+          Contraseña cambiada. Inicia sesión con la nueva.
         </p>
       )}
       {error && (

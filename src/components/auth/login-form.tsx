@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { FormAlert } from "@/components/forms/form-alert";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { PasswordField } from "@/components/forms/password-field";
@@ -33,6 +34,9 @@ export function LoginForm({ state, action, pending, next }: LoginFormProps) {
         required
         error={state?.fieldErrors?.password}
       />
+      <Link href="/forgot-password" className="-mt-2 self-start text-caption text-primary underline">
+        ¿Has olvidado tu contraseña?
+      </Link>
       <FormAlert message={state?.error} />
       <SubmitButton pending={pending} label="Iniciar sesión" pendingLabel="Iniciando sesión…" />
     </form>

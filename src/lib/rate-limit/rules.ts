@@ -42,6 +42,19 @@ export function signUpLimits(ip: string, email: string): Limit[] {
   ];
 }
 
+// Each request may send an email, so it is as scarce as signing up.
+export function passwordResetLimits(ip: string, email: string): Limit[] {
+  return [
+    [`password-reset|ip|${ip}`, signUpRules.ip],
+    [`password-reset|email|${email.toLowerCase()}`, signUpRules.email],
+  ];
+}
+
+// Guessing a reset token is hopeless, but each attempt still hashes a password.
+export function newPasswordLimits(ip: string): Limit[] {
+  return [[`new-password|ip|${ip}`, signInRules.ip]];
+}
+
 // The password check before deleting an account is another chance to guess it.
 export function deleteAccountLimits(userId: string): Limit[] {
   return [[`delete-account|user|${userId}`, signInRules.account]];
