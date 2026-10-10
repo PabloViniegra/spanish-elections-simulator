@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import { SiteAnalytics } from "@/components/analytics/site-analytics";
 import { Toaster } from "@/components/feedback/toaster";
 import { SITE_NAME, SITE_OPEN_GRAPH, SITE_URL } from "@/lib/site";
@@ -12,7 +13,9 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  // Nonces are request-specific, so HTML must never be prerendered.
+  await connection();
   return (
     <html lang="es" className="h-full antialiased">
       <body className="min-h-full flex flex-col">

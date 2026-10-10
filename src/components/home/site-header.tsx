@@ -61,7 +61,7 @@ export function SiteHeader({ username, current, accountBar, accountRows }: { use
       </a>
       <nav
         aria-label="Principal"
-        className="mx-auto flex h-11 max-w-content items-center justify-between gap-6 px-5 text-caption whitespace-nowrap"
+        className="mx-auto flex h-11 max-w-content items-center justify-between gap-2 px-5 text-caption whitespace-nowrap sm:gap-6"
       >
         <Link href="/" className="group flex min-h-11 shrink-0 items-center gap-2.5 text-body font-semibold">
           {/* The app icon's two arcs on one path: hover or focus swings the majority. */}

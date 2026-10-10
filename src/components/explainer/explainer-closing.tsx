@@ -1,6 +1,7 @@
 import { SiteFooter } from "../layout/site-footer";
 import { CtaLinks } from "../home/cta-links";
 import { closingTitle } from "../home/type";
+import { ElectionReference } from "../legal/election-reference";
 
 export function ExplainerClosing() {
   return (
@@ -25,7 +26,7 @@ export function ExplainerClosing() {
         <a href="https://www.boe.es/buscar/act.php?id=BOE-A-1985-11672" className="underline underline-offset-2">
           Ley Orgánica del Régimen Electoral General
         </a>{" "}
-        (artículos 96, 162 y 163) y en el Real Decreto 806/2026. Es una explicación divulgativa y no favorece a ningún partido.
+        (artículos 96, 162 y 163). <ElectionReference /> Es una explicación divulgativa y no favorece a ningún partido.
       </SiteFooter>
     </>
   );

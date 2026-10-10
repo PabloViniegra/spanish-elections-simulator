@@ -11,7 +11,7 @@ import type { ProvinceShares, Scenario } from "@/lib/scenario/types";
 import type { SimulatorInitialState } from "@/lib/scenario/initial";
 import { encodeScenario } from "@/lib/scenario/address";
 import { provinces } from "@/lib/provinces";
-import { seats2026 } from "@/lib/seats-2026";
+import { simulationSeats } from "@/lib/elections/current";
 import { DHONDT_ID } from "./ids";
 import type { InputMode } from "./mode-switch";
 import { useScenario } from "./use-scenario";
@@ -92,7 +92,7 @@ export function useSimulator(initial: SimulatorInitialState) {
   };
 
   const stale = !fitsInFull(scenario);
-  const simulation = simulate(valid, base.election, blocs, seats2026);
+  const simulation = simulate(valid, base.election, blocs, simulationSeats);
   const lockedCodes = provinces.map((province) => province.code).filter((locked) => scenario.provinces?.[locked]);
   // Locking a province starts from its projection, so nothing moves until the
   // user changes a share.
@@ -129,7 +129,6 @@ export function useSimulator(initial: SimulatorInitialState) {
   };
 
   return {
-    shared: initial.shared,
     brokenLink: initial.brokenLink,
     changingBase,
     scenario,

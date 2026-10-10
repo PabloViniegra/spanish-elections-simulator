@@ -43,7 +43,7 @@ export function DhondtExample() {
             Cada escaño tiene su cociente.
           </h2>
           <p className="rise text-body text-pretty text-ink-muted-80 [--c:1]">
-            En cada provincia, los votos de cada partido que supera el 3 % se dividen entre 1, 2,
+            En cada provincia, los votos de cada partido que alcanza al menos el 3 % de los votos válidos, incluidos los blancos, se dividen entre 1, 2,
             3… Cada resultado es un cociente, y los escaños van a los más altos.
           </p>
         </div>

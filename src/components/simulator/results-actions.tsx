@@ -7,7 +7,7 @@ type Panel = "downloads" | "save";
 type ResultsActionsProps = {
   share: ReactNode;
   downloads: ReactNode;
-  // Signed out there is nothing to save to.
+  // Either the save form or the account notice.
   save?: ReactNode;
 };
 

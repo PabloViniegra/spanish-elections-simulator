@@ -1,6 +1,6 @@
 import { hemicycleSeats } from "./hemicycle-layout";
 import { provinces } from "./provinces";
-import { seats2026 } from "./seats-2026";
+import { simulationSeats } from "./elections/current";
 
 // Each constituency gets a fixed slot plus a share per seat, so Madrid is
 // counted visibly longer than Soria without the whole count dragging.
@@ -28,7 +28,7 @@ export function seatCount() {
   let seatsSoFar = 0;
   let startMs = COUNT_DELAY_MS;
   const steps: CountStep[] = provinces.map(({ code, name }, index) => {
-    const count = seats2026.get(code) ?? 0;
+    const count = simulationSeats.get(code) ?? 0;
     const wedge = seats.slice(seatsSoFar, seatsSoFar + count);
     const durationMs = SLOT_BASE_MS + SLOT_PER_SEAT_MS * count;
     seatsSoFar += count;

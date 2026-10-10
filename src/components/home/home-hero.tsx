@@ -15,13 +15,13 @@ export function HomeHero({ actions }: { actions?: ReactNode }) {
           </h1>
           <p className="hero-rise max-w-[34rem] text-body text-on-dark-muted [--c:1] lg:text-lead-airy">
             Las 50 provincias, Ceuta y Melilla reparten cada una sus propios escaños. Pon una
-            estimación de voto y mira cómo queda el Congreso en las generales del 29 de noviembre.
+            estimación de voto y mira cómo queda el Congreso.
           </p>
           <div className="hero-rise [--c:2]">
             {actions ?? <CtaLinks tone="dark" />}
           </div>
           <p className="hero-rise text-caption text-on-dark-muted [--c:3]">
-            Es una simulación, no una previsión.
+            Sin cuenta; regístrate solo para guardar. Es una simulación, no una previsión.
           </p>
         </div>
         <CountReplay>

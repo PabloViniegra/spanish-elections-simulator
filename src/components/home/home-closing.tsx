@@ -1,6 +1,7 @@
 import { SiteFooter } from "../layout/site-footer";
 import { CtaLinks } from "./cta-links";
 import { closingTitle } from "./type";
+import { ElectionReference } from "../legal/election-reference";
 
 export function HomeClosing() {
   return (
@@ -21,8 +22,7 @@ export function HomeClosing() {
         </div>
       </section>
       <SiteFooter>
-        Escaños del 29 de noviembre de 2026 según el Real Decreto 806/2026. Es una simulación, no una previsión, y no favorece a
-        ningún partido.
+        <ElectionReference /> Es una simulación, no una previsión, y no favorece a ningún partido.
       </SiteFooter>
     </>
   );

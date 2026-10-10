@@ -1,13 +1,14 @@
 import { cssVar } from "@/lib/css-var";
 import { provinces } from "@/lib/provinces";
-import { seats2026 } from "@/lib/seats-2026";
+import { simulationSeats } from "@/lib/elections/current";
 import { sectionTitle } from "../home/type";
+import { ElectionReference } from "../legal/election-reference";
 
 // From the most deputies to the fewest, one dot per seat.
 const ladder = ["28", "08", "46", "41", "29", "50", "06", "44", "42", "51"].map((code) => ({
   code,
   name: provinces.find((province) => province.code === code)?.name ?? code,
-  seats: seats2026.get(code) ?? 0,
+  seats: simulationSeats.get(code) ?? 0,
 }));
 
 export function SeatLadder() {
@@ -22,10 +23,10 @@ export function SeatLadder() {
           <div className="flex flex-col gap-5">
             <p className="rise max-w-[30rem] text-body text-pretty text-ink-muted-80 [--c:1]">
               Todas parten de 2 diputados, y Ceuta y Melilla tienen 1. Los 248 que quedan se reparten según la población. Por eso
-              Madrid elige {seats2026.get("28")} y Soria, {seats2026.get("42")}.
+              Madrid elige {simulationSeats.get("28")} y Soria, {simulationSeats.get("42")}.
             </p>
             <p className="rise max-w-[30rem] text-caption text-pretty text-ink-muted-80 [--c:2]">
-              El reparto lo fija el decreto que convoca cada elección. Para el 29 de noviembre, el Real Decreto 806/2026.
+              El reparto lo fija el decreto que convoca cada elección. <ElectionReference />
             </p>
           </div>
         </div>

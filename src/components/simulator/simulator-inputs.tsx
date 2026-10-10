@@ -2,7 +2,7 @@ import { useSyncExternalStore } from "react";
 import { baseOptions } from "@/lib/elections/base-options";
 import { othersShare, provinceSeats } from "@/lib/scenario/simulate";
 import { provinces } from "@/lib/provinces";
-import { seats2026 } from "@/lib/seats-2026";
+import { simulationSeats } from "@/lib/elections/current";
 import { BaseSelect } from "./base-select";
 import { BlocManagerContainer } from "./bloc-manager-container";
 import { ModeSwitch } from "./mode-switch";
@@ -30,7 +30,7 @@ export function SimulatorInputs({ state }: { state: ReturnType<typeof useSimulat
         {mode === "national" ? (
           <NationalInputs blocs={editBlocs} base={base} shares={scenario.shares} blank={scenario.blank} others={othersShare(scenario)} seats={simulation.seats} baseSeats={baseline.simulation.seats} offTarget={simulation.offTarget} lockedCount={lockedCodes.length} stale={stale} free={free} onFreeChange={setFree} {...nationalEdits} onReset={reset} />
         ) : (
-          <ProvinceInputs blocs={blocs} rowBlocs={provinceBlocs} base={base} provinces={provinces} code={code} deputies={seats2026.get(code) ?? 0} lockedCodes={lockedCodes} shares={province.shares} blank={province.blank} others={othersShare(province)} seats={provinceSeats(simulation.results, code)} baseSeats={provinceSeats(baseline.simulation.results, code)} offTarget={simulation.offTarget} stale={stale} onSelect={setCode} free={free} onFreeChange={setFree} {...provinceEdits} onUnlock={unlockProvince} onReset={reset} />
+          <ProvinceInputs blocs={blocs} rowBlocs={provinceBlocs} base={base} provinces={provinces} code={code} deputies={simulationSeats.get(code) ?? 0} lockedCodes={lockedCodes} shares={province.shares} blank={province.blank} others={othersShare(province)} seats={provinceSeats(simulation.results, code)} baseSeats={provinceSeats(baseline.simulation.results, code)} offTarget={simulation.offTarget} stale={stale} onSelect={setCode} free={free} onFreeChange={setFree} {...provinceEdits} onUnlock={unlockProvince} onReset={reset} />
         )}
       </div>
       <BlocManagerContainer base={base} scenario={scenario} onChange={updateUnanchored} onRestart={restart} />

@@ -1,6 +1,6 @@
 import type { Base } from "@/lib/elections/bases";
 import type { Bloc } from "@/lib/elections/types";
-import { seats2026 } from "@/lib/seats-2026";
+import { simulationSeats } from "@/lib/elections/current";
 import { baseScenario, othersShare, simulate } from "./simulate";
 
 const cache = new Map<string, ReturnType<typeof build>>();
@@ -8,7 +8,7 @@ const cache = new Map<string, ReturnType<typeof build>>();
 function build({ election, blocs: defaults }: Base, blocs = defaults) {
   const plain = baseScenario(election, blocs);
   const scenario = blocs === defaults ? plain : { ...plain, blocs: [...blocs] };
-  return { scenario, others: othersShare(scenario), simulation: simulate(scenario, election, blocs, seats2026) };
+  return { scenario, others: othersShare(scenario), simulation: simulate(scenario, election, blocs, simulationSeats) };
 }
 
 // A base election as an untouched scenario, with its simulation on the 2026

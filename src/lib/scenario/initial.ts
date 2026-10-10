@@ -5,7 +5,6 @@ import type { Scenario } from "./types";
 export type SimulatorInitialState = {
   base: Base;
   scenario: Scenario | null;
-  shared: string | null;
   brokenLink: boolean;
 };
 
@@ -14,7 +13,6 @@ export function simulatorInitialState(shared: string | null): SimulatorInitialSt
   return {
     base: scenario ? baseById(scenario.baseElectionId) ?? defaultBase : defaultBase,
     scenario,
-    shared,
     brokenLink: Boolean(shared) && !scenario,
   };
 }

@@ -19,11 +19,11 @@ export function PrivacyData() {
       </LegalSection>
 
       <LegalSection id="datos" title="2. Qué datos tratamos">
-        <p>Puedes usar el simulador sin cuenta. Solo tratamos datos personales en estos casos:</p>
+        <p>Puedes simular, compartir y descargar sin cuenta. Para guardar escenarios en tu perfil necesitas registrarte. Tratamos datos personales en estos casos:</p>
         <ul>
           <li>
-            <strong>Si creas una cuenta:</strong> nombre de usuario, correo electrónico y contraseña (guardada cifrada, nunca
-            en claro). Si quieres, también tu provincia y tu perfil de uso.
+            <strong>Si creas una cuenta:</strong> nombre de usuario, correo electrónico y contraseña (almacenada mediante un
+            hash seguro con sal usando scrypt, nunca en claro ni con cifrado reversible). Si quieres, también tu provincia y tu perfil de uso.
           </li>
           <li>
             <strong>Si guardas simulaciones:</strong> el nombre que les pones, el escenario y la fecha.

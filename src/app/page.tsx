@@ -12,9 +12,9 @@ import { getSession } from "@/lib/auth/session";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: { absolute: "Simulador de escaños del Congreso · Elecciones 29 de noviembre de 2026" },
+  title: { absolute: "Simulador de escaños del Congreso · Elecciones generales" },
   description:
-    "Simula las elecciones generales del 29 de noviembre de 2026: cambia el voto de cada partido y mira cómo el método D'Hondt reparte los 350 escaños.",
+    "Simula elecciones generales sin cuenta: cambia el voto de cada partido y mira cómo el método D'Hondt reparte los 350 escaños del Congreso.",
   alternates: { canonical: "/" },
 };
 

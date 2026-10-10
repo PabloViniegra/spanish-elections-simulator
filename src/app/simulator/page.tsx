@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
 import { SiteHeader } from "@/components/home/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SimulatorContainer } from "@/components/simulator/simulator-container";
 import { JsonLd } from "@/components/seo/json-ld";
-import { withNext } from "@/lib/auth/next-path";
 import { getSession } from "@/lib/auth/session";
 import { SAVED_PARAM, SCENARIO_PARAM } from "@/lib/scenario/url";
 import { simulatorInitialState } from "@/lib/scenario/initial";
 import { findSimulation } from "@/lib/simulations/queries";
 import { OG_SIZE, SITE_OPEN_GRAPH, SITE_URL } from "@/lib/site";
+import { ElectionReference } from "@/components/legal/election-reference";
 
 const metadata: Metadata = {
   title: "Simulador",
-  description: "Cambia el porcentaje de voto de cada partido y mira el reparto de los 350 escaños del 29 de noviembre de 2026.",
+  description: "Cambia el porcentaje de voto de cada partido y mira el reparto de los 350 escaños del Congreso, sin cuenta.",
   alternates: { canonical: "/simulator" },
 };
 
@@ -39,11 +38,10 @@ export async function generateMetadata({ searchParams }: SimulatorPageProps): Pr
   return { ...metadata, openGraph: { ...SITE_OPEN_GRAPH, images: [image] }, twitter: { card: "summary_large_image", images: [image] } };
 }
 
-// Simulating takes an account; a shared link stays public, read-only.
+// Only saved scenarios require an account and are scoped to their owner.
 export default async function SimulatorPage({ searchParams }: SimulatorPageProps) {
   const session = await getSession();
   const param = await paramOf(searchParams, SCENARIO_PARAM);
-  if (!session && !param) redirect(withNext("/login", "/simulator"));
   const savedId = await paramOf(searchParams, SAVED_PARAM);
   const saved = session && param && savedId ? await findSimulation(session.user.id, savedId) : null;
   return (
@@ -64,10 +62,10 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
         <div className="bg-canvas-parchment">
           <div className="mx-auto flex max-w-content flex-col gap-3 px-5 py-6 sm:px-8 sm:py-8">
             <h1 className="text-display-lg text-balance max-sm:text-[1.75rem]">
-              {session ? "Cambia el voto y mira los 350 escaños del 29 de noviembre" : "Así quedarían los 350 escaños del 29 de noviembre con este escenario"}
+              Cambia el voto y mira los 350 escaños del Congreso
             </h1>
             <p className="max-w-xl text-body text-pretty text-ink-muted-80">
-              Votos reales de unas generales con los escaños de 2026. Si cambias un partido, su voto varía en la misma proporción
+              Votos reales de unas generales con el reparto de escaños de referencia. Si cambias un partido, su voto varía en la misma proporción
               en cada provincia.{" "}
               <span className="font-semibold text-ink">Es una simulación, no una previsión.</span>
             </p>
@@ -76,8 +74,7 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
         <SimulatorContainer signedIn={Boolean(session)} initial={simulatorInitialState(param ?? null)} saved={saved} />
       </main>
       <SiteFooter>
-        Escaños del 29 de noviembre de 2026 según el Real Decreto 806/2026. Es una simulación, no una previsión, y no favorece a
-        ningún partido.
+        <ElectionReference /> Es una simulación, no una previsión, y no favorece a ningún partido.
       </SiteFooter>
     </>
   );

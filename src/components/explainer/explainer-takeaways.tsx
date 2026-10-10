@@ -1,7 +1,7 @@
 import { MAJORITY } from "@/lib/hemicycle-layout";
 import { cssVar } from "@/lib/css-var";
 import { dhondt } from "@/lib/engine/dhondt";
-import { seats2026 } from "@/lib/seats-2026";
+import { simulationSeats } from "@/lib/elections/current";
 import { sectionTitle } from "../home/type";
 
 // Three invented provinces of 3 seats. Partido X has all its votes in the first;
@@ -33,7 +33,7 @@ const seatsLabel = (n: number) => `${n} ${n === 1 ? "escaño" : "escaños"}`;
 
 const takeaways = [
   {
-    figure: String(seats2026.get("42")),
+    figure: String(simulationSeats.get("42")),
     unit: "escaños en Soria",
     title: "En las provincias pequeñas, el listón sube.",
     text: "Con solo 2 escaños en juego, un partido necesita mucho más que el 3 % para llevarse uno.",

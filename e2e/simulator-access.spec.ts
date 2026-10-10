@@ -4,6 +4,7 @@ import { blocs2023 } from "../src/lib/elections/blocs-2023";
 import { provinces } from "../src/lib/provinces";
 import { baseScenario } from "../src/lib/scenario/simulate";
 import { encodeScenario } from "../src/lib/scenario/url";
+import { restoreScenario } from "../src/lib/scenario/restore";
 
 // A v1 link (PP 35%, PSOE 29.74%), as in src/lib/scenario/url.test.ts.
 const SHARED =
@@ -23,21 +24,49 @@ const provincesScenario = Object.fromEntries(
 );
 const LONG_SHARED = encodeScenario({ ...base, provinces: provincesScenario });
 
-test("the simulator asks to sign in and comes back afterwards", async ({ page }) => {
+test("the simulator works without an account and asks to sign in only to save", async ({ page }) => {
   await page.goto("/simulator");
-  await expect(page).toHaveURL(/\/login\?next=%2Fsimulator$/);
-  await page.getByRole("link", { name: "Crea una" }).click();
-  await expect(page).toHaveURL(/\/register\?next=%2Fsimulator$/);
+  await expect(page.getByRole("combobox", { name: "Votos de partida" })).toBeVisible();
+  const chamber = page.getByRole("img", { name: /^Hemiciclo de 350 escaños/ });
+  const before = await chamber.getAttribute("aria-label");
+  await page.getByRole("spinbutton", { name: "PP", exact: true }).fill("40");
+  await expect(chamber).not.toHaveAccessibleName(before!);
+  await page.getByRole("button", { name: "Guardar", exact: true }).click();
+  const register = page.getByRole("link", { name: "Crear cuenta para guardar" });
+  const href = await register.getAttribute("href");
+  const next = new URL(href!, "http://localhost").searchParams.get("next");
+  expect(next).toMatch(/^\/simulator\?e=v1\./);
+  const scenarioParam = new URL(next!, "http://localhost").searchParams.get("e");
+  expect(restoreScenario(scenarioParam!)?.shares.pp).toBe(4000);
+  await register.focus();
+  await register.press("Enter");
+  await expect(page).toHaveURL(new RegExp(`/register\\?next=${encodeURIComponent(next!).replace(/\./g, "\\.")}$`));
 });
 
-test("a shared link shows its results read-only when signed out", async ({ page }) => {
+test("anonymous controls and saving notice reflow on a narrow screen", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 740 });
+  await page.goto("/simulator");
+  await expect(page.getByRole("spinbutton", { name: "PP", exact: true })).toBeVisible();
+  const save = page.getByRole("button", { name: "Guardar", exact: true });
+  await save.focus();
+  await save.press("Enter");
+  await expect(page.getByRole("link", { name: "Crear cuenta para guardar" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
+});
+
+test("a shared link can be edited without an account", async ({ page }) => {
   await page.goto(`/simulator?e=${SHARED}`);
-  await expect(page.getByRole("heading", { name: "Escenario compartido sobre las generales de julio de 2023" })).toBeVisible();
-  await expect(page.getByRole("combobox", { name: "Votos de partida" })).toHaveCount(0);
-  await expect(page.getByRole("button", { name: "Guardar", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("combobox", { name: "Votos de partida" })).toBeVisible();
+  await expect(page.getByRole("spinbutton", { name: "PP", exact: true })).toHaveValue("35");
+  await page.getByRole("spinbutton", { name: "PP", exact: true }).fill("40");
+  await expect(page.getByRole("button", { name: "Guardar", exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Copiar enlace" })).toBeVisible();
+  await page.getByRole("button", { name: "Guardar", exact: true }).click();
   const login = page.getByRole("main").getByRole("link", { name: "Iniciar sesión" });
-  await expect(login).toHaveAttribute("href", `/login?next=${encodeURIComponent(`/simulator?e=${SHARED}`)}`);
+  const href = await login.getAttribute("href");
+  const next = new URL(href!, "http://localhost").searchParams.get("next");
+  expect(next).toMatch(/^\/simulator\?e=v1\./);
+  expect(restoreScenario(new URL(next!, "http://localhost").searchParams.get("e")!)?.shares.pp).toBe(4000);
 });
 
 test("a shared link previews its own chamber, and a broken one the site's", async ({ page, request }) => {
