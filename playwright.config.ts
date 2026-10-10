@@ -1,4 +1,5 @@
 import { defineConfig, devices } from "@playwright/test";
+import { AUTH_SECRET } from "./e2e/account";
 
 const port = 3100;
 const baseURL = `http://localhost:${port}`;
@@ -28,7 +29,7 @@ export default defineConfig({
     env: {
       DATABASE_URI: process.env.DATABASE_URI,
       BETTER_AUTH_URL: baseURL,
-      BETTER_AUTH_SECRET: "e2e-placeholder-secret-not-used-in-production",
+      BETTER_AUTH_SECRET: AUTH_SECRET,
       // Never send real email; the setup confirms addresses in the database.
       RESEND_API_KEY: "",
     },
