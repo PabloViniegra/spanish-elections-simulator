@@ -1,3 +1,5 @@
+import Image from "next/image";
+import ballotBox from "@/assets/images/ballot-box.webp";
 import { SiteFooter } from "../layout/site-footer";
 import { CtaLinks } from "./cta-links";
 import { closingTitle } from "./type";
@@ -19,6 +21,12 @@ export function HomeClosing() {
           <div className="rise [--c:2]">
             <CtaLinks tone="blue" withLogin={false} />
           </div>
+          <Image
+            src={ballotBox}
+            alt=""
+            sizes="(max-width: 639px) calc(100vw - 40px), (max-width: 831px) calc(100vw - 64px), 768px"
+            className="mt-6 h-auto w-full max-w-3xl"
+          />
         </div>
       </section>
       <SiteFooter>
