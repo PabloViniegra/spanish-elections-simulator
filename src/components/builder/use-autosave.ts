@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import { saveBuiltDraft } from "@/lib/builder/actions";
 import { createDraftSaver, type SaveStatus } from "@/lib/builder/draft-saver";
 
@@ -51,5 +51,7 @@ export function useAutosave(id: string, json: string, stored: string) {
     };
   }, [router, saver]);
 
-  return { status, flush: () => { void saver.flush(); }, discard: () => saver.discard() };
+  // Sends the latest draft now and says whether it was stored.
+  const save = useCallback(() => saver.flush(), [saver]);
+  return { status, flush: () => { void saver.flush(); }, save, discard: () => saver.discard() };
 }

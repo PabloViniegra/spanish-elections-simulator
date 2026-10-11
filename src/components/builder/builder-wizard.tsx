@@ -1,6 +1,8 @@
 import type { ComponentProps } from "react";
 import Link from "next/link";
 import { BuiltMap } from "./built-map";
+import { IMPORT_ID } from "./csv-import";
+import { CsvImportContainer } from "./csv-import-container";
 import { DiscardBuilt } from "./discard-built";
 import { ProvinceAllocation } from "./province-allocation";
 import { ProvinceHeading } from "./province-heading";
@@ -25,9 +27,10 @@ type BuilderWizardProps = {
   stepper: ComponentProps<typeof ProvinceStepper>;
   index: ComponentProps<typeof ProvinceIndex>;
   map: ComponentProps<typeof BuiltMap>;
+  importer: ComponentProps<typeof CsvImportContainer>;
 };
 
-export function BuilderWizard({ name, completed, resultsHref, save, discard, heading, votes, adder, allocation, stepper, index, map }: BuilderWizardProps) {
+export function BuilderWizard({ name, completed, resultsHref, save, discard, heading, votes, adder, allocation, stepper, index, map, importer }: BuilderWizardProps) {
   return (
     <div data-builder-wizard className="pb-56 lg:pb-0">
       <div className="bg-canvas-parchment">
@@ -46,6 +49,9 @@ export function BuilderWizard({ name, completed, resultsHref, save, discard, hea
                 Ver el Congreso
               </Link>
             )}
+            <a href={`#${IMPORT_ID}`} className="inline-flex min-h-11 w-fit items-center text-caption font-semibold underline underline-offset-2">
+              Importar votos desde un CSV
+            </a>
             <DiscardBuilt {...discard} />
           </div>
           <div className="hidden lg:block"><SaveStatus {...save} /></div>
@@ -73,6 +79,7 @@ export function BuilderWizard({ name, completed, resultsHref, save, discard, hea
           <ProvinceIndex {...index} />
         </div>
       </section>
+      <CsvImportContainer {...importer} />
     </div>
   );
 }

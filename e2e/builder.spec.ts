@@ -1,4 +1,5 @@
-import { expect, type Page, test } from "@playwright/test";
+import { readFile } from "node:fs/promises";
+import { expect, type Page, type Route, test } from "@playwright/test";
 import { and, eq } from "drizzle-orm";
 import { db } from "../src/lib/db/client";
 import { simulation } from "../src/lib/db/schema";
@@ -186,6 +187,84 @@ test("a built election can be discarded halfway, with an unsaved edit pending", 
   await expect(page.getByRole("region", { name: /Tus simulaciones/ }).getByText(name)).toHaveCount(0);
   expect(await db.select().from(simulation).where(eq(simulation.name, name))).toEqual([]);
   expect((await page.goto(address))?.status()).toBe(404);
+});
+
+test("the votes of all 52 provinces import from a CSV, after a preview and only when the file is right", async ({ page }) => {
+  await signUpTo(page, "/builder/new");
+  const name = `Importadas ${crypto.randomUUID().slice(0, 8)}`;
+  await page.getByLabel("Nombre", { exact: true }).fill(name);
+  for (const party of ["Mi Partido", "Otro Partido"]) {
+    await page.getByLabel("Crear un partido propio").fill(party);
+    await page.getByLabel("Crear un partido propio").press("Enter");
+  }
+  await page.getByRole("button", { name: "Crear y empezar por la primera provincia" }).click();
+  await expect(page).toHaveURL(/\/builder\/[^/?]+\?p=01$/);
+  await page.getByLabel("Mi Partido se presenta en Araba/Álava").check();
+  await page.getByLabel("Votos de Mi Partido").fill("7");
+  await page.getByRole("link", { name: "Importar votos desde un CSV" }).click();
+  const section = page.getByRole("region", { name: "Importar votos desde un CSV" });
+
+  const pending = page.waitForEvent("download");
+  await section.getByRole("button", { name: "Descargar la plantilla" }).click();
+  const template = await readFile(await (await pending).path(), "utf8");
+  const lines = template.replace(/^\uFEFF/, "").split("\r\n");
+  expect(lines[0]).toBe("codigo_ine;provincia;Mi Partido;Otro Partido;blancos;nulos;votos_emitidos");
+  expect(lines[1]).toBe("01;Araba/Álava;7;;0;0;7");
+
+  const rows = lines.slice(1, 53).map((line) => `${line.split(";").slice(0, 2).join(";")};1000;500;10;5;1515`);
+  const upload = (text: string) => section.getByLabel("Elegir un archivo CSV").setInputFiles({ name: "votos.csv", mimeType: "text/csv", buffer: Buffer.from(text) });
+  await upload([lines[0], ...rows.slice(0, 27), "28;Madrid;1.000;500;10;5;1515", ...rows.slice(28)].join("\n"));
+  await expect(section.getByRole("alert")).toHaveText("Hay un error; no se ha importado nada.");
+  await expect(section.getByRole("row").nth(1)).toHaveText(/^29Madrid\s*Mi Partido«1\.000» no es un número entero/);
+
+  await upload([lines[0], ...rows].join("\n"));
+  await expect(section.getByText("El archivo es correcto: 52 provincias", { exact: false })).toBeVisible();
+  await expect(section.getByText("Se reemplazarán los votos de la provincia que ya habías empezado. No se puede deshacer.")).toBeVisible();
+  // A save that fails stops the progress at the last step until retried.
+  const offline = (route: Route) => (route.request().method() === "POST" ? route.abort() : route.continue());
+  await page.route("**/builder/**", offline);
+  await section.getByRole("button", { name: "Reemplazar los votos" }).click();
+  const progress = section.getByRole("progressbar", { name: "No se han podido guardar los votos importados." });
+  await expect(progress).toHaveAttribute("aria-valuenow", "2");
+  await page.unroute("**/builder/**", offline);
+  await section.getByRole("button", { name: "Reintentar el guardado" }).click();
+  await expect(section.getByRole("progressbar", { name: "Importación completa" })).toHaveAttribute("aria-valuenow", "3");
+  await expect(section.getByRole("list", { name: "Pasos de la importación" }).getByRole("listitem")).toHaveText(["✓ Archivo comprobado", "✓ Votos de las 52 provincias reemplazados", "✓ Guardado en tu perfil"]);
+  await expect(page.getByText("Las 52 provincias están completas.")).toBeVisible();
+  await expect(page.getByLabel("Votos de Mi Partido")).toHaveValue("1000");
+  await expect(page.getByRole("status").filter({ hasText: "Guardado en tu perfil" })).toBeVisible();
+  const [saved] = await db.select().from(simulation).where(eq(simulation.name, name));
+  const provinces = JSON.parse(saved.scenario).provinces;
+  expect(Object.keys(provinces)).toHaveLength(52);
+  expect(provinces["52"]).toEqual({ votes: { propio: 1000, "propio-2": 500 }, blank: 10, null: 5 });
+});
+
+test("a new election is created straight from a CSV whose header names catalogue parties", async ({ page }) => {
+  await signUpTo(page, "/builder/new");
+  await page.getByLabel("Importar los votos desde un CSV").check();
+  const name = `Desde CSV ${crypto.randomUUID().slice(0, 8)}`;
+  await page.getByLabel("Nombre", { exact: true }).fill(name);
+
+  const pending = page.waitForEvent("download");
+  await page.getByRole("button", { name: "Descargar la plantilla" }).click();
+  const lines = (await readFile(await (await pending).path(), "utf8")).replace(/^\uFEFF/, "").split("\r\n");
+  expect(lines[0]).toMatch(/^codigo_ine;provincia;PP;PSOE;Vox;Sumar;.*;blancos;nulos;votos_emitidos$/);
+
+  const rows = lines.slice(1, 53).map((line) => `${line.split(";").slice(0, 2).join(";")};1000;500;10;5;1515`);
+  const upload = (text: string) => page.getByLabel("Elegir un archivo CSV").setInputFiles({ name: "votos.csv", mimeType: "text/csv", buffer: Buffer.from(text) });
+  await upload(["codigo_ine;provincia;PP;Mi Partido;blancos;nulos;votos_emitidos", ...rows].join("\n"));
+  await expect(page.getByRole("main").getByRole("alert")).toHaveText("Hay un error; no se ha importado nada.");
+  await expect(page.getByRole("row").nth(1)).toHaveText(/^1—Mi PartidoNo es la sigla exacta/);
+
+  await upload(["codigo_ine;provincia;PP;PSOE;blancos;nulos;votos_emitidos", ...rows].join("\n"));
+  await expect(page.getByText("El archivo es correcto: 52 provincias", { exact: false })).toBeVisible();
+  await page.getByRole("button", { name: "Crear las elecciones con estos votos" }).click();
+  await expect(page).toHaveURL(/\/builder\/[^/?]+\/results$/);
+  const [saved] = await db.select().from(simulation).where(and(eq(simulation.name, name), eq(simulation.kind, "built")));
+  const scenario = JSON.parse(saved.scenario);
+  expect(scenario.parties.map(({ catalogId }: { catalogId: string }) => catalogId)).toEqual(["pp", "psoe"]);
+  expect(Object.keys(scenario.provinces)).toHaveLength(52);
+  expect(scenario.provinces["28"]).toEqual({ votes: { pp: 1000, psoe: 500 }, blank: 10, null: 5 });
 });
 
 test("a complete built election shows its Congreso, shares read-only and is tagged in the profile", async ({ page, context }) => {

@@ -84,6 +84,21 @@ describe("createBuiltAs", () => {
     expect(calls).toEqual([]);
   });
 
+  it("stores the votes of an imported file", async () => {
+    const { calls, insertIfRoom } = fakeInsert(true);
+    const provinces = { "28": { votes: { pp: 10, c1: 5 }, blank: 1, null: 0 } };
+    await createBuiltAs("u1", form({ ...fields, provinces: JSON.stringify(provinces) }), insertIfRoom, reference);
+    expect(calls).toEqual([["u1", "Mis elecciones", JSON.stringify({ ...scenario, provinces }), "built"]]);
+  });
+
+  it("rejects imported votes that are broken or name another party or province", async () => {
+    const { calls, insertIfRoom } = fakeInsert(true);
+    for (const provinces of ["{", JSON.stringify({ "28": { votes: { x: 1 }, blank: 0, null: 0 } }), JSON.stringify({ "99": { votes: {}, blank: 0, null: 0 } })]) {
+      expect(await createBuiltAs("u1", form({ ...fields, provinces }), insertIfRoom, reference)).toEqual({ error: "Los votos importados no son válidos." });
+    }
+    expect(calls).toEqual([]);
+  });
+
   it("explains how to make room when the account is full", async () => {
     const { insertIfRoom } = fakeInsert(false);
     expect(await createBuiltAs("u1", form(fields), insertIfRoom, reference)).toEqual({

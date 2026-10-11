@@ -142,6 +142,7 @@ export function BuilderWizardContainer({ id, name, initial, stored, start }: Bui
         onGo: go,
       }}
       map={{ leaders, current: code, onGo: go }}
+      importer={{ scenario, onImport: (imported) => setScenario((current) => ({ ...current, provinces: imported })), onSave: autosave.save }}
     />
   );
 }

@@ -10,7 +10,7 @@ import { consume } from "@/lib/rate-limit/store";
 import { storeShortLink } from "@/lib/short-links/queries";
 import type { SaveState } from "@/lib/simulations/forms";
 import { insertSimulationIfRoom } from "@/lib/simulations/queries";
-import { builderHref } from "./address";
+import { builderHref, builderResultsHref } from "./address";
 import { isComplete } from "./allocate";
 import { findBuilt, updateOwnedBuilt } from "./queries";
 import { builderReference } from "./reference";
@@ -20,13 +20,14 @@ import { BUILT_SCENARIO_MAX } from "./schema";
 const id = z.string().max(64);
 const json = z.string().max(BUILT_SCENARIO_MAX);
 
-// Opens the first province of the new election, or returns why it was not created.
+// Opens the first province of the new election, or its Congreso when the votes
+// were imported, or returns why it was not created.
 export async function createBuilt(_prev: SaveState, formData: FormData): Promise<SaveState> {
   const session = await getSession();
   const state = await createBuiltAs(session?.user.id, formData, insertSimulationIfRoom, builderReference);
   if (!state?.id) return state;
   revalidatePath("/profile");
-  redirect(builderHref(state.id));
+  redirect(formData.get("provinces") ? builderResultsHref(state.id) : builderHref(state.id));
 }
 
 export async function saveBuiltDraft(simulationId: string, scenario: string, expected: string): Promise<DraftState> {

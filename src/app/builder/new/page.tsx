@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BuilderSetupContainer } from "@/components/builder/builder-setup-container";
+import { BuilderStart } from "@/components/builder/builder-start";
 import { BuilderIntro } from "@/components/builder/builder-intro";
 import { SiteHeader } from "@/components/home/site-header";
 import { requireSession } from "@/lib/auth/session";
@@ -15,7 +15,7 @@ export default async function NewBuilderPage() {
       <main id="contenido" className="flex-1">
         <BuilderIntro />
         <div className="mx-auto max-w-content px-5 py-12 sm:px-8 lg:py-16">
-          <BuilderSetupContainer catalog={catalog} />
+          <BuilderStart catalog={catalog} />
         </div>
       </main>
     </>

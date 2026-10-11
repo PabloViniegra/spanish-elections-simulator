@@ -30,10 +30,13 @@ const createSchema = z.object({
   name: simulationName,
   seatTable: z.enum(["2023", "2026"], "Elige el reparto de escaños."),
   parties: z.string().min(1, NO_PARTIES),
+  // Present when the votes come from an imported file.
+  provinces: z.string().optional(),
 });
 
-// Starts a built election with every province empty and stores it in the
-// user's profile, where it counts towards MAX_SIMULATIONS.
+// Starts a built election, with every province empty or with the votes of an
+// imported file, and stores it in the user's profile, where it counts towards
+// MAX_SIMULATIONS.
 export async function createBuiltAs(
   userId: string | undefined,
   formData: FormData,
@@ -41,18 +44,19 @@ export async function createBuiltAs(
   reference: BuilderReference,
 ): Promise<SaveState> {
   if (!userId) return { error: signedOut };
-  const parsed = createSchema.safeParse(formValues(formData, ["name", "seatTable", "parties"]));
+  const parsed = createSchema.safeParse(formValues(formData, ["name", "seatTable", "parties", "provinces"]));
   if (!parsed.success) return { fieldErrors: fieldErrorsOf(parsed.error) };
-  const { name, seatTable, parties } = parsed.data;
+  const { name, seatTable, parties, provinces } = parsed.data;
 
+  const broken: SaveState = provinces ? { error: "Los votos importados no son válidos." } : { fieldErrors: { parties: "La lista de partidos no es válida." } };
   let json: string;
   try {
-    json = JSON.stringify({ schemaVersion: 1, seatTable, parties: JSON.parse(parties), provinces: {} });
+    json = JSON.stringify({ schemaVersion: 1, seatTable, parties: JSON.parse(parties), provinces: provinces ? JSON.parse(provinces) : {} });
   } catch {
-    return { fieldErrors: { parties: "La lista de partidos no es válida." } };
+    return broken;
   }
   const scenario = validBuilt(json, reference);
-  if (!scenario) return { fieldErrors: { parties: "La lista de partidos no es válida." } };
+  if (!scenario) return broken;
   if (scenario.parties.length === 0) return { fieldErrors: { parties: NO_PARTIES } };
 
   const id = await insertIfRoom(userId, name, json, "built");
