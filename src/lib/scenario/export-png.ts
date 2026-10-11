@@ -17,7 +17,7 @@ function wrapUrl(context: CanvasRenderingContext2D, url: string, maxWidth: numbe
   return lines;
 }
 
-export async function hemicyclePng(ranked: readonly (Bloc & { seats: number })[], baseLabel: string, scenarioUrl: string) {
+export async function hemicyclePng(ranked: readonly (Bloc & { seats: number })[], subtitle: string, scenarioUrl: string) {
   await document.fonts.ready;
   const scale = 1080 / HEMICYCLE_WIDTH;
   const legendTop = 170 + HEMICYCLE_HEIGHT * scale + 65;
@@ -41,7 +41,7 @@ export async function hemicyclePng(ranked: readonly (Bloc & { seats: number })[]
   context.font = `600 36px ${font}`;
   context.fillText("Simulador de Elecciones", 60, 70);
   context.font = `24px ${font}`;
-  context.fillText(`Votos de partida: ${baseLabel}. Escaños de 2026.`, 60, 112);
+  context.fillText(subtitle, 60, 112);
 
   const owners = ranked.flatMap((bloc) => Array<Bloc>(bloc.seats).fill(bloc));
   context.save();

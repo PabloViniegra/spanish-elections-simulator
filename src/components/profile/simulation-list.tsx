@@ -14,17 +14,19 @@ export type SavedSimulation = {
   savedOn: string;
   // Absent until it is renamed or overwritten.
   updatedOn?: string;
-  // Null when the scenario no longer restores.
-  summary: { baseLabel: string; ranked: readonly (Bloc & { seats: number })[] } | null;
+  // Null when the scenario no longer restores, or a built one is unfinished.
+  summary: { lead: string; ranked: readonly (Bloc & { seats: number })[] } | null;
+  // Built by hand: how many of the 52 provinces are complete.
+  built?: { completed: number };
 };
 
-function Summary({ baseLabel, ranked }: NonNullable<SavedSimulation["summary"]>) {
+function Summary({ lead, ranked }: NonNullable<SavedSimulation["summary"]>) {
   const [first] = ranked;
   const shown = ranked.slice(0, 4).map((bloc) => `${bloc.name} ${bloc.seats}`);
   const more = ranked.length - shown.length;
   return (
     <p className="text-caption text-ink-muted-80 tabular-nums">
-      Desde {baseLabel}: {shown.join(" · ")}
+      {lead}: {shown.join(" · ")}
       {more > 0 && ` y ${more} más`}.{" "}
       <span className="font-semibold text-ink">
         {first && first.seats >= MAJORITY ? `${first.name} tiene mayoría absoluta.` : `Nadie llega solo a ${MAJORITY}.`}
@@ -68,7 +70,7 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
         <>
           <p className="text-caption text-ink-muted-80">Es una simulación, no una previsión.</p>
           <ul className="mt-4 flex flex-col divide-y divide-hairline border-y border-hairline">
-            {simulations.map(({ id, name, href, savedOn, updatedOn, summary }, index) => (
+            {simulations.map(({ id, name, href, savedOn, updatedOn, summary, built }, index) => (
               <li key={id} className={row}>
                 {summary ? (
                   // The chamber opens the scenario too; the link below is the named one.
@@ -82,7 +84,10 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
                 )}
                 <div className="flex min-w-0 flex-col gap-2">
                   <div className="flex flex-col gap-0.5">
-                    <h3 className="text-tagline break-words">{name}</h3>
+                    <h3 className="text-tagline break-words">
+                      {name}
+                      {built && <span className="ml-2 inline-block rounded-full border border-hairline px-2 align-middle text-fine-print font-semibold">Construcción manual</span>}
+                    </h3>
                     <p className="text-caption text-ink-muted-80">
                       Guardada el {savedOn}
                       {updatedOn && ` · actualizada el ${updatedOn}`}
@@ -90,15 +95,17 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
                   </div>
                   {summary ? (
                     <Summary {...summary} />
+                  ) : built ? (
+                    <p className="text-caption text-ink-muted-80 tabular-nums">{built.completed} de 52 provincias completas.</p>
                   ) : (
                     <p className="text-caption text-ink-muted-80">
                       Se guardó con una versión anterior del simulador y ya no se puede abrir. Puedes eliminarla.
                     </p>
                   )}
                   <div className="flex flex-wrap items-center gap-x-8">
-                    {summary && (
-                      <Link href={href} className="flex min-h-11 items-center text-caption font-semibold text-primary underline underline-offset-2">
-                        Abrir<span className="sr-only"> «{name}»</span>
+                    {(summary || built) && (
+                      <Link href={href} className="flex min-h-11 min-w-11 items-center text-caption font-semibold text-primary underline underline-offset-2">
+                        {summary ? "Abrir" : "Seguir construyendo"}<span className="sr-only"> «{name}»</span>
                       </Link>
                     )}
                     <RenameSimulationContainer id={id} name={name} />

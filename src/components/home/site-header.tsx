@@ -20,6 +20,9 @@ function Destinations({ current, variant }: { current: NavPage; variant: "bar" |
       <NavLink href="/simulator" page="simulator" current={current} variant={variant}>
         Simulador
       </NavLink>
+      <NavLink href="/builder/new" page="builder" current={current} variant={variant}>
+        Construir
+      </NavLink>
       <NavLink href="/how-it-works" page="how-it-works" current={current} variant={variant}>
         Cómo funciona
       </NavLink>
@@ -61,7 +64,7 @@ export function SiteHeader({ username, current, accountBar, accountRows }: { use
       </a>
       <nav
         aria-label="Principal"
-        className="mx-auto flex h-11 max-w-content items-center justify-between gap-2 px-5 text-caption whitespace-nowrap sm:gap-6"
+        className="mx-auto flex h-11 max-w-content items-center justify-between gap-2 px-5 text-caption whitespace-nowrap lg:gap-6"
       >
         <Link href="/" className="group flex min-h-11 shrink-0 items-center gap-2.5 text-body font-semibold">
           {/* The app icon's two arcs on one path: hover or focus swings the majority. */}
@@ -79,10 +82,10 @@ export function SiteHeader({ username, current, accountBar, accountRows }: { use
           </svg>
           Simulador de Elecciones
         </Link>
-        <div className="ml-6 mr-auto hidden items-center gap-6 sm:flex">
+        <div className="ml-6 mr-auto hidden items-center gap-6 lg:flex">
           <Destinations current={current} variant="bar" />
         </div>
-        <div className="hidden items-center gap-5 sm:flex">
+        <div className="hidden items-center gap-5 lg:flex">
           {accountBar ?? <AccountLinks username={username} current={current} variant="bar" />}
         </div>
         <MobileMenu>

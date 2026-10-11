@@ -1,8 +1,13 @@
 import { index, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
 
-// A scenario a user saved, kept as its URL parameter so old saves migrate
-// with old links (NFR-10).
+// What a saved or shared scenario holds: a projection is its URL parameter,
+// so old saves migrate with old links (NFR-10); a built election is the JSON
+// of the election builder.
+export const scenarioKinds = ["projection", "built"] as const;
+export type ScenarioKind = (typeof scenarioKinds)[number];
+
+// A scenario a user saved.
 export const simulation = pgTable(
   "simulation",
   {
@@ -13,6 +18,7 @@ export const simulation = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
+    kind: text("kind", { enum: scenarioKinds }).notNull().default("projection"),
     scenario: text("scenario").notNull(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     // Null until it is renamed or its scenario overwritten.

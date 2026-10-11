@@ -114,6 +114,14 @@
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-primary-focus;
   }
+
+  /* Keep focused fields above the builder's mobile navigation. */
+  html:has([data-builder-wizard]) {
+    @apply scroll-pb-56;
+    @variant lg {
+      @apply scroll-pb-0;
+    }
+  }
 }
 
 /* primary-focus is 2.3:1 on black; dark surfaces need a white ring (WCAG 1.4.11). */

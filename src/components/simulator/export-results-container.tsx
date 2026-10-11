@@ -4,10 +4,7 @@ import { useState } from "react";
 import { notify } from "@/components/feedback/notify";
 import type { Bloc } from "@/lib/elections/types";
 import type { ConstituencyResult } from "@/lib/engine/types";
-import type { Scenario } from "@/lib/scenario/types";
-import { exportScenarioId } from "@/lib/scenario/export-file-name";
 import { resultsCsv } from "@/lib/scenario/export-csv";
-import { encodeScenario, withScenarioParam } from "@/lib/scenario/address";
 import { ExportResults } from "./export-results";
 
 function download(blob: Blob, filename: string) {
@@ -26,15 +23,17 @@ type ExportResultsContainerProps = {
   results: readonly ConstituencyResult[];
   blocs: readonly Bloc[];
   ranked: readonly (Bloc & { seats: number })[];
-  scenario: Scenario;
-  baseId: string;
-  baseLabel: string;
+  // Names both files after the prefix.
+  filename: string;
+  // The line under the title of the PNG.
+  subtitle: string;
+  // The address printed in the PNG to get back to these results.
+  link: () => string | Promise<string>;
   stale: boolean;
 };
 
-export function ExportResultsContainer({ results, blocs, ranked, scenario, baseId, baseLabel, stale }: ExportResultsContainerProps) {
+export function ExportResultsContainer({ results, blocs, ranked, filename, subtitle, link, stale }: ExportResultsContainerProps) {
   const [busy, setBusy] = useState(false);
-  const filename = `${baseId}-${exportScenarioId(scenario)}`;
   const csv = () => {
     if (stale || busy) return;
     try {
@@ -47,10 +46,9 @@ export function ExportResultsContainer({ results, blocs, ranked, scenario, baseI
   const png = async () => {
     if (stale || busy) return;
     setBusy(true);
-    const href = withScenarioParam(window.location.href, encodeScenario(scenario));
     try {
       await notify.promise(
-        import("@/lib/scenario/export-png").then(({ hemicyclePng }) => hemicyclePng(ranked, baseLabel, href)).then((blob) => download(blob, `hemiciclo-${filename}.png`)),
+        Promise.all([import("@/lib/scenario/export-png"), link()]).then(([{ hemicyclePng }, href]) => hemicyclePng(ranked, subtitle, href)).then((blob) => download(blob, `hemiciclo-${filename}.png`)),
         {
           loading: { title: "Preparando PNG…" },
           success: { title: "PNG descargado", description: "El hemiciclo con el enlace a esta simulación." },

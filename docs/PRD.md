@@ -39,6 +39,7 @@ Nine product and architecture decisions are fixed for v1; each one is revisitabl
 | D-07 | Seat engine runs in the browser as a pure TypeScript module | Instant recalculation on every keystroke; the same module is testable in isolation. |
 | D-08 | Deploy on Vercel | Native Next.js hosting, preview deployments per branch, free tier is enough at launch. |
 | D-09 | Neon Postgres accessed through Drizzle ORM | Serverless HTTP driver suits Vercel; typed queries and drizzle-kit migrations; first-class Better Auth adapter. |
+| D-10 | Built elections are stored as JSON in the database, not in the URL | Added Oct 2026: 52 provinces of absolute votes do not fit a link; they are saved with the user's simulations and shared as a short-link snapshot. |
 
 Visualisations committed for v1: hemicycle, provincial map, coalition calculator and per-province D'Hondt detail.
 
@@ -96,7 +97,7 @@ National shares are turned into provincial shares by proportional swing over a b
 
 ## Functional requirements
 
-Fifteen requirements cover v1; Must items are the launch bar, Should items can slip to v1.1.
+Sixteen requirements cover v1; Must items are the launch bar, Should items can slip to v1.1.
 
 | ID | Priority | Requirement | Acceptance criteria |
 | --- | --- | --- | --- |
@@ -115,10 +116,13 @@ Fifteen requirements cover v1; Must items are the launch bar, Should items can s
 | FR-13 | Should | Export results as CSV and the hemicycle as PNG. | CSV has one row per province × bloc with votes, % and seats. |
 | FR-14 | Should | Explainer page on how the system works, linked to the D'Hondt detail. | Covers R-03 to R-07 in plain language. |
 | FR-15 | Should | Spanish and English UI. | All UI strings externalised; Spanish is the default locale. |
+| FR-16 | Should | Election builder: enter the votes of every party in each of the 52 provinces by hand and see the resulting Congreso. | Each province shows its D'Hondt allocation live; the Congreso appears only when all 52 are complete; seats match R-01 to R-09. |
 
 **FR-11 implemented (9 Oct 2026).** "Editar partidos", below the vote inputs, renames and recolours blocs, adds blocs (without base votes, so P-04 applies; at most 16) and removes them, their candidacies and share going to "Others". Every candidacy of the base election can be assigned to any bloc or to "Others"; a moved candidacy takes its base share with it, nationally and in locked provinces, so the scenario keeps fitting in 100%. Seat changes compare against the base election under the edited mapping. The scenario carries the full bloc list only while it differs from the default, and shared links validate it against the election's candidacies. Removing a bloc and restoring the default blocs can be undone.
 
 **FR-13 implemented (7 Oct 2026).** Downloads are available next to the hemicycle, including on public shared scenarios. The UTF-8 CSV has one row per province × bloc, including zero votes, with province code/name, bloc ID/name, simulated votes, percentage of valid votes (blank and Others included in the denominator), and seats. Filenames include a stable scenario identifier. The PNG exports the complete distribution without coalition highlighting, with a legend, the base election, the 2026 seat-table context, the majority line, the simulation disclaimer and the exact scenario URL, wrapped without truncation. Downloads are disabled while the inputs are invalid; this state, PNG preparation and download failures have visible feedback.
+
+**FR-16 implemented (11 Oct 2026).** "Construir" in the header opens `/builder/new` (signed-in users only). The user names the election, picks the 2023 or 2026 seat table and chooses up to 24 parties from the lists that ran in 2016–2023 or invents their own; a catalogue party that only ran in some provinces can only run there. The wizard at `/builder/<id>?p=<code>` goes province by province, starting blank: absolute votes per party, blank and null votes against the 2023 census, with turnout shown. A province is complete when at least one party has votes and the votes cast, blank and null included, do not exceed the census; blank votes count towards the 3% threshold but never win seats (R-04, R-05). Every edit is saved to the server as a draft. When all 52 provinces are complete, `/builder/<id>/results` shows a national table of votes, shares and seats, plus the simulator's hemicycle, map, coalition calculator, D'Hondt detail and CSV/PNG downloads. The owner can keep editing it, and "Copiar enlace" stores a read-only snapshot behind a public `/l/<id>` short link. Built elections appear in the profile tagged "Construcción manual", with their progress until complete, and count towards the same limit of 100 saved simulations.
 
 ## Non-functional requirements
 
@@ -150,6 +154,7 @@ Seven entities carry the whole domain; reference data is static JSON built offli
 | Scenario | schemaVersion, baseElectionId, mode, nationalInputs, blank, turnout, overrides, blocs | Everything the user changed; the only thing serialised to the URL. |
 | Result | perConstituency (votes, shares, excluded, quotients, seats), national totals | Derived, never stored; recomputed from Scenario + Election. |
 | User | id, name, email, username, province (INE code), usageProfile (citizen, journalist, teacher) | Stored in Neon Postgres and managed by Better Auth, with its session, account and verification tables. |
+| BuiltScenario | schemaVersion, seatTable, parties\[\] (id, name, colour, catalogId), provinces (votes per party, blank, null) | An election entered by hand (FR-16); stored as JSON in the user's simulations (D-10). |
 
 **Bundled elections (v1).** July 2023 as default base, plus November 2019, April 2019 and 2016 as validation fixtures and alternative bases. The last general election was held on 23 July 2023. On 5 October 2026 an early general election was called for 29 November 2026; its seat table (R-03a, from the 1 January 2025 population of Real Decreto 1117/2025) is the default seat distribution, with 2023 votes as the default base. Real Decreto 806/2026 (BOE-A-2026-20742) set it on 6 October 2026: Madrid 38 (+1) and Cádiz 8 (−1) against 2023.
 
@@ -238,5 +243,5 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 2. **M1 – Data for 29N.** Done: build script and 2016–2023 bases; 2026 seat table from Real Decreto 806/2026, checked against R-03 with RD 1117/2025 population; default bloc mapping for 2023.
 3. **M2 – Launch before the campaign (13 Nov 2026). Done.** National mode on 2023 votes and 2026 seats, hemicycle, coalition calculator, URL sharing, "simulation, not a forecast" notice, accessibility of the shipped views, Spanish UI, Vercel production.
 4. **M3 – Depth, after 29N. In progress.** Provincial mode with locks (FR-03), map (FR-07) and D'Hondt detail (FR-09) are implemented; bundle official 29 November 2026 results after election day.
-5. **M4 – Completion. In progress.** Explainer page implemented; remaining: full accessibility pass and English UI.
+5. **M4 – Completion. In progress.** Explainer page and election builder (FR-16) implemented; remaining: full accessibility pass and English UI.
 6. **Later.** Saved scenario history, Senado, autonómicas, population what-ifs (R-03).

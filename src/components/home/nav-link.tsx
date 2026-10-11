@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export type NavPage = "home" | "simulator" | "how-it-works" | "profile" | "privacy";
+export type NavPage = "home" | "simulator" | "builder" | "how-it-works" | "profile" | "privacy";
 
 // In the bar the indicator is a 2px rule on the bar's bottom edge: blue and
 // permanent for the current page (plus aria-current), a white one that draws

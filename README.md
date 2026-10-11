@@ -47,6 +47,7 @@ This simulator closes that gap:
 - **Visualisations** — hemicycle chart, provincial map, coalition calculator and per-province D'Hondt quotient detail.
 - **Full transparency** — per-province D'Hondt detail, 3% threshold handling, last-seat ties and deterministic lot resolution are all inspectable.
 - **Sharing & exports** — scenario state in a single URL plus CSV and PNG exports.
+- **Election builder** — enter every party's votes province by province, see each D'Hondt allocation live and, once all 52 are complete, the full Congreso with the same views, exports and read-only share links.
 - **Accounts** — sign-in is required to edit or save simulations to a personal profile; shared scenario links remain public and read-only.
 - **Instant recalculation** — the seat engine runs in the browser as a pure TypeScript module, recalculating on every keystroke.
 

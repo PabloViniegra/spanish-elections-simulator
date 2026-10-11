@@ -1,8 +1,9 @@
+import type { ScenarioKind } from "@/lib/db/schema";
 import { fieldErrorsOf, formValues } from "@/lib/auth/forms";
 import { MAX_SIMULATIONS, saveSimulationSchema, type SaveState, updateSimulationSchema } from "./forms";
 
 // Stores a simulation unless its owner already has MAX_SIMULATIONS; its id, or null when full.
-export type InsertIfRoom = (userId: string, name: string, scenario: string) => Promise<string | null>;
+export type InsertIfRoom = (userId: string, name: string, scenario: string, kind?: ScenarioKind) => Promise<string | null>;
 
 const signedOut = "Tu sesión ha caducado. Inicia sesión de nuevo para guardar.";
 const full = `Ya tienes ${MAX_SIMULATIONS} simulaciones guardadas. Borra alguna desde tu perfil para guardar otra.`;

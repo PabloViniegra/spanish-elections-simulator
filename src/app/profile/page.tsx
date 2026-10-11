@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import { SiteHeader } from "@/components/home/site-header";
+import { builderHref, builderResultsHref } from "@/lib/builder/address";
+import { builderReference } from "@/lib/builder/reference";
+import { summarizeBuilt } from "@/lib/builder/results";
 import { sectionTitle } from "@/components/home/type";
 import { DeleteAccountContainer } from "@/components/profile/delete-account-container";
 import { ProfileDetails } from "@/components/profile/profile-details";
@@ -15,6 +18,22 @@ export const metadata: Metadata = { title: "Mi perfil", robots: { index: false, 
 
 const longDate = (date: Date) => date.toLocaleDateString("es-ES", { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Madrid" });
 const savedAt = (date: Date) => `${longDate(date)}, a las ${date.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Madrid" })}`;
+
+function projectionRow(id: string, scenario: string) {
+  const summary = summarizeSimulation(scenario);
+  return { href: simulatorHref(scenario, id), summary: summary && { lead: `Desde ${summary.baseLabel}`, ranked: summary.ranked } };
+}
+
+// Finished elections open on their Congreso; the rest, on the next province to fill.
+function builtRow(id: string, scenario: string) {
+  const summary = summarizeBuilt(scenario, builderReference);
+  const ranked = summary?.ranked;
+  return {
+    href: ranked ? builderResultsHref(id) : builderHref(id),
+    summary: ranked ? { lead: "Construidas a mano", ranked } : null,
+    built: summary ? { completed: summary.completed } : undefined,
+  };
+}
 
 export default async function ProfilePage() {
   const { user } = await requireSession("/profile");
@@ -32,13 +51,12 @@ export default async function ProfilePage() {
         </div>
         <div className="mx-auto grid max-w-content grid-cols-[minmax(0,1fr)] gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-start lg:gap-16 lg:py-16">
           <SimulationList
-            simulations={saved.map(({ id, name, scenario, createdAt, updatedAt }) => ({
+            simulations={saved.map(({ id, name, kind, scenario, createdAt, updatedAt }) => ({
               id,
               name,
-              href: simulatorHref(scenario, id),
               savedOn: savedAt(createdAt),
               updatedOn: updatedAt ? savedAt(updatedAt) : undefined,
-              summary: summarizeSimulation(scenario),
+              ...(kind === "built" ? builtRow(id, scenario) : projectionRow(id, scenario)),
             }))}
           />
           <div className="flex flex-col gap-12 lg:sticky lg:top-8">

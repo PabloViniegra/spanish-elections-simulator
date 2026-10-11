@@ -16,7 +16,11 @@ describe("coalition combinations", () => {
     const html = renderToStaticMarkup(<CoalitionCombinations rows={[{ members: ["pp"], seats: 180 }]} names={new Map([["pp", "PP"]])} page={0} pages={2} total={51} onPage={() => {}} />);
     expect(html).toContain("Página 1 de 2");
     expect(html).toContain("51 combinaciones");
-    expect(html.match(/disabled=""/g)).toHaveLength(1);
+    expect(html.match(/disabled=""/g)).toHaveLength(2);
+    expect(html).toContain("Páginas de combinaciones (inicio)");
+    expect(html).toContain("Páginas de combinaciones (final)");
+    expect(html.indexOf("Página 1 de 2")).toBeLessThan(html.indexOf("<ul"));
+    expect(html.match(/role="status"/g)).toHaveLength(1);
     expect(html).toContain("PP");
   });
 });

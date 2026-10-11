@@ -4,7 +4,8 @@ import dynamic from "next/dynamic";
 import { dhondtDetail } from "@/lib/engine/last-seat";
 import type { SimulatorInitialState } from "@/lib/scenario/initial";
 import type { SavedTarget } from "./save-simulation";
-import { encodeScenario, simulatorHref } from "@/lib/scenario/address";
+import { encodeScenario, simulatorHref, withScenarioParam } from "@/lib/scenario/address";
+import { exportScenarioId } from "@/lib/scenario/export-file-name";
 import { provinces } from "@/lib/provinces";
 import { CoalitionCalculator } from "./coalition-calculator";
 import { CoalitionCombinationsContainer } from "./coalition-combinations-container";
@@ -44,10 +45,20 @@ export function SimulatorContainer({ signedIn, initial, saved }: { signedIn: boo
             <SimulatorInputs state={state} />
           </div>
           <div id={RESULTS_ID} className="flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
-            <ResultsOverview ranked={ranked} stale={stale} selected={picked} baseLabel={base.label} legendOnWide={mode === "province"} />
+            <ResultsOverview ranked={ranked} stale={stale} selected={picked} disclaimer={`Es una simulación con los votos de ${base.label}, no una previsión.`} legendOnWide={mode === "province"} />
             <ResultsActions
               share={<ShareLinkContainer brokenLink={brokenLink} scenarioParam={scenarioParam} />}
-              downloads={<ExportResultsContainer results={simulation.results} blocs={blocs} ranked={ranked} scenario={valid} baseId={base.election.id} baseLabel={base.label} stale={stale} />}
+              downloads={
+                <ExportResultsContainer
+                  results={simulation.results}
+                  blocs={blocs}
+                  ranked={ranked}
+                  filename={`${base.election.id}-${exportScenarioId(valid)}`}
+                  subtitle={`Votos de partida: ${base.label}. Escaños de 2026.`}
+                  link={() => withScenarioParam(window.location.href, encodeScenario(valid))}
+                  stale={stale}
+                />
+              }
               save={signedIn
                 ? <SaveSimulationContainer key={encodeScenario(valid)} scenario={valid} ranked={ranked} stale={stale} saved={target} onSaved={keepTarget} />
                 : <SaveAccountNotice next={simulatorHref(encodeScenario(valid))} />}
