@@ -12,19 +12,29 @@ type ProvinceHeadingProps = {
   cast: number;
   status: ProvinceStatus;
   censusYear: string;
+  // Catalogue parties marked here that never ran here.
+  outside: readonly string[];
 };
 
 const warnings = {
   empty: null,
   "over-census": "Hay más votos que electores en el censo. Corrígelo para completar la provincia.",
-  "invalid-party": "Un partido del catálogo no se presentó nunca aquí. Quítalo para completar la provincia.",
+  "invalid-party": null,
   incomplete: "Escribe los votos de al menos un partido para completar la provincia.",
   complete: null,
 } satisfies Record<ProvinceStatus, string | null>;
 
 // Which province this is, what it hands out and how full its census is.
-export function ProvinceHeading({ name, position, seats, census, cast, status, censusYear }: ProvinceHeadingProps) {
-  const warning = warnings[status];
+const list = new Intl.ListFormat("es", { type: "conjunction" });
+
+function outsideWarning(outside: readonly string[]) {
+  return outside.length === 1
+    ? `${outside[0]} no se presentó nunca aquí. Desmárcalo para completar la provincia.`
+    : `${list.format(outside)} no se presentaron nunca aquí. Desmárcalos para completar la provincia.`;
+}
+
+export function ProvinceHeading({ name, position, seats, census, cast, status, censusYear, outside }: ProvinceHeadingProps) {
+  const warning = status === "invalid-party" ? outsideWarning(outside) : warnings[status];
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">

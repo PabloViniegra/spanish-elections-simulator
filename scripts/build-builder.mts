@@ -3,7 +3,7 @@
 // election and the census of the most recent one; `pnpm data:builder`.
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
-import { buildCatalog } from "@/lib/builder/catalog";
+import { buildCatalog, catalogAliases, catalogResults } from "@/lib/builder/catalog";
 import { baseOptions } from "@/lib/elections/base-options";
 import { loadBase } from "@/lib/elections/load-base";
 
@@ -13,6 +13,8 @@ const bases = await Promise.all(baseOptions.map(async ({ id }) => (await loadBas
 const latest = bases[0].election;
 const census = Object.fromEntries(latest.constituencies.map(({ code, census: count }) => [code, count]));
 const parties = buildCatalog(bases);
+const aliases = catalogAliases(bases, parties);
+const results = catalogResults(bases[0]);
 
-await writeFile(OUTPUT, `${JSON.stringify({ censusElection: latest.id, census, parties })}\n`);
+await writeFile(OUTPUT, `${JSON.stringify({ censusElection: latest.id, census, parties, aliases, results })}\n`);
 console.log(`builder: ${parties.length} catalogue parties, census of ${latest.id}.`);

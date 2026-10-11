@@ -17,11 +17,12 @@ type PartyPickerProps = {
   chosen: ReadonlySet<string>;
   full: boolean;
   onAdd: (party: CatalogParty) => void;
+  label?: string;
 };
 
-// Search the parties that ran since 2016. With no search, the most voted
-// parties of the latest election come first.
-export function PartyPicker({ catalog, chosen, full, onAdd }: PartyPickerProps) {
+// Search the parties that ran since 2016. With no search, the catalogue
+// order stands: the most voted parties of the latest election first.
+export function PartyPicker({ catalog, chosen, full, onAdd, label = "Buscar partidos que se presentaron desde 2016" }: PartyPickerProps) {
   const id = useId();
   const [query, setQuery] = useState("");
   const folded = fold(query.trim());
@@ -31,7 +32,7 @@ export function PartyPicker({ catalog, chosen, full, onAdd }: PartyPickerProps) 
   return (
     <div className="flex flex-col gap-3">
       <label htmlFor={id} className="px-1 text-caption font-semibold">
-        Buscar partidos que se presentaron desde 2016
+        {label}
       </label>
       <input
         id={id}

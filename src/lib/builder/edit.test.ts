@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { CONSTITUENCY_CODES } from "@/lib/engine/constants";
 import type { BuilderReference } from "./allocate";
-import { eligibleParties, nextOpen, setOtherVotes, setPartyVotes, setRunning, voteCount } from "./edit";
+import { addPartyHere, eligibleParties, fillFromLatest, nextOpen, setOtherVotes, setPartyVotes, setRunning, startProvince, voteCount } from "./edit";
 import { MAX_VOTES } from "./schema";
 import type { BuiltScenario } from "./types";
 
 const reference: BuilderReference = {
   census: new Map(CONSTITUENCY_CODES.map((code) => [code, 1000])),
-  catalog: new Map([["pnv", { id: "pnv", acronym: "PNV", name: "Partido Nacionalista Vasco", colour: "#2a8343", provinces: ["01", "20", "48"], lastElection: "2023-07" }]]),
+  catalog: new Map([
+    ["pnv", { id: "pnv", acronym: "PNV", name: "Partido Nacionalista Vasco", colour: "#2a8343", provinces: ["01", "20", "48"], lastElection: "2023-07" }],
+    ["eaj-pnv", { id: "pnv", acronym: "PNV", name: "Partido Nacionalista Vasco", colour: "#2a8343", provinces: ["01", "20", "48"], lastElection: "2023-07" }],
+  ]),
 };
 
 const scenario: BuiltScenario = {
@@ -40,6 +43,39 @@ describe("editing a province", () => {
     expect(setRunning(voted, "48", "pnv", true).provinces["48"].votes).toEqual({ pnv: 300 });
     expect(setRunning(voted, "48", "pnv", false).provinces["48"].votes).toEqual({});
     expect(scenario.provinces).toEqual({});
+  });
+});
+
+describe("starting from the census election", () => {
+  const latest = { votes: { pnv: 164_188, bildu: 125_867 }, blank: 3391, null: 5251 };
+
+  it("runs the parties of the list that ran there, without votes", () => {
+    expect(startProvince(scenario, "48", reference, latest).provinces["48"]).toEqual({ votes: { pnv: 0 }, blank: 0, null: 0 });
+    const started = setPartyVotes(scenario, "48", "propio", 7);
+    expect(startProvince(started, "48", reference, latest)).toBe(started);
+  });
+
+  it("reads old catalogue ids as their bloc", () => {
+    const old = { ...scenario, parties: [{ id: "eaj-pnv", name: "EAJ-PNV", colour: "#2a8343", catalogId: "eaj-pnv" }] };
+    expect(startProvince(old, "48", reference, latest).provinces["48"].votes).toEqual({ "eaj-pnv": 0 });
+  });
+
+  it("fills only empty boxes of running parties", () => {
+    const typed = setPartyVotes(setRunning(scenario, "48", "pnv", true), "48", "propio", 7);
+    expect(fillFromLatest(typed, "48", reference, latest).provinces["48"]).toEqual({ votes: { pnv: 164_188, propio: 7 }, blank: 3391, null: 5251 });
+    const kept = setOtherVotes(setPartyVotes(typed, "48", "pnv", 10), "48", "blank", 1);
+    expect(fillFromLatest(kept, "48", reference, latest).provinces["48"]).toEqual({ votes: { pnv: 10, propio: 7 }, blank: 1, null: 5251 });
+    expect(fillFromLatest(typed, "48", reference, undefined)).toBe(typed);
+  });
+});
+
+describe("addPartyHere", () => {
+  it("runs the new party in the province", () => {
+    const parties = [...scenario.parties, { id: "nuevo", name: "Nuevo", colour: "#123456" }];
+    const added = addPartyHere(scenario, "28", parties);
+    expect(added.parties).toBe(parties);
+    expect(added.provinces["28"].votes).toEqual({ nuevo: 0 });
+    expect(addPartyHere(scenario, "28", scenario.parties).provinces).toEqual({});
   });
 });
 

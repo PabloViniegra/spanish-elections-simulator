@@ -1,12 +1,14 @@
 import { useId } from "react";
-import { formatShare } from "@/components/simulator/format";
+import { formatShare, formatVotes } from "@/components/simulator/format";
 import type { BuiltParty, BuiltProvince } from "@/lib/builder/types";
 import { PartyAcronym } from "./party-acronym";
 import { VoteInput } from "./vote-input";
 
 type ProvinceVotesProps = {
   provinceName: string;
-  parties: readonly (BuiltParty & { fullName?: string })[];
+  // Each with its votes here in the census election, when it ran.
+  parties: readonly (BuiltParty & { fullName?: string; previous?: number })[];
+  previousYear: string;
   // Parties of the list that never ran here.
   elsewhere: number;
   province: BuiltProvince;
@@ -15,10 +17,11 @@ type ProvinceVotesProps = {
   onRunning: (partyId: string, running: boolean) => void;
   onVotes: (partyId: string, votes: number) => void;
   onOther: (kind: "blank" | "null", votes: number) => void;
+  onFill: () => void;
 };
 
 // Which parties run here and their votes, then blank and null votes.
-export function ProvinceVotes({ provinceName, parties, elsewhere, province, excluded, onRunning, onVotes, onOther }: ProvinceVotesProps) {
+export function ProvinceVotes({ provinceName, parties, previousYear, elsewhere, province, excluded, onRunning, onVotes, onOther, onFill }: ProvinceVotesProps) {
   const id = useId();
   const valid = Object.values(province.votes).reduce((sum, votes) => sum + votes, province.blank);
   const share = (votes: number) => (valid > 0 ? Math.round((votes / valid) * 10_000) : 0);
@@ -30,6 +33,9 @@ export function ProvinceVotes({ provinceName, parties, elsewhere, province, excl
         Marca los partidos que se presentan y escribe sus votos. El 3 % se calcula sobre los votos válidos, que incluyen los votos en blanco.
         {elsewhere > 0 && ` ${elsewhere === 1 ? "Un partido de tu lista no se presentó" : `${elsewhere} partidos de tu lista no se presentaron`} nunca aquí.`}
       </p>
+      <button type="button" onClick={onFill} className="min-h-11 w-fit rounded-full border border-ink px-5 text-caption font-semibold">
+        Rellenar los huecos con los votos de {previousYear}
+      </button>
       <ul className="flex flex-col divide-y divide-hairline border-y border-hairline">
         {parties.map((party) => {
           const running = party.id in province.votes;
@@ -43,6 +49,7 @@ export function ProvinceVotes({ provinceName, parties, elsewhere, province, excl
                 <span className="min-w-0 break-words [overflow-wrap:anywhere]">
                   <PartyAcronym acronym={party.name} name={party.fullName} />
                   <span className="sr-only"> se presenta en {provinceName}</span>
+                  {party.previous !== undefined && <span className="block text-fine-print text-ink-muted-80">En {previousYear}: {formatVotes(party.previous)}</span>}
                 </span>
               </label>
               {running && (

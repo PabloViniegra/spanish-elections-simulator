@@ -65,14 +65,23 @@ test("a signed-in user creates a built election and fills it in province by prov
     provinces: {},
   });
 
-  // The first province, blank. PSOE ran in Álava only as PSE-EE, so only the invented party can run.
+  // The first province, not started: PSOE ran in Álava as PSE-EE, so it starts marked.
   await expect(page.getByRole("heading", { level: 2, name: "Araba/Álava", exact: true })).toBeVisible();
   await expect(page.getByText("Provincia 1 de 52")).toBeVisible();
   await expect(page.getByText("Sin empezar.")).toBeVisible();
-  await expect(page.getByText("Un partido de tu lista no se presentó nunca aquí.", { exact: false })).toBeVisible();
+  await expect(page.getByLabel("PSOE se presenta en Araba/Álava")).toBeChecked();
+  await expect(page.getByLabel("Mi Partido se presenta en Araba/Álava")).not.toBeChecked();
+  await page.getByLabel("PSOE se presenta en Araba/Álava").uncheck();
+
+  // A party missing from the list joins it from the province, already running.
+  await page.getByText("¿Falta un partido? Añádelo a tu lista").click();
+  await page.getByLabel("Buscar partidos que se presentaron en Araba/Álava").fill("nacionalista vasco");
+  await page.getByRole("button", { name: "Añadir PNV", exact: true }).click();
+  await expect(page.getByLabel("PNV se presenta en Araba/Álava")).toBeChecked();
+  await page.getByLabel("Votos de PNV").fill("50000");
   await page.getByLabel("Mi Partido se presenta en Araba/Álava").check();
   await page.getByLabel("Votos de Mi Partido").fill("20000");
-  await expect(page.getByRole("region", { name: "Reparto en Araba/Álava" }).getByRole("listitem")).toHaveText(["Mi Partido 4 escaños"]);
+  await expect(page.getByRole("region", { name: "Reparto en Araba/Álava" }).getByRole("listitem")).toHaveText(["PNV 3 escaños", "Mi Partido 1 escaño"]);
   await expect(page.getByText("Completa.")).toBeVisible();
 
   // Next province in place, keeping the focus on its name.
@@ -91,8 +100,9 @@ test("a signed-in user creates a built election and fills it in province by prov
   await page.getByLabel("Votos en blanco").fill("1000");
   await expect(page.getByRole("status").filter({ hasText: "Guardado en tu perfil" })).toBeVisible();
   const [row] = await db.select().from(simulation).where(eq(simulation.name, name));
+  expect(JSON.parse(row.scenario).parties.map(({ id }: { id: string }) => id)).toEqual(["psoe", "propio", "pnv"]);
   expect(JSON.parse(row.scenario).provinces).toEqual({
-    "01": { votes: { propio: 20000 }, blank: 0, null: 0 },
+    "01": { votes: { pnv: 50000, propio: 20000 }, blank: 0, null: 0 },
     "02": { votes: { psoe: 50000, propio: 20000 }, blank: 1000, null: 0 },
   });
 
@@ -105,9 +115,15 @@ test("a signed-in user creates a built election and fills it in province by prov
   await expect(page).toHaveURL(`${address}?p=28`);
   await page.reload();
   await expect(page.getByRole("heading", { level: 2, name: "Madrid", exact: true })).toBeVisible();
+  await expect(page.getByText("Un partido de tu lista no se presentó nunca aquí.", { exact: false })).toBeVisible();
   await page.getByText("Ver las 52 provincias y su progreso", { exact: true }).click();
   await expect(index.getByRole("link", { name: "Albacete, completa" })).toBeVisible();
   await expect(page.getByText("2 de 52 provincias completas.")).toBeVisible();
+
+  // The 2023 votes fill the empty boxes of the parties running.
+  await page.getByRole("button", { name: "Rellenar los huecos con los votos de 2023" }).click();
+  await expect(page.getByLabel("Votos de PSOE")).toHaveValue("1004599");
+  await expect(page.getByLabel("Votos de Mi Partido")).toHaveCount(0);
 
   // Leaving before the debounce expires waits for the pending edit.
   await page.getByLabel("Votos en blanco").fill("123");

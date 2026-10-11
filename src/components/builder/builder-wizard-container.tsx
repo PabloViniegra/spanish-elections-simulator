@@ -4,8 +4,10 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { builderHref, builderResultsHref } from "@/lib/builder/address";
 import { allocateProvince, castVotes, partyBlocs, provinceStatus } from "@/lib/builder/allocate";
-import { eligibleParties, setOtherVotes, setPartyVotes, setRunning } from "@/lib/builder/edit";
-import { builderReference as reference, censusElection, seatTables } from "@/lib/builder/reference";
+import { addPartyHere, eligibleParties, fillFromLatest, latestVotes, setOtherVotes, setPartyVotes, setRunning, startProvince } from "@/lib/builder/edit";
+import { addCatalogParty, addCustomParty } from "@/lib/builder/parties";
+import { catalog, censusElection, latestResults, builderReference as reference, seatTables } from "@/lib/builder/reference";
+import { MAX_PARTIES } from "@/lib/builder/schema";
 import type { BuiltScenario } from "@/lib/builder/types";
 import { CONSTITUENCY_CODES } from "@/lib/engine/constants";
 import { provinces } from "@/lib/provinces";
@@ -63,10 +65,18 @@ export function BuilderWizardContainer({ id, name, initial, stored, start }: Bui
   const complete = statuses.filter(({ status }) => status === "complete");
   const winners = provinceWinners(complete.map((each) => allocateProvince(scenario, each.code, seats)));
   const leaders = new Map([...winners].map(([each, { leaders: ids }]) => [each, ids.flatMap((leader) => blocById.get(leader) ?? [])]));
-  const province = scenario.provinces[code] ?? { votes: {}, blank: 0, null: 0 };
+  // A province not started yet shows, and starts with, the parties that ran there last time.
+  const latest = latestResults.get(code);
+  const province = startProvince(scenario, code, reference, latest).provinces[code];
+  const edit = (change: (current: BuiltScenario) => BuiltScenario) => setScenario((current) => change(startProvince(current, code, reference, latest)));
   const result = allocateProvince(scenario, code, seats);
-  const eligible = eligibleParties(scenario, code, reference);
+  const eligible = new Set(eligibleParties(scenario, code, reference).map((party) => party.id));
+  // Parties marked where they never ran stay listed, so they can be unmarked.
+  const listed = scenario.parties.filter((party) => eligible.has(party.id) || party.id in province.votes);
   const status = statuses.find((each) => each.code === code)?.status ?? "empty";
+  const year = censusElection.slice(0, 4);
+  const chosen = new Set(scenario.parties.flatMap(({ catalogId }) => (catalogId ? [reference.catalog.get(catalogId)?.id ?? catalogId] : [])));
+  const here = catalog.filter((party) => party.provinces.includes(code)).sort((a, b) => (latest?.votes[b.id] ?? -1) - (latest?.votes[a.id] ?? -1));
 
   return (
     <BuilderWizard
@@ -82,17 +92,32 @@ export function BuilderWizardContainer({ id, name, initial, stored, start }: Bui
         census: reference.census.get(code) ?? 0,
         cast: castVotes(province),
         status,
-        censusYear: censusElection.slice(0, 4),
+        censusYear: year,
+        outside: listed.filter((party) => !eligible.has(party.id)).map((party) => party.name),
       }}
       votes={{
         provinceName: nameOf(code),
-        parties: eligible.map((party) => ({ ...party, fullName: party.catalogId ? reference.catalog.get(party.catalogId)?.name : undefined })),
-        elsewhere: scenario.parties.length - eligible.length,
+        parties: listed.map((party) => ({
+          ...party,
+          fullName: party.catalogId ? reference.catalog.get(party.catalogId)?.name : undefined,
+          previous: latestVotes(party, reference, latest),
+        })),
+        previousYear: year,
+        elsewhere: scenario.parties.length - listed.length,
         province,
         excluded: new Set(result.candidacies.filter(({ excluded }) => excluded).map(({ id: party }) => party)),
-        onRunning: (party, running) => setScenario((current) => setRunning(current, code, party, running)),
-        onVotes: (party, votes) => setScenario((current) => setPartyVotes(current, code, party, votes)),
-        onOther: (kind, votes) => setScenario((current) => setOtherVotes(current, code, kind, votes)),
+        onRunning: (party, running) => edit((current) => setRunning(current, code, party, running)),
+        onVotes: (party, votes) => edit((current) => setPartyVotes(current, code, party, votes)),
+        onOther: (kind, votes) => edit((current) => setOtherVotes(current, code, kind, votes)),
+        onFill: () => edit((current) => fillFromLatest(current, code, reference, latest)),
+      }}
+      adder={{
+        provinceName: nameOf(code),
+        catalog: here,
+        chosen,
+        full: scenario.parties.length >= MAX_PARTIES,
+        onAddCatalog: (party) => edit((current) => addPartyHere(current, code, addCatalogParty(current.parties, party))),
+        onAddCustom: (name) => edit((current) => addPartyHere(current, code, addCustomParty(current.parties, name))),
       }}
       allocation={{ provinceName: nameOf(code), result, blocs: blocById }}
       stepper={{ previous: step(-1), next: step(1), onGo: go }}

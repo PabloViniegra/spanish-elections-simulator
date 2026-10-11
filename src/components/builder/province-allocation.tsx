@@ -26,11 +26,9 @@ export function ProvinceAllocation({ provinceName, result, blocs }: ProvinceAllo
           <ul className="flex flex-col gap-2">
             {winners.map(({ id, seats }) => (
               <li key={id} className="flex min-w-0 items-center gap-3">
-                <span
-                  aria-hidden
-                   className="h-3 min-w-3 max-w-24 shrink-0 rounded-full"
-                  style={{ backgroundColor: blocs.get(id)?.colour, width: `${(seats / result.seats) * 100}%` }}
-                />
+                <span aria-hidden className="h-3 w-24 shrink-0">
+                  <span className="block h-full min-w-3 rounded-full" style={{ backgroundColor: blocs.get(id)?.colour, width: `${(seats / result.seats) * 100}%` }} />
+                </span>
                 <span className="min-w-0 break-words text-caption [overflow-wrap:anywhere]">
                   <span className="font-semibold">{nameOf(id)}</span> {seats === 1 ? "1 escaño" : `${seats} escaños`}
                 </span>

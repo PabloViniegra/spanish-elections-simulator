@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Election } from "@/lib/elections/types";
-import { buildCatalog, catalogId, displayName, NEUTRAL_COLOUR } from "./catalog";
+import { buildCatalog, catalogAliases, catalogId, catalogResults, displayName, NEUTRAL_COLOUR } from "./catalog";
 
 const election = (id: string, candidacies: [string, string, string][], results: Record<string, [string, number][]>): Election => ({
   id,
@@ -68,5 +68,44 @@ describe("buildCatalog", () => {
 
   it("gives unmapped lists a neutral colour", () => {
     expect(catalog.find(({ id }) => id === "big")!.colour).toBe(NEUTRAL_COLOUR);
+  });
+});
+
+describe("regional brands", () => {
+  const base = {
+    election: election("2023-07", [["1", "PSOE", "Partido Socialista Obrero Español"], ["2", "PSC", "Partit dels Socialistes de Catalunya"], ["3", "EAJ-PNV", "Euzko Alderdi Jeltzalea-Partido Nacionalista Vasco"], ["4", "FO", "Frente Obrero"]], {
+      "28": [["1", 900], ["4", 3]],
+      "08": [["2", 700]],
+      "48": [["3", 160], ["4", 2]],
+    }),
+    blocs: [
+      { id: "psoe", name: "PSOE", colour: "#e30613", candidacyIds: ["1", "2"] },
+      { id: "pnv", name: "PNV", colour: "#2a8343", candidacyIds: ["3"] },
+    ],
+  };
+  const catalog = buildCatalog([base]);
+
+  it("count with their bloc, named after its most voted list", () => {
+    expect(catalog.find(({ id }) => id === "psoe")).toEqual({
+      id: "psoe",
+      acronym: "PSOE",
+      name: "Partido Socialista Obrero Español",
+      colour: "#e30613",
+      provinces: ["08", "28"],
+      lastElection: "2023-07",
+    });
+    expect(catalog.map(({ acronym }) => acronym)).toEqual(["PSOE", "PNV", "FO"]);
+  });
+
+  it("keep their old ids as aliases of the bloc", () => {
+    expect(catalogAliases([base], catalog)).toEqual({ psc: "psoe", "eaj-pnv": "pnv" });
+  });
+
+  it("add their votes to the bloc in each province", () => {
+    expect(catalogResults(base)).toEqual({
+      "28": { votes: { psoe: 900, fo: 3 }, blank: 0, null: 0 },
+      "08": { votes: { psoe: 700 }, blank: 0, null: 0 },
+      "48": { votes: { pnv: 160, fo: 2 }, blank: 0, null: 0 },
+    });
   });
 });

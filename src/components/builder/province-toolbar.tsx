@@ -15,7 +15,9 @@ export function ProvinceToolbar({ allocation, stepper, save }: ProvinceToolbarPr
   return (
     <div className="fixed inset-x-0 bottom-0 z-20 border-t border-hairline bg-canvas px-5 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-8 lg:static lg:col-start-1 lg:border-0 lg:p-0">
       <div className="relative flex min-w-0 items-center justify-between gap-3 lg:hidden">
-        <details className="min-w-0">
+        {/* Closes when another field takes the focus, so it never hides the
+            vote being typed. Taps that focus nothing leave it open. */}
+        <details className="min-w-0" onBlur={(event) => { if (event.relatedTarget && !event.currentTarget.contains(event.relatedTarget)) event.currentTarget.open = false; }}>
           <summary className="min-h-11 cursor-pointer py-3 text-caption font-semibold">Reparto · {assigned} {assigned === 1 ? "escaño" : "escaños"}</summary>
           <div className="absolute inset-x-0 bottom-full max-h-[40svh] overflow-y-auto border border-hairline bg-canvas p-4">
             <p className="mb-3 text-caption font-semibold">{allocation.provinceName}</p>

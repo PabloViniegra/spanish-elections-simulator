@@ -4,6 +4,7 @@ import { BuiltMap } from "./built-map";
 import { ProvinceAllocation } from "./province-allocation";
 import { ProvinceHeading } from "./province-heading";
 import { ProvinceIndex } from "./province-index";
+import { ProvincePartyAdder } from "./province-party-adder";
 import { ProvinceToolbar } from "./province-toolbar";
 import type { ProvinceStepper } from "./province-stepper";
 import { ProvinceVotes } from "./province-votes";
@@ -17,13 +18,14 @@ type BuilderWizardProps = {
   save: ComponentProps<typeof SaveStatus>;
   heading: ComponentProps<typeof ProvinceHeading>;
   votes: ComponentProps<typeof ProvinceVotes>;
+  adder: ComponentProps<typeof ProvincePartyAdder>;
   allocation: ComponentProps<typeof ProvinceAllocation>;
   stepper: ComponentProps<typeof ProvinceStepper>;
   index: ComponentProps<typeof ProvinceIndex>;
   map: ComponentProps<typeof BuiltMap>;
 };
 
-export function BuilderWizard({ name, completed, resultsHref, save, heading, votes, allocation, stepper, index, map }: BuilderWizardProps) {
+export function BuilderWizard({ name, completed, resultsHref, save, heading, votes, adder, allocation, stepper, index, map }: BuilderWizardProps) {
   return (
     <div data-builder-wizard className="pb-56 lg:pb-0">
       <div className="bg-canvas-parchment">
@@ -51,8 +53,9 @@ export function BuilderWizard({ name, completed, resultsHref, save, heading, vot
         <div className="min-w-0 lg:sticky lg:top-8 lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:self-start">
           <ProvinceAllocation {...allocation} />
         </div>
-        <div className="min-w-0 lg:col-start-1">
+        <div className="flex min-w-0 flex-col gap-8 lg:col-start-1">
           <ProvinceVotes {...votes} />
+          <ProvincePartyAdder {...adder} />
         </div>
         <ProvinceToolbar allocation={allocation} stepper={stepper} save={save} />
       </div>
