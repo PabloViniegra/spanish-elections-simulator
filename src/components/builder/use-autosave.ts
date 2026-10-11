@@ -51,5 +51,5 @@ export function useAutosave(id: string, json: string, stored: string) {
     };
   }, [router, saver]);
 
-  return { status, flush: () => { void saver.flush(); } };
+  return { status, flush: () => { void saver.flush(); }, discard: () => saver.discard() };
 }

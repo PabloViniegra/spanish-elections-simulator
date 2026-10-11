@@ -165,6 +165,29 @@ test("stale tabs cannot overwrite a saved province and failed saves block naviga
   await stale.close();
 });
 
+test("a built election can be discarded halfway, with an unsaved edit pending", async ({ page }) => {
+  await signUpTo(page, "/builder/new");
+  const name = `Descartadas ${crypto.randomUUID().slice(0, 8)}`;
+  await page.getByLabel("Nombre", { exact: true }).fill(name);
+  await page.getByLabel("Crear un partido propio").fill("Mi Partido");
+  await page.getByLabel("Crear un partido propio").press("Enter");
+  await page.getByRole("button", { name: "Crear y empezar por la primera provincia" }).click();
+  await expect(page).toHaveURL(/\/builder\/[^/?]+\?p=01$/);
+  const address = new URL(page.url()).pathname;
+
+  await page.getByLabel("Mi Partido se presenta en Araba/Álava").check();
+  await page.getByRole("button", { name: "Descartar estas elecciones" }).click();
+  await expect(page.getByRole("button", { name: "Cancelar" })).toBeFocused();
+  await page.getByRole("button", { name: "Cancelar" }).click();
+  await page.getByRole("button", { name: "Descartar estas elecciones" }).click();
+  await page.getByRole("button", { name: "Sí, descartar" }).click();
+  await expect(page).toHaveURL("/profile");
+  await expect(page.getByRole("status").filter({ hasText: `«${name}» ya no está en tu perfil.` })).toBeVisible();
+  await expect(page.getByRole("region", { name: /Tus simulaciones/ }).getByText(name)).toHaveCount(0);
+  expect(await db.select().from(simulation).where(eq(simulation.name, name))).toEqual([]);
+  expect((await page.goto(address))?.status()).toBe(404);
+});
+
 test("a complete built election shows its Congreso, shares read-only and is tagged in the profile", async ({ page, context }) => {
   await signUpTo(page, "/builder/new");
   const name = `Completas ${crypto.randomUUID().slice(0, 8)}`;

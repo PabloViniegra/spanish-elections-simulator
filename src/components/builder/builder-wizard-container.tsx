@@ -1,7 +1,8 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { notify } from "@/components/feedback/notify";
 import { builderHref, builderResultsHref } from "@/lib/builder/address";
 import { allocateProvince, castVotes, partyBlocs, provinceStatus } from "@/lib/builder/allocate";
 import { addPartyHere, eligibleParties, fillFromLatest, latestVotes, setOtherVotes, setPartyVotes, setRunning, startProvince } from "@/lib/builder/edit";
@@ -12,6 +13,7 @@ import type { BuiltScenario } from "@/lib/builder/types";
 import { CONSTITUENCY_CODES } from "@/lib/engine/constants";
 import { provinces } from "@/lib/provinces";
 import { provinceWinners } from "@/lib/scenario/province-winners";
+import { deleteSimulation } from "@/lib/simulations/actions";
 import { BuilderWizard } from "./builder-wizard";
 import { PROVINCE_HEADING_ID } from "./province-heading";
 import { useAutosave } from "./use-autosave";
@@ -32,6 +34,18 @@ export function BuilderWizardContainer({ id, name, initial, stored, start }: Bui
   const code = requested && CONSTITUENCY_CODES.includes(requested) ? requested : start;
   const [scenario, setScenario] = useState(initial);
   const autosave = useAutosave(id, JSON.stringify(scenario), stored);
+  const router = useRouter();
+  const [discarding, startDiscard] = useTransition();
+  const discard = () =>
+    startDiscard(async () => {
+      if (!(await deleteSimulation(id).catch(() => false))) {
+        notify.error({ title: "No se pudieron descartar", description: "Comprueba tu conexión e inténtalo de nuevo." });
+        return;
+      }
+      autosave.discard();
+      notify.success({ title: "Elecciones descartadas", description: `«${name}» ya no está en tu perfil.` });
+      router.replace("/profile");
+    });
 
   // Name the province in the address, so going back returns to it and not to
   // wherever the server would start then.
@@ -85,6 +99,7 @@ export function BuilderWizardContainer({ id, name, initial, stored, start }: Bui
       // The results page reads the saved copy, so it waits for the save.
       resultsHref={complete.length === CONSTITUENCY_CODES.length && autosave.status.kind === "saved" ? builderResultsHref(id) : null}
       save={{ status: autosave.status, onRetry: autosave.flush }}
+      discard={{ pending: discarding, onDiscard: discard }}
       heading={{
         name: nameOf(code),
         position: CONSTITUENCY_CODES.indexOf(code) + 1,

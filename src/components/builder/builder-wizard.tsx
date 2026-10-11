@@ -1,6 +1,7 @@
 import type { ComponentProps } from "react";
 import Link from "next/link";
 import { BuiltMap } from "./built-map";
+import { DiscardBuilt } from "./discard-built";
 import { ProvinceAllocation } from "./province-allocation";
 import { ProvinceHeading } from "./province-heading";
 import { ProvinceIndex } from "./province-index";
@@ -16,6 +17,7 @@ type BuilderWizardProps = {
   // Once all 52 are complete and saved.
   resultsHref: string | null;
   save: ComponentProps<typeof SaveStatus>;
+  discard: ComponentProps<typeof DiscardBuilt>;
   heading: ComponentProps<typeof ProvinceHeading>;
   votes: ComponentProps<typeof ProvinceVotes>;
   adder: ComponentProps<typeof ProvincePartyAdder>;
@@ -25,7 +27,7 @@ type BuilderWizardProps = {
   map: ComponentProps<typeof BuiltMap>;
 };
 
-export function BuilderWizard({ name, completed, resultsHref, save, heading, votes, adder, allocation, stepper, index, map }: BuilderWizardProps) {
+export function BuilderWizard({ name, completed, resultsHref, save, discard, heading, votes, adder, allocation, stepper, index, map }: BuilderWizardProps) {
   return (
     <div data-builder-wizard className="pb-56 lg:pb-0">
       <div className="bg-canvas-parchment">
@@ -44,6 +46,7 @@ export function BuilderWizard({ name, completed, resultsHref, save, heading, vot
                 Ver el Congreso
               </Link>
             )}
+            <DiscardBuilt {...discard} />
           </div>
           <div className="hidden lg:block"><SaveStatus {...save} /></div>
         </div>

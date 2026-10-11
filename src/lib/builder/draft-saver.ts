@@ -12,13 +12,15 @@ export function createDraftSaver(initial: string, stored: string, save: Save) {
   let active: Promise<boolean> | null = null;
   let status: SaveStatus = { kind: "saved" };
   let listener: ((status: SaveStatus) => void) | null = null;
+  // Once the draft is deleted nothing may be sent for it again.
+  let discarded = false;
 
   const publish = (next: SaveStatus) => {
     status = next;
     listener?.(next);
   };
   const drain = async () => {
-    while (latest !== saved) {
+    while (!discarded && latest !== saved) {
       const sending = latest;
       publish({ kind: "saving" });
       const result = await save(sending, expected).catch(() => ({ error: offline }));
@@ -40,12 +42,17 @@ export function createDraftSaver(initial: string, stored: string, save: Save) {
       listener?.(status);
     },
     update(json: string) {
+      if (discarded) return;
       latest = json;
       if (!active) publish({ kind: latest === saved ? "saved" : "pending" });
     },
     flush() {
       active ??= drain().finally(() => { active = null; });
       return active;
+    },
+    discard() {
+      discarded = true;
+      latest = saved;
     },
   };
 }

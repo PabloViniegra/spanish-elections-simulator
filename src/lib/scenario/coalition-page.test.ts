@@ -16,7 +16,8 @@ describe("bounded coalition pages", () => {
     expect(actual.map(({ members, seats: sum }) => [members.length, sum])).toEqual(expected.map(({ members, seats: sum }) => [members.length, sum]));
   });
 
-  it("counts millions of 24-party coalitions but retains only the requested page", () => {
+  // Walks C(24, 13) coalitions twice; v8 coverage on CI runners exceeds the 5 s default.
+  it("counts millions of 24-party coalitions but retains only the requested page", { timeout: 30_000 }, () => {
     const seats: [string, number][] = Array.from({ length: 24 }, (_, i) => [`p${i}`, 14]);
     const result = winningCoalitionPage({ seats, page: 0, size: 50 });
     expect(result.total).toBe(2496144); // C(24, 13)

@@ -51,4 +51,15 @@ describe("draft save queue", () => {
     expect(await saver.flush()).toBe(true);
     expect(save.mock.calls).toEqual([["edited", "initial"], ["edited", "initial"]]);
   });
+
+  it("sends nothing more once the draft is discarded", async () => {
+    const save = vi.fn(async (): Promise<DraftState> => ({ saved: true }));
+    const saver = createDraftSaver("initial", "initial", save);
+    saver.update("edited");
+    saver.discard();
+    saver.update("edited again");
+    expect(saver.dirty).toBe(false);
+    expect(await saver.flush()).toBe(true);
+    expect(save).not.toHaveBeenCalled();
+  });
 });
