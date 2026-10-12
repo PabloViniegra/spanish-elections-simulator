@@ -22,6 +22,7 @@ async function signUpTo(page: Page, next: string) {
   await page.getByLabel("Nombre de usuario").fill(`builder_${id}`);
   await page.getByLabel("Correo electrónico").fill(email);
   await page.getByLabel("Contraseña", { exact: true }).fill(password);
+  await page.getByLabel("Confirmar contraseña").fill(password);
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page).toHaveURL(/\/register\/check-email/);
   await confirmEmail(email);
