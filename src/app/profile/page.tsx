@@ -53,8 +53,8 @@ export default async function ProfilePage({ searchParams }: ProfilePageProps) {
       <main id="contenido" className="flex-1">
         <div className="focus-on-dark bg-surface-black text-on-dark">
           <div className="mx-auto flex max-w-content flex-col gap-3 px-5 pt-14 pb-12 sm:px-8 lg:pt-20 lg:pb-16">
-            <h1 className={`hero-rise [--c:0] ${sectionTitle}`}>Mi perfil</h1>
-            <p className="hero-rise text-lead-airy break-words text-on-dark-muted [--c:1]">{username}</p>
+            <h1 className={sectionTitle}>Mi perfil</h1>
+            <p className="text-lead-airy break-words text-on-dark-muted">{username}</p>
           </div>
         </div>
         <div className="mx-auto grid max-w-content grid-cols-[minmax(0,1fr)] gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-start lg:gap-16 lg:py-16">

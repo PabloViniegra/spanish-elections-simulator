@@ -9,10 +9,10 @@ type CsvFilePickerProps = {
 export function CsvFilePicker({ inputKey, fileName, onTemplate, onChoose }: CsvFilePickerProps) {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <button type="button" onClick={onTemplate} className="min-h-11 rounded-full border border-ink px-5 text-caption font-semibold">
+      <button type="button" onClick={onTemplate} className="min-h-11 rounded-full border border-ink px-5 text-caption font-semibold transition-[scale] duration-150 active:scale-[0.96]">
         Descargar la plantilla
       </button>
-      <label className="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color] duration-150 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary hover:bg-primary-focus">
+      <label className="inline-flex min-h-11 cursor-pointer items-center rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-150 active:scale-[0.96] focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-primary hover:bg-primary-focus">
         Elegir un archivo CSV
         <input key={inputKey} type="file" accept=".csv,text/csv" onChange={(event) => onChoose(event.target.files?.[0])} className="sr-only" />
       </label>

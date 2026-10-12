@@ -43,7 +43,7 @@ export function ShareLink({ brokenLink, copied, onCopy }: ShareLinkProps) {
         type="button"
         onClick={onCopy}
         data-copied={copied}
-        className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-caption leading-none font-semibold text-on-primary transition-[background-color,scale] duration-200 ease-snappy hover:bg-primary-focus active:scale-[0.96] data-[copied=true]:bg-ink"
+        className="group inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-caption leading-none font-semibold text-on-primary transition-[background-color,scale] duration-150 ease-snappy hover:bg-primary-focus active:scale-[0.96] data-[copied=true]:bg-ink"
       >
         <span aria-hidden="true" className="relative size-[18px] flex-none">
           <LinkIcon className="absolute inset-0 transition-[opacity,scale,rotate] duration-300 ease-snappy group-data-[copied=true]:-rotate-45 group-data-[copied=true]:scale-50 group-data-[copied=true]:opacity-0 motion-reduce:transition-none" />

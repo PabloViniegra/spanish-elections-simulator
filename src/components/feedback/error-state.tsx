@@ -12,7 +12,7 @@ export function ErrorState({ digest, onRetry }: { digest?: string; onRetry: () =
         <button
           type="button"
           onClick={onRetry}
-          className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-200 ease-snappy hover:bg-primary-focus active:scale-[0.96]"
+          className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-150 ease-snappy hover:bg-primary-focus active:scale-[0.96]"
         >
           Reintentar
         </button>

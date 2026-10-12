@@ -11,7 +11,7 @@ export function BuilderIntro() {
           <p className="hero-rise max-w-[60ch] text-lead-airy text-ink-muted-80 [--c:1]">
             Elige los partidos y el reparto de escaños. Después irás provincia a provincia escribiendo los votos y verás cómo se reparten los escaños.
           </p>
-          <p className="text-caption text-ink-muted-80">Son unas elecciones construidas a mano, no una previsión.</p>
+          <p className="hero-rise text-caption text-ink-muted-80 [--c:2]">Son unas elecciones construidas a mano, no una previsión.</p>
         </div>
         <div className="relative hidden aspect-[18/13] w-full max-w-80 justify-self-center sm:block lg:max-w-md">
           <Image

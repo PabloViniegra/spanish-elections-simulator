@@ -83,7 +83,7 @@ export function SimulationList({ simulations, total, page, pages }: SimulationLi
               <li key={id} className={row}>
                 {summary ? (
                   // The chamber opens the scenario too; the link below is the named one.
-                  <Link href={href} tabIndex={-1} aria-hidden="true" className={`${chamber} active:scale-[0.97]`}>
+                  <Link href={href} tabIndex={-1} aria-hidden="true" className={`${chamber} active:scale-[0.97] active:duration-150`}>
                     <SavedHemicycle ranked={summary.ranked} order={index} />
                   </Link>
                 ) : (

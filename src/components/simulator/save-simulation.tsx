@@ -26,7 +26,7 @@ type SaveSimulationProps = {
 };
 
 const button =
-  "min-h-11 rounded-full border border-ink px-[22px] text-body font-semibold transition-[scale,background-color,color] duration-200 ease-snappy active:scale-[0.97] disabled:border-ink-muted-48 disabled:bg-transparent disabled:text-ink-muted-48";
+  "min-h-11 rounded-full border border-ink px-[22px] text-body font-semibold transition-[scale,background-color,color] duration-150 ease-snappy active:scale-[0.97] disabled:border-ink-muted-48 disabled:bg-transparent disabled:text-ink-muted-48";
 
 export function SaveSimulation({ state, action, pending, scenario, defaultName, stale, saved }: SaveSimulationProps) {
   // Which button sent the form, so only that one reads "Guardando…". Enter
