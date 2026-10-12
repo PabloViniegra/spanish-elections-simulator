@@ -6,9 +6,9 @@ import { createDraftSaver, type SaveStatus } from "@/lib/builder/draft-saver";
 export type { SaveStatus } from "@/lib/builder/draft-saver";
 const DELAY_MS = 1000;
 
-export function useAutosave(id: string, json: string, stored: string) {
+export function useAutosave(id: string, json: string, revision: number) {
   const router = useRouter();
-  const [saver] = useState(() => createDraftSaver(json, stored, (next, expected) => saveBuiltDraft(id, next, expected)));
+  const [saver] = useState(() => createDraftSaver(json, revision, (next, current) => saveBuiltDraft(id, next, current)));
   const [status, setStatus] = useState<SaveStatus>({ kind: "saved" });
 
   useLayoutEffect(() => {

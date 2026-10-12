@@ -10,6 +10,9 @@ export const SAVED_PARAM = "s";
 export const simulatorHref = (param: string, savedId?: string) =>
   `/simulator?${SCENARIO_PARAM}=${encodeURIComponent(param)}${savedId ? `&${SAVED_PARAM}=${encodeURIComponent(savedId)}` : ""}`;
 
+// A saved simulation by id alone; the page loads its scenario for the owner.
+export const savedSimulatorHref = (savedId: string) => `/simulator?${SAVED_PARAM}=${encodeURIComponent(savedId)}`;
+
 // The address to share: the scenario, without the saved simulation it came from.
 export function withScenarioParam(currentHref: string, scenarioParam: string | null) {
   const url = new URL(currentHref);

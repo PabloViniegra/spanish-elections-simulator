@@ -3,28 +3,19 @@ import { fieldErrorsOf, formValues } from "@/lib/auth/forms";
 import { MAX_SIMULATIONS, type SaveState, simulationName } from "@/lib/simulations/forms";
 import type { InsertIfRoom } from "@/lib/simulations/save";
 import type { BuilderReference } from "./allocate";
-import { parseBuiltScenario } from "./schema";
-import type { BuiltScenario } from "./types";
+import { NO_PARTIES } from "./messages";
+import { validBuilt } from "./schema";
 
-// Compare-and-swap against the exact snapshot loaded by this editor.
-export type UpdateOwnedBuilt = (userId: string, id: string, scenario: string, expected: string) => Promise<boolean>;
+// Compare-and-swap against the revision loaded by this editor; the new
+// revision, or null when it changed or the election is not the user's.
+export type UpdateOwnedBuilt = (userId: string, id: string, scenario: string, revision: number) => Promise<number | null>;
 
-export type DraftState = { saved: true } | { error: string };
+export type DraftState = { saved: true; revision: number } | { error: string };
 
 const signedOut = "Tu sesión ha caducado. Inicia sesión de nuevo para guardar.";
 const full = `Ya tienes ${MAX_SIMULATIONS} simulaciones guardadas. Borra alguna desde tu perfil para crear otra.`;
 const conflict = "No se han guardado los cambios: estas elecciones han cambiado en otra pestaña o ya no están en tu perfil. Conserva tus cambios antes de recargar.";
 const invalid = "Los datos de las elecciones no son válidos. Recarga la página e inténtalo de nuevo.";
-// Shown until the first party is added, so the form can drop it then.
-export const NO_PARTIES = "Elige al menos un partido.";
-
-// The stored JSON as a scenario, or null when it does not parse or names a
-// catalogue party the catalogue does not have.
-export function validBuilt(json: string, reference: BuilderReference): BuiltScenario | null {
-  const scenario = parseBuiltScenario(json);
-  const known = scenario?.parties.every(({ catalogId }) => !catalogId || reference.catalog.has(catalogId));
-  return known ? scenario : null;
-}
 
 const createSchema = z.object({
   name: simulationName,
@@ -70,9 +61,10 @@ export async function saveBuiltDraftAs(
   json: string,
   updateOwned: UpdateOwnedBuilt,
   reference: BuilderReference,
-  expected: string,
+  revision: number,
 ): Promise<DraftState> {
   if (!userId) return { error: signedOut };
-  if (!id || !validBuilt(json, reference) || !validBuilt(expected, reference)) return { error: invalid };
-  return (await updateOwned(userId, id, json, expected)) ? { saved: true } : { error: conflict };
+  if (!id || !validBuilt(json, reference)) return { error: invalid };
+  const next = await updateOwned(userId, id, json, revision);
+  return next === null ? { error: conflict } : { saved: true, revision: next };
 }

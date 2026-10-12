@@ -3,10 +3,10 @@ import { SiteHeader } from "@/components/home/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SimulatorContainer } from "@/components/simulator/simulator-container";
 import { JsonLd } from "@/components/seo/json-ld";
-import { getSession } from "@/lib/auth/session";
-import { SAVED_PARAM, SCENARIO_PARAM } from "@/lib/scenario/url";
+import { getSession, requireSession } from "@/lib/auth/session";
+import { SAVED_PARAM, SCENARIO_PARAM, savedSimulatorHref } from "@/lib/scenario/url";
 import { simulatorInitialState } from "@/lib/scenario/initial";
-import { findSimulation } from "@/lib/simulations/queries";
+import { findSavedProjection, findSimulation } from "@/lib/simulations/queries";
 import { OG_SIZE, SITE_OPEN_GRAPH, SITE_URL } from "@/lib/site";
 import { ElectionReference } from "@/components/legal/election-reference";
 
@@ -40,10 +40,14 @@ export async function generateMetadata({ searchParams }: SimulatorPageProps): Pr
 
 // Only saved scenarios require an account and are scoped to their owner.
 export default async function SimulatorPage({ searchParams }: SimulatorPageProps) {
-  const session = await getSession();
-  const param = await paramOf(searchParams, SCENARIO_PARAM);
+  const shared = await paramOf(searchParams, SCENARIO_PARAM);
   const savedId = await paramOf(searchParams, SAVED_PARAM);
-  const saved = session && param && savedId ? await findSimulation(session.user.id, savedId) : null;
+  // A saved simulation opened by id alone needs its owner signed in.
+  const session = savedId && !shared ? await requireSession(savedSimulatorHref(savedId)) : await getSession();
+  // The profile links by id alone; the page then restores the stored scenario.
+  const opened = session && savedId && !shared ? await findSavedProjection(session.user.id, savedId) : null;
+  const param = shared ?? opened?.scenario;
+  const saved = opened ? { id: opened.id, name: opened.name } : session && param && savedId ? await findSimulation(session.user.id, savedId) : null;
   return (
     <>
       <JsonLd

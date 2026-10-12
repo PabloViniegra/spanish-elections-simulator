@@ -22,18 +22,18 @@ type BuilderWizardContainerProps = {
   id: string;
   name: string;
   initial: BuiltScenario;
-  stored: string;
+  revision: number;
   // Where to start when the address names no province.
   start: string;
 };
 
 const nameOf = (code: string) => provinces.find((province) => province.code === code)?.name ?? code;
 
-export function BuilderWizardContainer({ id, name, initial, stored, start }: BuilderWizardContainerProps) {
+export function BuilderWizardContainer({ id, name, initial, revision, start }: BuilderWizardContainerProps) {
   const requested = useSearchParams().get("p");
   const code = requested && CONSTITUENCY_CODES.includes(requested) ? requested : start;
   const [scenario, setScenario] = useState(initial);
-  const autosave = useAutosave(id, JSON.stringify(scenario), stored);
+  const autosave = useAutosave(id, JSON.stringify(scenario), revision);
   const router = useRouter();
   const [discarding, startDiscard] = useTransition();
   const discard = () =>

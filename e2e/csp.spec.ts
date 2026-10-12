@@ -41,3 +41,8 @@ test("production HTML gets a fresh nonce and hydration works without inline scri
   expect(secondNonce).not.toBe(nonce);
   expect(secondNonce).not.toBe("attacker-controlled");
 });
+
+test("short links get the policy too, so they cannot be framed", async ({ request }) => {
+  const response = await request.get("/l/desconocido", { maxRedirects: 0 });
+  expect(response.headers()["content-security-policy"]).toContain("frame-ancestors 'none'");
+});

@@ -6,6 +6,7 @@ import { LIST_HEADING_ID } from "./delete-simulation";
 import { DeleteSimulationContainer } from "./delete-simulation-container";
 import { RenameSimulationContainer } from "./rename-simulation-container";
 import { SavedHemicycle } from "./saved-hemicycle";
+import { SimulationPages } from "./simulation-pages";
 
 export type SavedSimulation = {
   id: string;
@@ -56,11 +57,19 @@ const row =
 const chamber =
   "block w-40 transition-[filter,opacity,scale] duration-300 group-has-[[data-confirming]]:opacity-50 group-has-[[data-confirming]]:grayscale sm:w-full";
 
-export function SimulationList({ simulations }: { simulations: readonly SavedSimulation[] }) {
+type SimulationListProps = {
+  simulations: readonly SavedSimulation[];
+  // Saved in all, across every page.
+  total: number;
+  page: number;
+  pages: number;
+};
+
+export function SimulationList({ simulations, total, page, pages }: SimulationListProps) {
   return (
     <section aria-labelledby={LIST_HEADING_ID} className="flex flex-col gap-2">
       <h2 id={LIST_HEADING_ID} tabIndex={-1} className="text-display-md outline-none">
-        Tus simulaciones{simulations.length > 0 && <span className="text-ink-muted-48 tabular-nums"> · {simulations.length}</span>}
+        Tus simulaciones{total > 0 && <span className="text-ink-muted-48 tabular-nums"> · {total}</span>}
       </h2>
       {simulations.length === 0 ? (
         <div className="pt-4">
@@ -115,6 +124,7 @@ export function SimulationList({ simulations }: { simulations: readonly SavedSim
               </li>
             ))}
           </ul>
+          <SimulationPages page={page} pages={pages} />
         </>
       )}
     </section>

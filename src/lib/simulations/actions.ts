@@ -28,11 +28,12 @@ export async function updateSimulation(_prev: SaveState, formData: FormData): Pr
 // True once the simulation is gone.
 export async function deleteSimulation(id: string) {
   const session = await getSession();
-  if (!session) return false;
+  const input = z.string().max(64).safeParse(id);
+  if (!session || !input.success) return false;
   // Scoped to the owner, so an id from someone else deletes nothing.
   const deleted = await db
     .delete(simulation)
-    .where(and(eq(simulation.id, z.string().parse(id)), eq(simulation.userId, session.user.id)))
+    .where(and(eq(simulation.id, input.data), eq(simulation.userId, session.user.id)))
     .returning({ id: simulation.id });
   revalidatePath("/profile");
   return deleted.length > 0;

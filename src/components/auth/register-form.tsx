@@ -4,7 +4,7 @@ import { SelectField } from "@/components/forms/select-field";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { TextField } from "@/components/forms/text-field";
 import type { FormState } from "@/lib/auth/forms";
-import { usageProfileLabels } from "@/lib/auth/user-fields";
+import { usageProfileLabels } from "@/lib/auth/usage-profiles";
 import { provinces } from "@/lib/provinces";
 
 const provinceOptions = [

@@ -1,7 +1,7 @@
 import { FormAlert } from "@/components/forms/form-alert";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { TextField } from "@/components/forms/text-field";
-import { NO_PARTIES } from "@/lib/builder/save";
+import { NO_PARTIES } from "@/lib/builder/messages";
 import type { BuiltParty, CatalogParty, SeatTable } from "@/lib/builder/types";
 import type { SaveState } from "@/lib/simulations/forms";
 import { NAME_MAX } from "@/lib/simulations/limits";

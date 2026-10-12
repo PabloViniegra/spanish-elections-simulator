@@ -2,3 +2,7 @@ allowBuilds:
   sharp: false
   unrs-resolver: false
   esbuild: true
+
+# GHSA-67mh-4wv8-2f99: drizzle-kit still pulls esbuild 0.18 through @esbuild-kit.
+overrides:
+  "@esbuild-kit/core-utils>esbuild": "^0.25.12"

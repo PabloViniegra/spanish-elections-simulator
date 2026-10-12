@@ -10,7 +10,8 @@ import { sendVerificationEmail } from "@/lib/email/send-verification-email";
 import { consume } from "@/lib/rate-limit/store";
 import * as schema from "@/lib/db/schema";
 import { SITE_URL } from "@/lib/site";
-import { provinceCode, usageProfile, usageProfiles } from "./user-fields";
+import { usageProfiles } from "./usage-profiles";
+import { provinceCode, usageProfile } from "./user-fields";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg", schema }),

@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { getSession } from "@/lib/auth/session";
-import { clientIp, firstBlocked, shortLinkLimits } from "@/lib/rate-limit/rules";
+import { autosaveLimits, clientIp, firstBlocked, shortLinkLimits, tooManyAttempts } from "@/lib/rate-limit/rules";
 import { consume } from "@/lib/rate-limit/store";
 import { storeShortLink } from "@/lib/short-links/queries";
 import type { SaveState } from "@/lib/simulations/forms";
@@ -14,7 +14,8 @@ import { builderHref, builderResultsHref } from "./address";
 import { isComplete } from "./allocate";
 import { findBuilt, updateOwnedBuilt } from "./queries";
 import { builderReference } from "./reference";
-import { createBuiltAs, type DraftState, saveBuiltDraftAs, validBuilt } from "./save";
+import { createBuiltAs, type DraftState, saveBuiltDraftAs } from "./save";
+import { validBuilt } from "./schema";
 import { BUILT_SCENARIO_MAX } from "./schema";
 
 const id = z.string().max(64);
@@ -30,10 +31,12 @@ export async function createBuilt(_prev: SaveState, formData: FormData): Promise
   redirect(formData.get("provinces") ? builderResultsHref(state.id) : builderHref(state.id));
 }
 
-export async function saveBuiltDraft(simulationId: string, scenario: string, expected: string): Promise<DraftState> {
+export async function saveBuiltDraft(simulationId: string, scenario: string, revision: number): Promise<DraftState> {
   const session = await getSession();
-  const input = z.tuple([id, json, json]).safeParse([simulationId, scenario, expected]);
+  const input = z.tuple([id, json, z.int().nonnegative()]).safeParse([simulationId, scenario, revision]);
   if (!input.success) return { error: "Los datos de las elecciones no son válidos." };
+  const blocked = session ? await firstBlocked(autosaveLimits(session.user.id), consume) : null;
+  if (blocked !== null) return { error: tooManyAttempts(blocked) };
   // No revalidation: it would re-render the wizard with every save and could
   // overtake a navigation away from it. The profile is dynamic anyway.
   return saveBuiltDraftAs(session?.user.id, input.data[0], input.data[1], updateOwnedBuilt, builderReference, input.data[2]);

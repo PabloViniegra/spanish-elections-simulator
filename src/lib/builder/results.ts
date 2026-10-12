@@ -3,7 +3,7 @@ import { rankedBlocs } from "@/lib/scenario/blocs";
 import { allocateBuilt, type BuilderReference, partyBlocs, provinceStatus } from "./allocate";
 import { CONSTITUENCY_CODES } from "@/lib/engine/constants";
 import { seatTables } from "./reference";
-import { validBuilt } from "./save";
+import { validBuilt } from "./schema";
 import type { BuiltParty, BuiltScenario } from "./types";
 
 export type NationalRow = BuiltParty & { votes: number; share: number; seats: number };

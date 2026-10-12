@@ -8,10 +8,12 @@ import { DeleteAccountContainer } from "@/components/profile/delete-account-cont
 import { ProfileDetails } from "@/components/profile/profile-details";
 import { SimulationList } from "@/components/profile/simulation-list";
 import { requireSession } from "@/lib/auth/session";
-import { usageProfile, usageProfileLabels } from "@/lib/auth/user-fields";
+import { usageProfileLabels } from "@/lib/auth/usage-profiles";
+import { usageProfile } from "@/lib/auth/user-fields";
 import { provinces } from "@/lib/provinces";
-import { simulatorHref } from "@/lib/scenario/url";
-import { listSimulations } from "@/lib/simulations/queries";
+import { savedSimulatorHref } from "@/lib/scenario/url";
+import { profilePage, PAGE_SIZE } from "@/lib/simulations/pages";
+import { countSimulations, listSimulations } from "@/lib/simulations/queries";
 import { summarizeSimulation } from "@/lib/simulations/summary";
 
 export const metadata: Metadata = { title: "Mi perfil", robots: { index: false, follow: false } };
@@ -21,7 +23,8 @@ const savedAt = (date: Date) => `${longDate(date)}, a las ${date.toLocaleTimeStr
 
 function projectionRow(id: string, scenario: string) {
   const summary = summarizeSimulation(scenario);
-  return { href: simulatorHref(scenario, id), summary: summary && { lead: `Desde ${summary.baseLabel}`, ranked: summary.ranked } };
+  // By id: the simulator loads the scenario, so the page does not carry it.
+  return { href: savedSimulatorHref(id), summary: summary && { lead: `Desde ${summary.baseLabel}`, ranked: summary.ranked } };
 }
 
 // Finished elections open on their Congreso; the rest, on the next province to fill.
@@ -35,9 +38,14 @@ function builtRow(id: string, scenario: string) {
   };
 }
 
-export default async function ProfilePage() {
+type ProfilePageProps = { searchParams: Promise<{ page?: string | string[] }> };
+
+export default async function ProfilePage({ searchParams }: ProfilePageProps) {
   const { user } = await requireSession("/profile");
-  const saved = await listSimulations(user.id);
+  const requested = (await searchParams).page;
+  const total = await countSimulations(user.id);
+  const { page, pages, offset } = profilePage(Array.isArray(requested) ? requested[0] : requested, total);
+  const saved = total > 0 ? await listSimulations(user.id, PAGE_SIZE, offset) : [];
   const username = user.displayUsername ?? user.username ?? user.name;
   return (
     <>
@@ -51,6 +59,9 @@ export default async function ProfilePage() {
         </div>
         <div className="mx-auto grid max-w-content grid-cols-[minmax(0,1fr)] gap-12 px-5 py-12 sm:px-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,4fr)] lg:items-start lg:gap-16 lg:py-16">
           <SimulationList
+            total={total}
+            page={page}
+            pages={pages}
             simulations={saved.map(({ id, name, kind, scenario, createdAt, updatedAt }) => ({
               id,
               name,

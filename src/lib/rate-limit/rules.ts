@@ -5,10 +5,13 @@ export type Limit = readonly [key: string, rule: RateRule];
 export type Consume = (key: string, rule: RateRule) => Promise<{ retryAfter: number | null }>;
 
 // Per address, to slow down one client; per account, to slow down guessing a
-// password or mailing someone from many addresses.
+// password or mailing someone from many addresses. Signing in counts an
+// account per address first, so a stranger cannot lock its owner out with ten
+// wrong passwords; the looser total still caps guessing from many addresses.
 export const signInRules = {
   ip: { window: 60, max: 10 },
   account: { window: 15 * 60, max: 10 },
+  accountTotal: { window: 60 * 60, max: 100 },
 } satisfies Record<string, RateRule>;
 
 export const signUpRules = {
@@ -29,9 +32,11 @@ export function tooManyAttempts(retryAfter: number) {
 
 // Keys are lower-cased so changing the case does not open a fresh bucket.
 export function signInLimits(ip: string, identifier: string): Limit[] {
+  const account = identifier.toLowerCase();
   return [
     [`sign-in|ip|${ip}`, signInRules.ip],
-    [`sign-in|account|${identifier.toLowerCase()}`, signInRules.account],
+    [`sign-in|account-ip|${account}|${ip}`, signInRules.account],
+    [`sign-in|account|${account}`, signInRules.accountTotal],
   ];
 }
 
@@ -63,6 +68,12 @@ export function deleteAccountLimits(userId: string): Limit[] {
 // Each new short link is a row anyone can add, so one address adds a few.
 export function shortLinkLimits(ip: string): Limit[] {
   return [[`short-link|ip|${ip}`, { window: 60 * 60, max: 60 }]];
+}
+
+// Each autosave rewrites up to a whole built election, so one account gets a
+// ceiling well above what editing by hand produces.
+export function autosaveLimits(userId: string): Limit[] {
+  return [[`autosave|user|${userId}`, { window: 60, max: 120 }]];
 }
 
 // Seconds until the first exhausted limit frees up, or null when all allow the

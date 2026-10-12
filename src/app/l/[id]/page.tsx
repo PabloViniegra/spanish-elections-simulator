@@ -4,7 +4,7 @@ import { BuiltResultsContainer } from "@/components/builder/built-results-contai
 import { SessionSiteHeader } from "@/components/home/session-site-header";
 import { isComplete } from "@/lib/builder/allocate";
 import { builderReference } from "@/lib/builder/reference";
-import { validBuilt } from "@/lib/builder/save";
+import { validBuilt } from "@/lib/builder/schema";
 import { simulatorHref } from "@/lib/scenario/address";
 import { findShortLink } from "@/lib/short-links/queries";
 

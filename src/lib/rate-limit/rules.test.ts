@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { clientIp, type Consume, deleteAccountLimits, firstBlocked, newPasswordLimits, passwordResetLimits, shortLinkLimits, signInLimits, signInRules, signUpLimits, signUpRules, tooManyAttempts } from "./rules";
+import { autosaveLimits, clientIp, type Consume, deleteAccountLimits, firstBlocked, newPasswordLimits, passwordResetLimits, shortLinkLimits, signInLimits, signInRules, signUpLimits, signUpRules, tooManyAttempts } from "./rules";
 
 describe("clientIp", () => {
   it("prefers the address the proxy sets", () => {
@@ -24,7 +24,8 @@ describe("attempt limits", () => {
   it("key accounts and emails case-insensitively", () => {
     expect(signInLimits("1.2.3.4", "Ana@Example.com")).toEqual([
       ["sign-in|ip|1.2.3.4", signInRules.ip],
-      ["sign-in|account|ana@example.com", signInRules.account],
+      ["sign-in|account-ip|ana@example.com|1.2.3.4", signInRules.account],
+      ["sign-in|account|ana@example.com", signInRules.accountTotal],
     ]);
     expect(signUpLimits("1.2.3.4", "Ana@Example.com")).toEqual([
       ["sign-up|ip|1.2.3.4", signUpRules.ip],
@@ -42,6 +43,10 @@ describe("attempt limits", () => {
 
   it("limit password checks before deleting an account per user", () => {
     expect(deleteAccountLimits("user-1")).toEqual([["delete-account|user|user-1", signInRules.account]]);
+  });
+
+  it("limit autosaves per user", () => {
+    expect(autosaveLimits("user-1")).toEqual([["autosave|user|user-1", { window: 60, max: 120 }]]);
   });
 
   it("limit new short links per address", () => {
@@ -63,7 +68,7 @@ describe("firstBlocked", () => {
   it("counts every limit and allows the attempt when none is exhausted", async () => {
     const { counted, consume } = fakeConsume(new Map());
     expect(await firstBlocked(signInLimits("ip", "ana"), consume)).toBeNull();
-    expect(counted).toEqual(["sign-in|ip|ip", "sign-in|account|ana"]);
+    expect(counted).toEqual(["sign-in|ip|ip", "sign-in|account-ip|ana|ip", "sign-in|account|ana"]);
   });
 
   it("stops at the first exhausted limit", async () => {

@@ -97,4 +97,10 @@ describe("scenario URL (FR-10)", () => {
     expect(decodeScenario(link({ ...base, shares: { ...base.shares, pp: 9000 } }), base, codes, candidacies)).toBeNull();
     expect(decodeScenario(link({ ...base, blank: 1.5 }), base, codes, candidacies)).toBeNull();
   });
+
+  it("rejects links too long, or expanding too far, before parsing them", () => {
+    expect(decodeScenario(`${V1_FIXTURE}${"A".repeat(20_000)}`, base, codes, candidacies)).toBeNull();
+    // About 2,300 characters that would decompress to a million.
+    expect(decodeScenario(`v1.${compressToEncodedURIComponent(" ".repeat(1_000_000))}`, base, codes, candidacies)).toBeNull();
+  });
 });

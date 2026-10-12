@@ -1,5 +1,6 @@
 import * as z from "zod/mini";
 import { CONSTITUENCY_CODES } from "@/lib/engine/constants";
+import type { BuilderReference } from "./allocate";
 import type { BuiltScenario } from "./types";
 
 // Parties in one scenario, so the chamber and its legend stay legible.
@@ -48,4 +49,12 @@ function fits({ parties, provinces }: BuiltScenario) {
     new Set(catalogIds).size === catalogIds.length &&
     Object.entries(provinces).every(([code, { votes }]) => codes.has(code) && Object.keys(votes).every((id) => ids.has(id)))
   );
+}
+
+// The stored JSON as a scenario, or null when it does not parse or names a
+// catalogue party the catalogue does not have.
+export function validBuilt(json: string, reference: BuilderReference): BuiltScenario | null {
+  const scenario = parseBuiltScenario(json);
+  const known = scenario?.parties.every(({ catalogId }) => !catalogId || reference.catalog.has(catalogId));
+  return known ? scenario : null;
 }

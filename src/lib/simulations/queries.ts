@@ -1,4 +1,4 @@
-import { and, desc, eq, sql } from "drizzle-orm";
+import { and, count, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { type ScenarioKind, simulation, user } from "@/lib/db/schema";
 import { MAX_SIMULATIONS } from "./forms";
@@ -7,14 +7,42 @@ import type { InsertIfRoom, UpdateOwned } from "./save";
 // Scoped to the owner, so an id from someone else matches nothing.
 const owned = (userId: string, id: string) => and(eq(simulation.id, id), eq(simulation.userId, userId));
 
-export function listSimulations(userId: string) {
-  return db.select().from(simulation).where(eq(simulation.userId, userId)).orderBy(desc(simulation.createdAt));
+// One page of the user's simulations, newest first; the id breaks ties so pages do not overlap.
+export function listSimulations(userId: string, limit: number, offset: number) {
+  return db
+    .select({
+      id: simulation.id,
+      name: simulation.name,
+      kind: simulation.kind,
+      scenario: simulation.scenario,
+      createdAt: simulation.createdAt,
+      updatedAt: simulation.updatedAt,
+    })
+    .from(simulation)
+    .where(eq(simulation.userId, userId))
+    .orderBy(desc(simulation.createdAt), desc(simulation.id))
+    .limit(limit)
+    .offset(offset);
+}
+
+export async function countSimulations(userId: string) {
+  const [row] = await db.select({ total: count() }).from(simulation).where(eq(simulation.userId, userId));
+  return row?.total ?? 0;
 }
 
 // The saved simulation a scenario was opened from, if the user still has it.
 export async function findSimulation(userId: string, id: string) {
   const [found] = await db
     .select({ id: simulation.id, name: simulation.name })
+    .from(simulation)
+    .where(and(owned(userId, id), eq(simulation.kind, "projection")));
+  return found ?? null;
+}
+
+// A saved projection opened by its id alone, with the scenario to restore.
+export async function findSavedProjection(userId: string, id: string) {
+  const [found] = await db
+    .select({ id: simulation.id, name: simulation.name, scenario: simulation.scenario })
     .from(simulation)
     .where(and(owned(userId, id), eq(simulation.kind, "projection")));
   return found ?? null;

@@ -1,12 +1,13 @@
-import { decompressFromEncodedURIComponent } from "lz-string";
 import * as z from "zod/mini";
 import { BLOC_NAME_MAX, MAX_BLOCS } from "./blocs";
 import { fitsInFull } from "./simulate";
 import { FULL_SHARE, type Scenario } from "./types";
 import { SCENARIO_PREFIX } from "./address";
+import { decompressBounded } from "./decompress";
+import { SCENARIO_MAX } from "@/lib/simulations/limits";
 
 // URL format: "v1." + the scenario as JSON compressed with lz-string (NFR-10).
-export { encodeScenario, SAVED_PARAM, SCENARIO_PARAM, simulatorHref, withScenarioParam } from "./address";
+export { encodeScenario, SAVED_PARAM, SCENARIO_PARAM, savedSimulatorHref, simulatorHref, withScenarioParam } from "./address";
 
 const share = z.int().check(z.gte(0), z.lte(FULL_SHARE));
 const bloc = z.object({
@@ -25,11 +26,14 @@ const scenarioSchema = z.object({
   blocs: z.optional(z.array(bloc).check(z.minLength(1), z.maxLength(MAX_BLOCS))),
 });
 
-// The scenario a link carries, or null when it is broken or from another
-// schema version. Decompressing is the costly step, so it runs once per link.
+// Well above the JSON of the largest scenario (about 25,000 characters).
+const SCENARIO_JSON_MAX = 100_000;
+
+// The scenario a link carries, or null when it is broken, oversized or from
+// another schema version. Decompressing is the costly step, so it runs once per link.
 export function parseScenarioParam(param: string): Scenario | null {
-  if (!param.startsWith(SCENARIO_PREFIX)) return null;
-  const json = decompressFromEncodedURIComponent(param.slice(SCENARIO_PREFIX.length));
+  if (param.length > SCENARIO_MAX || !param.startsWith(SCENARIO_PREFIX)) return null;
+  const json = decompressBounded(param.slice(SCENARIO_PREFIX.length), SCENARIO_JSON_MAX);
   if (!json) return null;
   let data: unknown;
   try {

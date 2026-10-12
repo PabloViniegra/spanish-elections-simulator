@@ -7,7 +7,7 @@ import { builderHref, builderResultsHref } from "@/lib/builder/address";
 import { isComplete } from "@/lib/builder/allocate";
 import { findBuilt } from "@/lib/builder/queries";
 import { builderReference } from "@/lib/builder/reference";
-import { validBuilt } from "@/lib/builder/save";
+import { validBuilt } from "@/lib/builder/schema";
 
 export const metadata: Metadata = { title: "Resultados de tus elecciones", robots: { index: false, follow: false } };
 

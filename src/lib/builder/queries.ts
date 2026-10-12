@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { simulation } from "@/lib/db/schema";
 import type { UpdateOwnedBuilt } from "./save";
@@ -10,17 +10,17 @@ const ownedBuilt = (userId: string, id: string) =>
 
 export async function findBuilt(userId: string, id: string) {
   const [found] = await db
-    .select({ id: simulation.id, name: simulation.name, scenario: simulation.scenario })
+    .select({ id: simulation.id, name: simulation.name, scenario: simulation.scenario, revision: simulation.revision })
     .from(simulation)
     .where(ownedBuilt(userId, id));
   return found ?? null;
 }
 
-export const updateOwnedBuilt: UpdateOwnedBuilt = async (userId, id, scenario, expected) => {
-  const updated = await db
+export const updateOwnedBuilt: UpdateOwnedBuilt = async (userId, id, scenario, revision) => {
+  const [updated] = await db
     .update(simulation)
-    .set({ scenario, updatedAt: new Date() })
-    .where(and(ownedBuilt(userId, id), eq(simulation.scenario, expected)))
-    .returning({ id: simulation.id });
-  return updated.length > 0;
+    .set({ scenario, revision: sql`${simulation.revision} + 1`, updatedAt: new Date() })
+    .where(and(ownedBuilt(userId, id), eq(simulation.revision, revision)))
+    .returning({ revision: simulation.revision });
+  return updated?.revision ?? null;
 };

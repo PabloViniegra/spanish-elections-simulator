@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { InsertIfRoom } from "@/lib/simulations/save";
 import type { BuilderReference } from "./allocate";
-import { createBuiltAs, saveBuiltDraftAs, type UpdateOwnedBuilt, validBuilt } from "./save";
+import { createBuiltAs, saveBuiltDraftAs, type UpdateOwnedBuilt } from "./save";
+import { validBuilt } from "./schema";
 import type { BuiltParty, BuiltScenario } from "./types";
 
 const reference: BuilderReference = {
@@ -30,12 +31,13 @@ function fakeInsert(room: boolean) {
   return { calls, insertIfRoom };
 }
 
-// Records every update and reports whether the election was found.
+// Records every update and answers with the next revision, or null when the
+// election was not found.
 function fakeUpdate(found: boolean) {
   const calls: Parameters<UpdateOwnedBuilt>[] = [];
   const updateOwned: UpdateOwnedBuilt = async (...args) => {
     calls.push(args);
-    return found;
+    return found ? args[3] + 1 : null;
   };
   return { calls, updateOwned };
 }
@@ -108,38 +110,36 @@ describe("createBuiltAs", () => {
 });
 
 describe("saveBuiltDraftAs", () => {
-  const original = JSON.stringify(scenario);
   const draft = JSON.stringify({ ...scenario, provinces: { "28": { votes: { pp: 10 }, blank: 1, null: 0 } } });
 
   it("overwrites the scenario of an election the user owns", async () => {
     const { calls, updateOwned } = fakeUpdate(true);
-    expect(await saveBuiltDraftAs("u1", "s1", draft, updateOwned, reference, original)).toEqual({ saved: true });
-    expect(calls).toEqual([["u1", "s1", draft, original]]);
+    expect(await saveBuiltDraftAs("u1", "s1", draft, updateOwned, reference, 4)).toEqual({ saved: true, revision: 5 });
+    expect(calls).toEqual([["u1", "s1", draft, 4]]);
   });
 
   it("stores nothing without a session or with an invalid scenario", async () => {
     const { calls, updateOwned } = fakeUpdate(true);
-    expect(await saveBuiltDraftAs(undefined, "s1", draft, updateOwned, reference, original)).toHaveProperty("error");
-    expect(await saveBuiltDraftAs("u1", "s1", "{", updateOwned, reference, original)).toHaveProperty("error");
-    expect(await saveBuiltDraftAs("u1", "", draft, updateOwned, reference, original)).toHaveProperty("error");
-    expect(await saveBuiltDraftAs("u1", "s1", draft, updateOwned, reference, "{")).toHaveProperty("error");
+    expect(await saveBuiltDraftAs(undefined, "s1", draft, updateOwned, reference, 0)).toHaveProperty("error");
+    expect(await saveBuiltDraftAs("u1", "s1", "{", updateOwned, reference, 0)).toHaveProperty("error");
+    expect(await saveBuiltDraftAs("u1", "", draft, updateOwned, reference, 0)).toHaveProperty("error");
     expect(calls).toEqual([]);
   });
 
   it("reports an election that is gone or belongs to someone else", async () => {
     const { updateOwned } = fakeUpdate(false);
-    expect(await saveBuiltDraftAs("u1", "s1", draft, updateOwned, reference, original)).toEqual({ error: "No se han guardado los cambios: estas elecciones han cambiado en otra pestaña o ya no están en tu perfil. Conserva tus cambios antes de recargar." });
+    expect(await saveBuiltDraftAs("u1", "s1", draft, updateOwned, reference, 0)).toEqual({ error: "No se han guardado los cambios: estas elecciones han cambiado en otra pestaña o ya no están en tu perfil. Conserva tus cambios antes de recargar." });
   });
 
   it("rejects a stale tab without overwriting an acknowledged edit", async () => {
-    let stored = original;
-    const update: UpdateOwnedBuilt = async (_user, _id, next, expected) => {
-      if (stored !== expected) return false;
-      stored = next;
-      return true;
+    let stored = { scenario: JSON.stringify(scenario), revision: 0 };
+    const update: UpdateOwnedBuilt = async (_user, _id, next, revision) => {
+      if (stored.revision !== revision) return null;
+      stored = { scenario: next, revision: revision + 1 };
+      return stored.revision;
     };
-    expect(await saveBuiltDraftAs("u1", "s1", draft, update, reference, original)).toEqual({ saved: true });
-    expect(await saveBuiltDraftAs("u1", "s1", original, update, reference, original)).toHaveProperty("error");
-    expect(stored).toBe(draft);
+    expect(await saveBuiltDraftAs("u1", "s1", draft, update, reference, 0)).toEqual({ saved: true, revision: 1 });
+    expect(await saveBuiltDraftAs("u1", "s1", JSON.stringify(scenario), update, reference, 0)).toHaveProperty("error");
+    expect(stored.scenario).toBe(draft);
   });
 });

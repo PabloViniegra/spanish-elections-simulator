@@ -1,14 +1,14 @@
 import type { DraftState } from "./save";
 
 export type SaveStatus = { kind: "saved" } | { kind: "pending" } | { kind: "saving" } | { kind: "error"; message: string };
-type Save = (json: string, expected: string) => Promise<DraftState>;
+type Save = (json: string, revision: number) => Promise<DraftState>;
 const offline = "No se han podido guardar los cambios. Revisa tu conexión.";
 
 // All callers, including navigation, wait for the same queue to drain.
-export function createDraftSaver(initial: string, stored: string, save: Save) {
+export function createDraftSaver(initial: string, storedRevision: number, save: Save) {
   let latest = initial;
   let saved = initial;
-  let expected = stored;
+  let revision = storedRevision;
   let active: Promise<boolean> | null = null;
   let status: SaveStatus = { kind: "saved" };
   let listener: ((status: SaveStatus) => void) | null = null;
@@ -23,12 +23,12 @@ export function createDraftSaver(initial: string, stored: string, save: Save) {
     while (!discarded && latest !== saved) {
       const sending = latest;
       publish({ kind: "saving" });
-      const result = await save(sending, expected).catch(() => ({ error: offline }));
+      const result = await save(sending, revision).catch(() => ({ error: offline }));
       if ("error" in result) {
         publish({ kind: "error", message: result.error });
         return false;
       }
-      expected = sending;
+      revision = result.revision;
       saved = sending;
     }
     publish({ kind: "saved" });

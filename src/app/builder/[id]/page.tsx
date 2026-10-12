@@ -7,7 +7,7 @@ import { builderHref } from "@/lib/builder/address";
 import { nextOpen } from "@/lib/builder/edit";
 import { findBuilt } from "@/lib/builder/queries";
 import { builderReference } from "@/lib/builder/reference";
-import { validBuilt } from "@/lib/builder/save";
+import { validBuilt } from "@/lib/builder/schema";
 
 export const metadata: Metadata = { title: "Construir unas elecciones", robots: { index: false, follow: false } };
 
@@ -26,7 +26,7 @@ export default async function BuilderPage({ params }: BuilderPageProps) {
     <>
       <SiteHeader username={user.name} current="builder" />
       <main id="contenido" className="flex-1">
-        <BuilderWizardContainer key={found.id} id={found.id} name={found.name} initial={scenario} stored={found.scenario} start={nextOpen(scenario, builderReference)} />
+        <BuilderWizardContainer key={found.id} id={found.id} name={found.name} initial={scenario} revision={found.revision} start={nextOpen(scenario, builderReference)} />
       </main>
     </>
   );
