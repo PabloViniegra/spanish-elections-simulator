@@ -53,7 +53,7 @@ export function ShareInput({ id, label, value, onChange, colour = "var(--color-i
           step={0.01}
           value={value / 100}
           onChange={(event) => update(event.target.valueAsNumber)}
-          className="min-h-11 w-[5.5rem] scroll-mt-28 rounded-xs lg:scroll-mt-12 border border-hairline bg-canvas px-2 text-right lg:min-h-0 lg:py-1.5 text-caption tabular-nums"
+            className="min-h-11 w-[5.5rem] scroll-mt-28 rounded-xs lg:scroll-mt-12 border border-hairline bg-canvas px-2 text-right lg:min-h-0 lg:py-1.5 text-base lg:text-caption tabular-nums"
         />
         <span aria-hidden="true" className="text-caption text-ink-muted-80">
           %

@@ -37,7 +37,7 @@ export function NationalInputs(props: NationalInputsProps) {
           Estimación de voto
         </h2>
         <button type="button" onClick={props.onReset} className="min-h-11 text-caption underline underline-offset-2">
-          Volver a los resultados de {props.base.label}
+          Volver a los votos de {props.base.label}
         </button>
       </div>
       {lockedCount > 0 && (

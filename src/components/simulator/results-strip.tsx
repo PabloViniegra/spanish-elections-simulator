@@ -10,6 +10,7 @@ type ResultsStripProps = {
   stale?: boolean;
   // Blocs picked in the coalition calculator.
   selected: ReadonlySet<string>;
+  edited?: { name: string; seats: number };
 };
 
 // How far a seat count stands from the 176 line.
@@ -33,11 +34,13 @@ export function summaryOf(ranked: ResultsStripProps["ranked"], selected: Readonl
 // the hemicycle, which carries the accessible description.
 // Its height is fixed (h-15) because the share budget pins itself right below
 // it with the same value (top-15); change both together.
-export function ResultsStrip({ ranked, stale = false, selected }: ResultsStripProps) {
+export function ResultsStrip({ ranked, stale = false, selected, edited }: ResultsStripProps) {
   const { picked, summary } = summaryOf(ranked, selected);
+  const feedback = edited && picked.length === 0 ? `${edited.name} ${edited.seats} escaños` : summary;
   return (
     <a href={`#${RESULTS_ID}`} className="glass sticky top-0 z-10 block h-15 border-b border-hairline lg:hidden">
       <span className="sr-only">Ver el reparto de escaños</span>
+      <span role="status" className="sr-only">{stale ? "Último reparto válido. " : ""}{feedback}</span>
       <div aria-hidden="true" className={`mx-auto flex h-full max-w-content flex-col justify-center gap-1.5 px-5 transition-opacity duration-150 sm:px-8 ${stale ? "opacity-65" : ""}`}>
         <div className="relative flex h-3 overflow-hidden rounded-full bg-hairline">
           {ranked.map((bloc) => (
@@ -50,7 +53,7 @@ export function ResultsStrip({ ranked, stale = false, selected }: ResultsStripPr
           <span className="absolute inset-y-0 w-px bg-ink" style={{ left: `${(MAJORITY / TOTAL_SEATS) * 100}%` }} />
         </div>
         <p className="flex justify-between gap-3 text-caption tabular-nums">
-          <span className="min-w-0 truncate font-semibold">{summary}</span>
+          <span className="min-w-0 truncate font-semibold">{feedback}</span>
           <span className="shrink-0 text-ink-muted-80">
             {stale ? "Sin actualizar" : <><span className="max-[359px]:hidden">Ver escaños </span>↓</>}
           </span>

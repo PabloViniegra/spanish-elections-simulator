@@ -37,7 +37,7 @@ export function SimulatorContainer({ signedIn, initial, saved }: { signedIn: boo
 
   return (
     <>
-      <ResultsStrip ranked={ranked} stale={stale} selected={picked} />
+      <ResultsStrip ranked={ranked} stale={stale} selected={picked} edited={state.editedBloc ? { name: state.editedBloc.name, seats: simulation.seats.get(state.editedBloc.id) ?? 0 } : undefined} />
       <div className="mx-auto flex max-w-content flex-col gap-10 px-5 py-10 sm:px-8">
         {/* Two columns with the results pinned on the right; the rows below take the full width, so they sit outside this grid (a sticky box stays within the grid container, not its area). */}
         <div className="grid grid-cols-[minmax(0,1fr)] gap-10 [&>*]:min-w-0 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-x-16 lg:gap-y-6">

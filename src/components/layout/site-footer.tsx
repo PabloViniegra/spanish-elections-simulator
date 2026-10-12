@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { CONTACT_EMAIL } from "@/lib/legal";
 
 const REPO_URL = "https://github.com/PabloViniegra/spanish-elections-simulator";
 
@@ -72,6 +73,11 @@ export function SiteFooter({ children }: { children: ReactNode }) {
                 <Link href="/privacy" className={linkClass}>
                   Privacidad
                 </Link>
+              </li>
+              <li>
+                <a href={`mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent("Problema en el Simulador de Elecciones")}`} className={linkClass}>
+                  Comunicar un problema
+                </a>
               </li>
               <li>
                 <a href={REPO_URL} className={linkClass}>

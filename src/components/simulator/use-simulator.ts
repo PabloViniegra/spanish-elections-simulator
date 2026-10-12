@@ -77,7 +77,7 @@ export function useSimulator(initial: SimulatorInitialState) {
     setAnchor(null);
     update(next);
   };
-  const reset = () => restart(baseline.scenario, `Escenario restablecido a los resultados de ${base.label}.`);
+  const reset = () => restart(baseline.scenario, `Escenario restablecido a los votos de ${base.label}.`);
   const changeBase = (id: string) => {
     startBaseChange(async () => {
       try {
@@ -142,6 +142,9 @@ export function useSimulator(initial: SimulatorInitialState) {
     baseline,
     simulation,
     ranked: rankedBlocs(blocs, simulation.seats),
+    editedBloc: mode === "national" && anchor?.scope === "national"
+      ? blocs.find((bloc) => bloc.id === anchor.field)
+      : undefined,
     stale,
     mode,
     setMode,

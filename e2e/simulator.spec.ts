@@ -18,8 +18,8 @@ test("a national edit moves the seats, and a reset can be undone", async ({ page
   await expect(page.getByRole("spinbutton", { name: "PSOE" })).not.toHaveValue("31.68");
   await expect(hemicycle(page)).not.toHaveAccessibleName(/PP 136,/);
 
-  await page.getByRole("button", { name: "Volver a los resultados de julio de 2023" }).click();
-  await expect(page.getByText("Escenario restablecido a los resultados de julio de 2023.")).toBeVisible();
+  await page.getByRole("button", { name: "Volver a los votos de julio de 2023" }).click();
+  await expect(page.getByText("Escenario restablecido a los votos de julio de 2023.")).toBeVisible();
   await expect(pp).toHaveValue("33.06");
 
   await page.getByRole("button", { name: "Deshacer" }).click();
@@ -27,7 +27,7 @@ test("a national edit moves the seats, and a reset can be undone", async ({ page
 });
 
 test("with manual balancing an excess is flagged until it is adjusted", async ({ page }) => {
-  await page.getByRole("checkbox", { name: "Cuadrar los porcentajes a mano" }).check();
+  await page.getByRole("checkbox", { name: "Ajuste manual" }).check();
   await page.getByRole("spinbutton", { name: "PP" }).fill("40");
   await expect(page.getByRole("spinbutton", { name: "PSOE" })).toHaveValue("31.68");
   await expect(page.getByText(/^Los porcentajes suman/)).toBeVisible();
@@ -41,7 +41,7 @@ test("changing the base election can be undone", async ({ page }) => {
   const base = page.getByRole("combobox", { name: "Votos de partida" });
   await base.selectOption({ label: "Generales de junio de 2016" });
   await expect(page.getByText("Votos de partida: generales de junio de 2016.")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Volver a los resultados de junio de 2016" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Volver a los votos de junio de 2016" })).toBeVisible();
 
   await page.getByRole("button", { name: "Deshacer" }).click();
   await expect(base).toHaveValue(/2023/);

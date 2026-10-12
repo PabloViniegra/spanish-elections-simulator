@@ -27,7 +27,7 @@ export function ShareRows(props: ShareRowsProps) {
       <legend className="sr-only">{legend}</legend>
       <div aria-hidden="true" className="flex justify-between border-b border-hairline pb-2 text-fine-print text-ink-muted-80">
         <span>Partido y % de voto válido</span>
-        <span>Escaños (frente a {baseLabel})</span>
+        <span>Escaños (frente a los votos de {baseLabel})</span>
       </div>
       {blocs.map((bloc) => {
         const blocSeats = seats.get(bloc.id) ?? 0;
@@ -44,7 +44,7 @@ export function ShareRows(props: ShareRowsProps) {
               </span>
               <span key={`delta-${delta}`} className={`tick text-caption sm:block ${delta === 0 ? "text-ink-muted-80" : "font-semibold"}`}>
                 {formatDelta(delta)}
-                <span className="sr-only"> respecto a {baseLabel}</span>
+                <span className="sr-only"> respecto a la simulación con los votos de {baseLabel}</span>
               </span>
             </p>
             <div className="col-span-2 sm:col-span-1">

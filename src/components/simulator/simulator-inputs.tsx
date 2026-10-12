@@ -2,7 +2,7 @@ import { useSyncExternalStore } from "react";
 import { baseOptions } from "@/lib/elections/base-options";
 import { othersShare, provinceSeats } from "@/lib/scenario/simulate";
 import { provinces } from "@/lib/provinces";
-import { simulationSeats } from "@/lib/elections/current";
+import { currentElection, simulationSeats } from "@/lib/elections/current";
 import { BaseSelect } from "./base-select";
 import { BlocManagerContainer } from "./bloc-manager-container";
 import { ModeSwitch } from "./mode-switch";
@@ -24,6 +24,17 @@ export function SimulatorInputs({ state }: { state: ReturnType<typeof useSimulat
         <BaseSelect bases={baseOptions} value={base.election.id} onChange={changeBase} />
         <ModeSwitch mode={mode} onChange={setMode} />
       </div>
+      <p className="text-caption text-pretty text-ink-muted-80">
+        Votos de partida: {base.label}. Reparto provincial de escaños: {currentElection.label}.
+        {" "}La comparación usa esos mismos escaños, no el resultado histórico oficial.
+      </p>
+      <details className="text-caption text-ink-muted-80">
+        <summary className="min-h-11 cursor-pointer py-3 font-semibold text-ink">Cómo se proyecta tu estimación</summary>
+        <div className="flex flex-col gap-2 pb-3 text-pretty">
+          <p>El voto de cada partido se distribuye tomando como referencia dónde obtuvo votos en la elección de partida. No es una encuesta ni una predicción de cómo votará cada provincia.</p>
+          <p>Puedes ajustar el voto en «Por provincia». «Otros partidos» agrupa el voto no modelado y no recibe escaños. Si falta un partido, añádelo en «Editar partidos» e introduce su porcentaje.</p>
+        </div>
+      </details>
       <p role="status" className={changingBase ? "text-caption" : "sr-only"}>{changingBase ? "Cargando votos de partida…" : ""}</p>
       <UndoNotice notice={notice} onUndo={undo} />
       <div key={mode} className="settle">
