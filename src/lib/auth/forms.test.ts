@@ -5,6 +5,7 @@ const validSignUp = {
   username: "ana.garcia",
   email: "ana@example.com",
   password: "contraseña-segura",
+  confirmPassword: "contraseña-segura",
   province: "28",
   usageProfile: "citizen",
 };
@@ -38,12 +39,27 @@ describe("signUpSchema", () => {
     ["username", "ana garcía"],
     ["email", "ana"],
     ["password", "corta"],
+    ["confirmPassword", ""],
+    ["confirmPassword", "otra-contraseña"],
     ["province", "53"],
     ["usageProfile", "admin"],
   ])("rejects an invalid %s (%s)", (field, value) => {
     const result = signUpSchema.safeParse({ ...validSignUp, [field]: value });
     expect(result.success).toBe(false);
     if (!result.success) expect(fieldErrorsOf(result.error)[field]).toBeTypeOf("string");
+  });
+
+  it("requires password confirmation even when it is omitted", () => {
+    const { confirmPassword: _confirmation, ...values } = validSignUp;
+    const result = signUpSchema.safeParse(values);
+    expect(result.success).toBe(false);
+    if (!result.success) expect(fieldErrorsOf(result.error).confirmPassword).toBeTypeOf("string");
+  });
+
+  it("does not trim passwords when comparing them", () => {
+    const result = signUpSchema.safeParse({ ...validSignUp, confirmPassword: `${validSignUp.password} ` });
+    expect(result.success).toBe(false);
+    if (!result.success) expect(fieldErrorsOf(result.error).confirmPassword).toBe("Las contraseñas no coinciden.");
   });
 });
 

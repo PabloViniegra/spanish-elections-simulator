@@ -47,11 +47,17 @@ export const signUpSchema = z.object({
     .regex(/^[a-zA-Z0-9_.]+$/, "Usa solo letras, números, punto o guion bajo."),
   email: z.email("Introduce un correo electrónico válido."),
   password: newPassword,
+  confirmPassword: z.string().min(1, "Confirma tu contraseña."),
   province: z.union([z.literal("").transform(() => undefined), provinceCode], {
     error: "Elige una provincia de la lista.",
   }),
   usageProfile: z.enum(usageProfile.options, { error: "Elige un perfil de uso." }),
+}).refine(({ password, confirmPassword }) => !confirmPassword || password === confirmPassword, {
+  path: ["confirmPassword"],
+  message: "Las contraseñas no coinciden.",
 });
+
+export type SignUpValues = z.input<typeof signUpSchema>;
 
 export function fieldErrorsOf(error: z.ZodError) {
   // Reversed so the first issue of each field wins.

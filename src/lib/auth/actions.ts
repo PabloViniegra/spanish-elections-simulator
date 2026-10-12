@@ -43,7 +43,7 @@ export async function signIn(_prev: FormState, formData: FormData): Promise<Form
 
 export async function signUp(_prev: FormState, formData: FormData): Promise<FormState> {
   const values = formValues(formData, ["username", "email", "province", "usageProfile"]);
-  const parsed = signUpSchema.safeParse({ ...values, ...formValues(formData, ["password"]) });
+  const parsed = signUpSchema.safeParse({ ...values, ...formValues(formData, ["password", "confirmPassword"]) });
   if (!parsed.success) return { values, fieldErrors: fieldErrorsOf(parsed.error) };
 
   const { username, email, password, province, usageProfile } = parsed.data;

@@ -1,9 +1,11 @@
+import type { ComponentProps } from "react";
+import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormAlert } from "@/components/forms/form-alert";
 import { PasswordField } from "@/components/forms/password-field";
 import { SelectField } from "@/components/forms/select-field";
 import { SubmitButton } from "@/components/forms/submit-button";
 import { TextField } from "@/components/forms/text-field";
-import type { FormState } from "@/lib/auth/forms";
+import type { SignUpValues } from "@/lib/auth/forms";
 import { usageProfileLabels } from "@/lib/auth/usage-profiles";
 import { provinces } from "@/lib/provinces";
 
@@ -15,23 +17,19 @@ const provinceOptions = [
 const usageProfileOptions = Object.entries(usageProfileLabels).map(([value, label]) => ({ value, label }));
 
 type RegisterFormProps = {
-  state: FormState;
-  action: (formData: FormData) => void;
+  register: UseFormRegister<SignUpValues>;
+  errors: FieldErrors<SignUpValues>;
+  onSubmit: ComponentProps<"form">["onSubmit"];
+  error?: string;
   pending: boolean;
-  // Where to go once signed in.
-  next: string;
 };
 
-export function RegisterForm({ state, action, pending, next }: RegisterFormProps) {
-  const values = state?.values;
-  const errors = state?.fieldErrors;
-
+export function RegisterForm({ register, errors, onSubmit, error, pending }: RegisterFormProps) {
   return (
-    <form action={action} noValidate className="flex flex-col gap-5">
-      <input type="hidden" name="next" value={next} />
+    <form onSubmit={onSubmit} noValidate className="flex flex-col gap-5">
       <TextField
         label="Nombre de usuario"
-        name="username"
+        {...register("username")}
         hint="Entre 3 y 30 caracteres: letras, números, punto o guion bajo."
         autoComplete="username"
         autoCapitalize="none"
@@ -40,29 +38,36 @@ export function RegisterForm({ state, action, pending, next }: RegisterFormProps
         minLength={3}
         maxLength={30}
         pattern="[a-zA-Z0-9_.]+"
-        defaultValue={values?.username}
-        error={errors?.username}
+        error={errors.username?.message}
       />
       <TextField
         label="Correo electrónico"
-        name="email"
+        {...register("email")}
         type="email"
         autoComplete="email"
         required
-        defaultValue={values?.email}
-        error={errors?.email}
+        error={errors.email?.message}
       />
       <PasswordField
         label="Contraseña"
-        name="password"
+        {...register("password")}
         hint="Mínimo 8 caracteres."
         autoComplete="new-password"
         required
         minLength={8}
         maxLength={128}
-        error={errors?.password}
+        error={errors.password?.message}
       />
-      <details open={Boolean(errors?.province || errors?.usageProfile)}>
+      <PasswordField
+        label="Confirmar contraseña"
+        {...register("confirmPassword")}
+        hint="Repite la contraseña anterior."
+        autoComplete="new-password"
+        required
+        maxLength={128}
+        error={errors.confirmPassword?.message}
+      />
+      <details open={Boolean(errors.province || errors.usageProfile)}>
         <summary className="flex min-h-11 cursor-pointer items-center px-1 text-caption text-primary">
           Añadir detalles (opcional)
         </summary>
@@ -72,22 +77,20 @@ export function RegisterForm({ state, action, pending, next }: RegisterFormProps
           </p>
           <SelectField
             label="Provincia (opcional)"
-            name="province"
+            {...register("province")}
             options={provinceOptions}
-            defaultValue={values?.province ?? ""}
-            error={errors?.province}
+            error={errors.province?.message}
           />
           <SelectField
             label="Perfil de uso"
             hint="Cuéntanos cómo vas a usar el simulador."
-            name="usageProfile"
+            {...register("usageProfile")}
             options={usageProfileOptions}
-            defaultValue={values?.usageProfile ?? "citizen"}
-            error={errors?.usageProfile}
+            error={errors.usageProfile?.message}
           />
         </div>
       </details>
-      <FormAlert message={state?.error} />
+      <FormAlert message={error} />
       <SubmitButton pending={pending} label="Crear cuenta" pendingLabel="Creando cuenta…" />
     </form>
   );
