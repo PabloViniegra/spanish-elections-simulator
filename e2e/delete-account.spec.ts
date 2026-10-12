@@ -27,6 +27,7 @@ test("deleting the account asks for the password and removes it", async ({ page 
 
   await page.getByLabel("Contraseña", { exact: true }).fill(account.password);
   await page.getByRole("button", { name: "Eliminar mi cuenta" }).click();
+  await page.waitForURL(/\/(?:\?account-deleted=1)?$/);
   await expect(page.getByText("Cuenta eliminada", { exact: true })).toBeVisible();
   await expect(page).toHaveURL(/\/$/);
   await page.goto("/profile");

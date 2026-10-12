@@ -64,7 +64,7 @@ test("editing a province fixes it until it goes back to the projection", async (
 });
 
 test("blocs can be renamed, added and restored", async ({ page }) => {
-  await page.getByText("Editar partidos").click();
+  await page.locator("summary").getByText("Editar partidos", { exact: true }).click();
   await page.getByLabel("Nombre de PP").fill("Populares");
   await expect(page.getByRole("spinbutton", { name: "Populares" })).toHaveValue("33.06");
 
