@@ -32,6 +32,13 @@ describe("allocateConstituency threshold (R-04, R-05)", () => {
     expect(result.awards).toEqual([]);
     expect(result.vacantSeats).toBe(3);
   });
+
+  it("elects the most voted candidacy in Ceuta and Melilla without a threshold (R-09)", () => {
+    const result = allocateConstituency({ ...constituency(1_000, [20, 30], 1), code: "51" }, "seed");
+    expect(result.candidacies.map((candidacy) => candidacy.excluded)).toEqual([false, false]);
+    expect(result.candidacies[1].seats).toBe(1);
+    expect(result.vacantSeats).toBe(0);
+  });
 });
 
 describe("allocateConstituency input checks", () => {

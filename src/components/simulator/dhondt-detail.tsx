@@ -23,7 +23,7 @@ export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, 
   const blocById = new Map(blocs.map((bloc) => [bloc.id, bloc]));
   const nameOf = (id: string) => blocById.get(id)?.name ?? id;
   const province = provinces.find((candidate) => candidate.code === code)?.name;
-  const { rows, lastSeat, runnerUp } = detail;
+  const { rows, lastSeat, runnerUp, belowThreshold } = detail;
   return (
     <section id={DHONDT_ID} aria-labelledby="dhondt-title" className="flex scroll-mt-16 flex-col gap-4">
       <div className="grid gap-4 lg:grid-cols-2 lg:items-end lg:gap-16">
@@ -63,14 +63,24 @@ export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, 
                 <dd className="font-semibold">
                   {nameOf(runnerUp.candidacyId)}, con {formatVotes(runnerUp.quotient)}
                   <span className="block font-normal">
-                    Le habrían hecho falta {formatVotes(runnerUp.votesToFlip)} votos más para ganar ese escaño a {nameOf(lastSeat.candidacyId)}.
+                    Le habrían hecho falta {formatVotes(runnerUp.votesToFlip)} votos más, sin que cambien los de los demás, para ganar ese escaño a{" "}
+                    {nameOf(lastSeat.candidacyId)}.
                   </span>
                 </dd>
               </div>
             )}
           </dl>
         ) : (
-          <p className="text-caption">Ningún partido pasa el 3 % en {province}: los escaños quedan vacantes.</p>
+          <p className="text-caption">
+            Ningún partido pasa el 3 % en {province}. La ley no prevé este caso; el simulador deja los escaños sin asignar.
+          </p>
+        )}
+        {belowThreshold.length > 0 && (
+          <p className="text-caption text-pretty text-ink-muted-80">
+            {belowThreshold.map(nameOf).join(", ")}{" "}
+            {belowThreshold.length === 1 ? "queda bajo el 3 %: no entra" : "quedan bajo el 3 %: no entran"} en el reparto aunque sus votos
+            superan el cociente del último escaño.
+          </p>
         )}
         {rows.length > 0 && (
           <QuotientTable

@@ -55,8 +55,14 @@ describe("dhondtDetail (FR-09)", () => {
     expect(runnerUp).toBeNull();
   });
 
+  it("flags candidacies the threshold left out despite beating the last quotient", () => {
+    // 2,900 of 100,000 valid votes is below 3%, yet above 97,000 / 40.
+    expect(detail([97_000, 2_900], 40, 100).belowThreshold).toEqual(["P1"]);
+    expect(detail([9_700, 300], 2, 1).belowThreshold).toEqual([]);
+  });
+
   it("has no last seat when every seat is vacant", () => {
-    expect(detail([20, 20], 3, 1_000)).toEqual({ rows: [], lastSeat: null, runnerUp: null });
+    expect(detail([20, 20], 3, 1_000)).toEqual({ rows: [], lastSeat: null, belowThreshold: [], runnerUp: null });
   });
 
   it("takes the last seat with exactly the votes it reports (property)", () => {

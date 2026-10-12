@@ -65,8 +65,9 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
               Cambia el voto y mira los 350 escaños del Congreso
             </h1>
             <p className="max-w-xl text-body text-pretty text-ink-muted-80">
-              Votos reales de unas generales con el reparto de escaños de referencia. Si cambias un partido, su voto varía en la misma proporción
-              en cada provincia.{" "}
+              Votos reales de unas generales con el reparto de escaños de referencia. Si cambias un partido, su voto varía aproximadamente en la
+              misma proporción en cada provincia, con un ajuste para que cada provincia sume el 100 % y el total nacional coincida con tu
+              cifra.{" "}
               <span className="font-semibold text-ink">Es una simulación, no una previsión.</span>
             </p>
           </div>

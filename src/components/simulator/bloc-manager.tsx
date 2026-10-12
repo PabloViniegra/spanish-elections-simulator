@@ -31,6 +31,10 @@ export function BlocManager(props: BlocManagerProps) {
           Cambia el nombre o el color de un partido, añade uno nuevo o decide con qué partido cuenta cada candidatura. Una candidatura que cambia
           de partido se lleva su porcentaje de {props.baseShort}; las que no cuentan con ninguno van a «Otros».
         </p>
+        <p className="text-caption text-pretty text-ink-muted-80">
+          La agrupación inicial es una convención del simulador, no un dato oficial: sigue las listas conjuntas de cada elección y cuenta las
+          marcas regionales con su partido. Puedes cambiarla.
+        </p>
         <ul aria-label="Partidos" className="flex flex-col border-t border-hairline">
           {blocs.map((bloc) => (
             <BlocRow

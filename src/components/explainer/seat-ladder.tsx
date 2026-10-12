@@ -22,7 +22,7 @@ export function SeatLadder() {
           </h2>
           <div className="flex flex-col gap-5">
             <p className="rise max-w-[30rem] text-body text-pretty text-ink-muted-80 [--c:1]">
-              Todas parten de 2 diputados, y Ceuta y Melilla tienen 1. Los 248 que quedan se reparten según la población. Por eso
+              Todas parten de 2 diputados, y Ceuta y Melilla tienen 1. Los 248 que quedan se reparten según la población de derecho (padrón) de cada provincia. Por eso
               Madrid elige {simulationSeats.get("28")} y Soria, {simulationSeats.get("42")}.
             </p>
             <p className="rise max-w-[30rem] text-caption text-pretty text-ink-muted-80 [--c:2]">

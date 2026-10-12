@@ -14,7 +14,7 @@ export function SeatContrast() {
           </h2>
           <p className="rise max-w-[30rem] text-body [--c:1] text-pretty text-ink-muted-80">
             Cada provincia parte de 2 escaños, y Ceuta y Melilla tienen 1. Los 248 restantes se
-            reparten según la población.
+            reparten según la población de derecho (padrón) de cada provincia.
           </p>
         </div>
         <ConstituencyDots />

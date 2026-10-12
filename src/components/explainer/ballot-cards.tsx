@@ -6,7 +6,7 @@ type PaperKind = "list" | "blank" | "spoilt" | "none";
 
 const ballots: { kind: string; verdict: string; detail: string; paper: PaperKind; tilt: string; depth: number }[] = [
   { kind: "Una candidatura", verdict: "Cuenta", detail: "Suma para su partido y para calcular el 3 %.", paper: "list", tilt: "-rotate-3", depth: 1.5 },
-  { kind: "En blanco", verdict: "Cuenta, a medias", detail: "Entra en el cálculo del 3 %, pero no da escaños. Un sobre vacío es un voto en blanco.", paper: "blank", tilt: "rotate-2", depth: -1 },
+  { kind: "En blanco", verdict: "Cuenta como válido", detail: "Entra en el cálculo del 3 %, pero no da escaños. Un sobre vacío es un voto en blanco.", paper: "blank", tilt: "rotate-2", depth: -1 },
   { kind: "Nulo", verdict: "No cuenta", detail: "Por ejemplo, una papeleta con nombres tachados o dos papeletas distintas en el sobre.", paper: "spoilt", tilt: "-rotate-1", depth: 2 },
   { kind: "No votar", verdict: "No cuenta", detail: "La abstención solo cambia la participación.", paper: "none", tilt: "rotate-3", depth: -0.5 },
 ];

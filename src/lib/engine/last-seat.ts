@@ -48,9 +48,19 @@ export function dhondtDetail(result: ConstituencyResult) {
       null,
     );
 
+  // Candidacies below 3% whose votes beat the last seat's quotient: the
+  // threshold, not D'Hondt, left them out (R-05).
+  const belowThreshold = lastSeat
+    ? result.candidacies
+        .filter((candidacy) => candidacy.excluded && candidacy.votes * lastSeat.divisor > lastSeat.votes)
+        .sort((a, b) => b.votes - a.votes || a.id.localeCompare(b.id))
+        .map(({ id }) => id)
+    : [];
+
   return {
     rows,
     lastSeat: lastSeat ?? null,
+    belowThreshold,
     runnerUp:
       runnerUp && last
         ? { ...runnerUp, quotient: runnerUp.votes / runnerUp.divisor, votesToFlip: votesToBeat(last, runnerUp) }

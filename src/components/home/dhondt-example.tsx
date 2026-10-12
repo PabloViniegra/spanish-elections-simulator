@@ -104,7 +104,8 @@ export function DhondtExample() {
             </table>
           </div>
           <p className="max-w-prose text-caption text-pretty text-ink-muted-80">
-            Los dos 20.000 empatan: el 3.º va al Partido A, que tiene más votos en total. El
+            Los dos 20.000 empatan: el 3.º va al Partido A, que tiene más votos en total. Aquí el empate solo
+            ordena los escaños, porque los dos lo consiguen; solo decide algo cuando queda un único escaño en juego. El
             recuadro claro es el primer cociente que se queda sin escaño.
           </p>
         </div>

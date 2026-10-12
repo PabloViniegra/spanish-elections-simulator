@@ -69,7 +69,7 @@ where r\_p is 1 for the provinces with the largest fractional parts until 248 se
 
 **R-08 Candidacies are per constituency.** A party may run under different labels or coalitions in different provinces. Nationally, results are aggregated through a user-editable mapping from local candidacy to national "bloc" (for example, a regional coalition counted with its national partner).
 
-**R-09 Single-seat constituencies.** Ceuta and Melilla follow the same algorithm; with 1 seat, D'Hondt reduces to plurality.
+**R-09 Single-seat constituencies.** Ceuta and Melilla elect the candidacy with the most votes (LOREG art. 163.2); the 3% threshold does not apply there.
 
 ## Projection model
 

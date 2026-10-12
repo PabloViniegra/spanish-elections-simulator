@@ -51,7 +51,7 @@ const takeaways = [
     figure: String(MAJORITY),
     unit: "escaños para la mayoría absoluta",
     title: "La cifra que se mira.",
-    text: "Es la mitad más uno de los 350 escaños del Congreso.",
+    text: "Es la mitad más uno de los 350 escaños del Congreso. Hace falta en la primera votación de investidura; en la segunda basta con más síes que noes.",
     depth: -1,
   },
 ];

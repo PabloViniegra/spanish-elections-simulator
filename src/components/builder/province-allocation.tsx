@@ -36,10 +36,10 @@ export function ProvinceAllocation({ provinceName, result, blocs }: ProvinceAllo
             ))}
           </ul>
         ) : (
-          <p className="text-caption text-ink-muted-80">Ningún partido pasa el 3 % todavía: los escaños quedan vacantes.</p>
+          <p className="text-caption text-ink-muted-80">Ningún partido pasa el 3 % todavía. La ley no prevé este caso; el simulador deja los escaños sin asignar.</p>
         )}
         {winners.length > 0 && result.vacantSeats > 0 && (
-          <p className="text-caption">{result.vacantSeats === 1 ? "1 escaño vacante." : `${result.vacantSeats} escaños vacantes.`}</p>
+          <p className="text-caption">{result.vacantSeats === 1 ? "1 escaño sin asignar." : `${result.vacantSeats} escaños sin asignar.`}</p>
         )}
       </div>
       {lastSeat && (
@@ -56,7 +56,7 @@ export function ProvinceAllocation({ provinceName, result, blocs }: ProvinceAllo
               <dt className="text-ink-muted-80">Primero que se queda fuera</dt>
               <dd className="font-semibold">
                 {nameOf(runnerUp.candidacyId)}
-                <span className="block font-normal">Le faltan {formatVotes(runnerUp.votesToFlip)} votos para ese escaño.</span>
+                <span className="block font-normal">Le faltan {formatVotes(runnerUp.votesToFlip)} votos para ese escaño, sin que cambien los de los demás.</span>
               </dd>
             </div>
           )}

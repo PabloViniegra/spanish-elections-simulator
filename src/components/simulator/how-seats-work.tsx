@@ -8,7 +8,7 @@ export function HowSeatsWork() {
       <div className="flex max-w-md flex-col gap-2 pb-4 text-pretty text-ink-muted-80">
         <p>Los 350 escaños se reparten en 52 circunscripciones: las 50 provincias, Ceuta y Melilla.</p>
         <p>
-          En cada una se descartan las candidaturas con menos del 3 % de los votos válidos. Con las demás se aplica la regla D’Hondt: los votos
+          En cada una se descartan las candidaturas con menos del 3 % de los votos válidos (en Ceuta y Melilla gana el candidato más votado). Con las demás se aplica la regla D’Hondt: los votos
           de cada candidatura se dividen entre 1, 2, 3… y los escaños van a los cocientes más altos.
         </p>
         <p>

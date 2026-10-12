@@ -49,6 +49,9 @@ export function CoalitionCalculator({ ranked, selected, onToggle, children }: Co
         </p>
         <CoalitionBar picked={pickedBlocs} total={total} />
       </div>
+      <p className="text-caption text-pretty text-ink-muted-80">
+        En la primera votación de investidura hacen falta {MAJORITY} votos; en la segunda basta con más síes que noes.
+      </p>
       {children}
     </section>
   );

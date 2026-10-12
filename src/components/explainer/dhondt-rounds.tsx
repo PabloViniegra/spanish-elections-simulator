@@ -59,7 +59,8 @@ export function DhondtRounds({ rounds, results }: { rounds: Round[]; results: Re
       </dl>
       <figcaption id="dhondt-rounds-note" className="text-caption text-pretty text-ink-muted-80">
         Ejemplo con datos inventados. En el 3.º turno, A y C empatan a 20.000: va primero A porque tiene más votos
-        originales. C recibe el siguiente escaño.
+        originales. C recibe el siguiente escaño. Aquí el empate solo ordena los escaños, porque los dos lo consiguen; solo decide
+        algo cuando queda un único escaño en juego.
       </figcaption>
     </figure>
   );

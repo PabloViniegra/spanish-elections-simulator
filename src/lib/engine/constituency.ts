@@ -1,13 +1,16 @@
+import { AUTONOMOUS_CITY_CODES } from "./constants";
 import { dhondt } from "./dhondt";
 import { passesThreshold, validVotes } from "./threshold";
 import type { ConstituencyResult, ConstituencyVotes } from "./types";
 
 // Allocates one constituency: threshold (R-04, R-05), then D'Hondt with tie
-// rules (R-06, R-07). Single-seat constituencies need no special case (R-09).
+// rules (R-06, R-07). Ceuta and Melilla elect the most voted candidacy with no
+// threshold (R-09, LOREG art. 163.2).
 export function allocateConstituency(constituency: ConstituencyVotes, lotSeed: string): ConstituencyResult {
   assertVotes(constituency);
   const valid = validVotes(constituency);
-  const eligible = constituency.candidacies.filter((candidacy) => passesThreshold(candidacy.votes, valid));
+  const plurality = AUTONOMOUS_CITY_CODES.includes(constituency.code);
+  const eligible = constituency.candidacies.filter((candidacy) => plurality || passesThreshold(candidacy.votes, valid));
   const { awards, vacantSeats } = dhondt(eligible, constituency.seats, `${lotSeed}:${constituency.code}`);
 
   const seatsById = new Map<string, number>();
