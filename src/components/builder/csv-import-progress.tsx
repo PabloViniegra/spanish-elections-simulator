@@ -42,7 +42,7 @@ export function CsvImportProgress({ steps, done, label, onRetry }: CsvImportProg
         ))}
       </ol>
       {onRetry && (
-        <button type="button" onClick={onRetry} className="min-h-11 w-fit rounded-full border border-ink px-5 text-caption font-semibold transition-[scale] duration-150 active:scale-[0.96]">
+        <button type="button" onClick={onRetry} className="min-h-11 w-fit rounded-full border border-ink px-5 text-caption font-semibold transition-[background-color,scale] hover:bg-canvas-parchment duration-150 active:scale-[0.96]">
           Reintentar el guardado
         </button>
       )}

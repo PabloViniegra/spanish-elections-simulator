@@ -116,6 +116,21 @@
     @apply outline-2 outline-offset-2 outline-primary-focus;
   }
 
+  /* Keep focused fields and anchor targets clear of the simulator's sticky
+     bars: the results strip (h-15, below lg) and the share budget under it. */
+  html:has([data-results-strip]) {
+    @apply scroll-pt-16;
+    @variant lg {
+      @apply scroll-pt-0;
+    }
+  }
+  html:has([data-share-budget]) {
+    @apply scroll-pt-28;
+    @variant lg {
+      @apply scroll-pt-12;
+    }
+  }
+
   /* Keep focused fields above the builder's mobile navigation. */
   html:has([data-builder-wizard]) {
     @apply scroll-pb-56;
@@ -156,6 +171,19 @@
 
   html {
     scrollbar-color: var(--color-ink-muted-48) transparent;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* No double-tap zoom delay on controls. */
+  :is(a, button, summary, label, input, select, textarea) {
+    touch-action: manipulation;
+  }
+
+  /* Underlined links and text buttons thicken their line under the pointer. */
+  @media (hover: hover) {
+    :is(a, button:enabled, summary):hover {
+      text-decoration-thickness: 2px;
+    }
   }
 }
 
@@ -269,7 +297,6 @@
   from {
     opacity: 0;
     transform: translateY(20px);
-    filter: blur(4px);
   }
 }
 
@@ -293,7 +320,6 @@
   from {
     opacity: 0;
     transform: translateY(20px);
-    filter: blur(4px);
   }
 }
 

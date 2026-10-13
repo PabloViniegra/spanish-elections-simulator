@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { connection } from "next/server";
 import { SiteAnalytics } from "@/components/analytics/site-analytics";
 import { Toaster } from "@/components/feedback/toaster";
@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   openGraph: SITE_OPEN_GRAPH,
   twitter: { card: "summary_large_image" },
 };
+
+// The header is black on every page; the site has no dark theme.
+export const viewport: Viewport = { themeColor: "#000000", colorScheme: "light" };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   // Nonces are request-specific, so HTML must never be prerendered.

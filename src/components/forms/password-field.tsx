@@ -29,7 +29,7 @@ export function PasswordField({ label, hint, error, ...inputProps }: PasswordFie
             type="button"
             aria-label={visible ? "Ocultar contraseña" : "Mostrar contraseña"}
             onClick={() => setVisible((current) => !current)}
-            className="absolute inset-y-0 right-1 rounded-sm px-4 text-caption text-primary"
+            className="absolute inset-y-0 right-1 rounded-sm px-4 text-caption text-primary hover:underline underline-offset-2"
           >
             {visible ? "Ocultar" : "Mostrar"}
           </button>

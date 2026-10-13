@@ -21,7 +21,7 @@ export function AuthCard({ title, description, children, footer, notice }: AuthC
             Simulador de Elecciones
           </Link>
           <h1 className="text-display-md leading-tight">{title}</h1>
-          <p className="text-body text-ink-muted-80">{description}</p>
+          <p className="text-body break-words text-ink-muted-80">{description}</p>
         </header>
         {notice}
         <div className="rounded-lg bg-canvas p-6 sm:p-8">{children}</div>

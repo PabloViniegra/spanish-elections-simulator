@@ -55,7 +55,7 @@ export function BuiltResults({ name, seatTable, ownerId, ranked, selected, onTog
       <div className="mx-auto flex max-w-content flex-col gap-10 px-5 py-10 sm:px-8">
         <div className="grid grid-cols-[minmax(0,1fr)] gap-10 [&>*]:min-w-0 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-x-16 lg:gap-y-6">
           <BuiltNationalTable {...table} />
-          <div id={RESULTS_ID} className="flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <div id={RESULTS_ID} className="flex flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <ResultsOverview ranked={ranked} selected={selected} disclaimer="Son unas elecciones construidas a mano, no una previsión." legendOnWide={false} />
             <ResultsActions
               share={ownerId && <BuiltShareContainer id={ownerId} />}

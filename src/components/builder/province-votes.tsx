@@ -33,7 +33,7 @@ export function ProvinceVotes({ provinceName, parties, previousYear, elsewhere, 
         Marca los partidos que se presentan y escribe sus votos. El 3 % se calcula sobre los votos válidos, que incluyen los votos en blanco.
         {elsewhere > 0 && ` ${elsewhere === 1 ? "Un partido de tu lista no se presentó" : `${elsewhere} partidos de tu lista no se presentaron`} nunca aquí.`}
       </p>
-      <button type="button" onClick={onFill} className="min-h-11 w-fit rounded-full border border-ink px-5 text-caption font-semibold">
+      <button type="button" onClick={onFill} className="min-h-11 w-fit rounded-full border border-ink px-5 text-caption font-semibold transition-colors duration-150 hover:bg-canvas-parchment">
         Rellenar los huecos con los votos de {previousYear}
       </button>
       <ul className="flex flex-col divide-y divide-hairline border-y border-hairline">

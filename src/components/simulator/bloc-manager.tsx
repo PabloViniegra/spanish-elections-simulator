@@ -52,7 +52,7 @@ export function BlocManager(props: BlocManagerProps) {
             type="button"
             onClick={props.onAdd}
             disabled={!props.canAdd}
-            className="min-h-11 rounded-sm bg-primary px-4 text-on-primary transition-[scale,background-color] duration-150 ease-snappy active:scale-[0.97] disabled:bg-ink-muted-48"
+            className="min-h-11 rounded-sm bg-primary px-4 text-on-primary transition-[scale,background-color] duration-150 ease-snappy enabled:hover:bg-primary-focus active:scale-[0.97] disabled:bg-ink-muted-48"
           >
             Añadir partido
           </button>

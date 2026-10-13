@@ -44,7 +44,7 @@ export function SimulatorContainer({ signedIn, initial, saved }: { signedIn: boo
           <div className="flex flex-col gap-6">
             <SimulatorInputs state={state} />
           </div>
-          <div id={RESULTS_ID} className="flex scroll-mt-16 flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+          <div id={RESULTS_ID} className="flex flex-col gap-6 lg:sticky lg:top-6 lg:col-start-2 lg:row-span-2 lg:row-start-1">
             <ResultsOverview ranked={ranked} stale={stale} selected={picked} disclaimer={`Es una simulación con los votos de ${base.label}, no una previsión.`} legendOnWide={mode === "province"} />
             <ResultsActions
               share={<ShareLinkContainer brokenLink={brokenLink} scenarioParam={scenarioParam} />}

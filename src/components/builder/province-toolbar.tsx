@@ -22,7 +22,7 @@ export function ProvinceToolbar({ allocation, stepper, save }: ProvinceToolbarPr
           <div className="absolute inset-x-0 bottom-full max-h-[40svh] overflow-y-auto border border-hairline bg-canvas p-4">
             <p className="mb-3 text-caption font-semibold">{allocation.provinceName}</p>
             {winners.length > 0 ? (
-              <ul aria-label="Reparto rápido" aria-live="polite" className="flex flex-col gap-2">
+              <ul aria-label="Reparto rápido" className="flex flex-col gap-2">
                 {winners.map(({ id, seats }) => (
                   <li key={id} className="flex min-w-0 justify-between gap-3 text-caption">
                     <span className="min-w-0 break-words [overflow-wrap:anywhere]">{allocation.blocs.get(id)?.name ?? id}</span>

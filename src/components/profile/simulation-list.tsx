@@ -68,7 +68,7 @@ type SimulationListProps = {
 export function SimulationList({ simulations, total, page, pages }: SimulationListProps) {
   return (
     <section aria-labelledby={LIST_HEADING_ID} className="flex flex-col gap-2">
-      <h2 id={LIST_HEADING_ID} tabIndex={-1} className="text-display-md outline-none">
+      <h2 id={LIST_HEADING_ID} tabIndex={-1} className="text-display-md">
         Tus simulaciones{total > 0 && <span className="text-ink-muted-48 tabular-nums"> · {total}</span>}
       </h2>
       {simulations.length === 0 ? (

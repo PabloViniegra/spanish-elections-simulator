@@ -38,7 +38,7 @@ export function ResultsStrip({ ranked, stale = false, selected, edited }: Result
   const { picked, summary } = summaryOf(ranked, selected);
   const feedback = edited && picked.length === 0 ? `${edited.name} ${edited.seats} escaños` : summary;
   return (
-    <a href={`#${RESULTS_ID}`} className="glass sticky top-0 z-10 block h-15 border-b border-hairline lg:hidden">
+    <a href={`#${RESULTS_ID}`} data-results-strip className="glass sticky top-0 z-10 block h-15 border-b border-hairline lg:hidden">
       <span className="sr-only">Ver el reparto de escaños</span>
       <span role="status" className="sr-only">{stale ? "Último reparto válido. " : ""}{feedback}</span>
       <div aria-hidden="true" className={`mx-auto flex h-full max-w-content flex-col justify-center gap-1.5 px-5 transition-opacity duration-150 sm:px-8 ${stale ? "opacity-65" : ""}`}>
