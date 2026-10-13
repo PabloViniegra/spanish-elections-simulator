@@ -64,7 +64,7 @@
     "tailwindcss": "^4",
     "topojson-client": "3.1.0",
     "tsx": "^4.23.15",
-    "typescript": "^5",
+    "typescript": "^7.0.2",
     "vitest": "^5.0.3"
   },
   "packageManager": "pnpm@11.2.2"
