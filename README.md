@@ -21,7 +21,7 @@ computed constituency by constituency as Spanish electoral law (LOREG) prescribe
 [![Vitest](https://img.shields.io/badge/Vitest-5-6E9F18?logo=vitest&logoColor=white)](https://vitest.dev)
 [![Playwright](https://img.shields.io/badge/Playwright-E2E-2EAD33?logo=playwright&logoColor=white)](https://playwright.dev)
 
-[About](#-about) · [Features](#-features) · [Getting Started](#-getting-started) · [Electoral Engine](#%EF%B8%8F-the-electoral-engine) · [Testing](#-testing) · [Roadmap](#%EF%B8%8F-roadmap)
+[About](#about) · [Features](#features) · [Getting Started](#getting-started) · [Electoral Engine](#the-electoral-engine) · [Testing](#testing) · [Roadmap](#roadmap)
 
 </div>
 
@@ -36,31 +36,31 @@ computed constituency by constituency as Spanish electoral law (LOREG) prescribe
 </tr>
 </table>
 
-## 📖 About
+## About
 
 Polls publish national vote shares, but seats are decided in **52 constituencies** with D'Hondt and a 3% threshold. The gap between "% of vote" and "seats" is where most public misunderstanding lives — and existing tools are opaque about how they get from one to the other.
 
 This simulator closes that gap:
 
-| | Principle | What it means |
-| :---: | --- | --- |
-| ⚖️ | **Faithful allocation** | The same inputs as the official count produce the same seats, following the LOREG (Organic Law 5/1985), Title II, arts. 161–163. |
-| 🔍 | **Explainability** | Every seat can be traced back to its D'Hondt quotient. |
-| 🔗 | **Shareability** | Any scenario is encoded in the URL, so links never expire and need no backend lookup. |
+| Principle | What it means |
+| --- | --- |
+| **Faithful allocation** | The same inputs as the official count produce the same seats, following the LOREG (Organic Law 5/1985), Title II, arts. 161–163. |
+| **Explainability** | Every seat can be traced back to its D'Hondt quotient. |
+| **Shareability** | Any scenario is encoded in the URL, so links never expire and need no backend lookup. |
 
-## ✨ Features
+## Features
 
 <table>
 <tr>
 <td width="50%" valign="top">
 
-### 🎛️ Two input modes
+### Two input modes
 Enter national shares projected to provinces, or edit every province in detail with locked overrides.
 
 </td>
 <td width="50%" valign="top">
 
-### 📈 Proportional swing projection
+### Proportional swing projection
 National shares become provincial shares over a base election (2016, Apr 2019, Nov 2019 or Jul 2023), then raked so the national aggregate matches the input exactly.
 
 </td>
@@ -68,13 +68,13 @@ National shares become provincial shares over a base election (2016, Apr 2019, N
 <tr>
 <td valign="top">
 
-### 🏛️ Rich visualisations
+### Rich visualisations
 Hemicycle chart, provincial map, coalition calculator and per-province D'Hondt quotient detail.
 
 </td>
 <td valign="top">
 
-### 🔎 Full transparency
+### Full transparency
 3% threshold handling, last-seat ties and deterministic lot resolution are all inspectable.
 
 </td>
@@ -82,13 +82,13 @@ Hemicycle chart, provincial map, coalition calculator and per-province D'Hondt q
 <tr>
 <td valign="top">
 
-### 🧮 Election builder
+### Election builder
 Enter every party's votes province by province, watch each D'Hondt allocation live and, once all 52 are complete, get the full Congreso with the same views, exports and read-only share links.
 
 </td>
 <td valign="top">
 
-### 📤 Sharing & exports
+### Sharing & exports
 The whole scenario lives in a single URL, with short links, CSV and PNG exports.
 
 </td>
@@ -96,20 +96,20 @@ The whole scenario lives in a single URL, with short links, CSV and PNG exports.
 <tr>
 <td valign="top">
 
-### 👤 Accounts
+### Accounts
 Sign in to edit and save simulations to a personal profile. Shared scenario links stay public and read-only.
 
 </td>
 <td valign="top">
 
-### ⚡ Instant recalculation
+### Instant recalculation
 The seat engine runs in the browser as a pure TypeScript module, recalculating on every keystroke.
 
 </td>
 </tr>
 </table>
 
-## 🧰 Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 | --- | --- |
@@ -127,7 +127,7 @@ The seat engine runs in the browser as a pure TypeScript module, recalculating o
 | **Tooling** | [pnpm](https://pnpm.io) · [tsx](https://github.com/privatenumber/tsx) |
 | **Hosting** | [Vercel](https://vercel.com) |
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -158,7 +158,7 @@ cp .env.example .env.local  # then fill in the values
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) and start simulating. 🗳️
+Open [http://localhost:3000](http://localhost:3000) and start simulating.
 
 ### Scripts
 
@@ -177,7 +177,7 @@ Open [http://localhost:3000](http://localhost:3000) and start simulating. 🗳�
 | `pnpm typecheck` | Generate Next.js types and run `tsc --noEmit` |
 | `pnpm test` | Run unit tests with Vitest |
 | `pnpm test:coverage` | Run unit tests with coverage |
-| `pnpm test:e2e` | Run Playwright end-to-end tests (see [Testing](#-testing)) |
+| `pnpm test:e2e` | Run Playwright end-to-end tests (see [Testing](#testing)) |
 | `pnpm test:e2e:db` | Start the end-to-end database |
 | `pnpm test:e2e:db:down` | Stop and discard the end-to-end database |
 | **Database & auth** | |
@@ -193,7 +193,7 @@ Open [http://localhost:3000](http://localhost:3000) and start simulating. 🗳�
 
 </details>
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 src/
@@ -218,20 +218,20 @@ drizzle/                  # SQL migrations
 > [!TIP]
 > The codebase follows the **container-presentational pattern**: containers hold data and state logic, presentational components render it.
 
-## 🏛️ The Electoral Engine
+## The Electoral Engine
 
 The seat engine (`src/lib/engine`) implements the Congreso rules as a pure, testable TypeScript module.
 
 ```mermaid
 flowchart LR
-    A["🗳️ National vote shares"] --> B["📈 Proportional swing<br/>over a base election"]
-    B --> C["⚖️ Raking to the<br/>national total"]
-    C --> D["🗺️ 52 provincial<br/>vote tables"]
-    M["✏️ Per-province input<br/>& locked overrides"] --> D
-    D --> E["🚧 3% threshold<br/>per constituency"]
-    E --> F["🧮 D'Hondt<br/>per constituency"]
-    S["🪑 Seats per<br/>constituency"] --> F
-    F --> G["🏛️ 350 seats<br/>in the Congreso"]
+ A["National vote shares"] --> B["Proportional swing<br/>over a base election"]
+ B --> C["Raking to the<br/>national total"]
+ C --> D["52 provincial<br/>vote tables"]
+ M["Per-province input<br/>& locked overrides"] --> D
+ D --> E["3% threshold<br/>per constituency"]
+ E --> F["D'Hondt<br/>per constituency"]
+ S["Seats per<br/>constituency"] --> F
+ F --> G["350 seats<br/>in the Congreso"]
 ```
 
 | Rules | Scope |
@@ -258,11 +258,11 @@ C wins 13% of the vote but no seat: in small constituencies the effective thresh
 
 </details>
 
-## 🔄 Data Pipeline
+## Data Pipeline
 
 Official per-province figures (seat counts, census, results) are preprocessed into static JSON with `pnpm data:build` and `pnpm map:build`. The app ships them as reference data — no backend lookup is needed to compute a scenario, and links keep working forever.
 
-## 🧪 Testing
+## Testing
 
 | Suite | Tooling | Coverage |
 | --- | --- | --- |
@@ -294,7 +294,7 @@ pnpm test:e2e:db:down  # throw it away
 
 </details>
 
-## 📚 Documentation
+## Documentation
 
 | Document | Contents |
 | --- | --- |
@@ -302,7 +302,7 @@ pnpm test:e2e:db:down  # throw it away
 | [`DESIGN.md`](DESIGN.md) | Visual and UX design notes |
 | [`PRODUCT.md`](PRODUCT.md) | Product rationale and scope |
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [x] Congreso seat engine faithful to the LOREG
 - [x] Two input modes and proportional swing projection
@@ -314,13 +314,13 @@ pnpm test:e2e:db:down  # throw it away
 - [ ] "What if" population scenarios for seat apportionment
 - [ ] Saved scenario history
 
-## 📄 License
+## License
 
 Distributed under the [MIT License](./LICENSE).
 
 <div align="center">
 <br />
 
-Made with ❤️ in Spain by [Pablo Viniegra](https://github.com/PabloViniegra)
+Made in Spain by [Pablo Viniegra](https://github.com/PabloViniegra)
 
 </div>
