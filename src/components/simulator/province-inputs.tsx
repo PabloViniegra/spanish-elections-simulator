@@ -44,7 +44,7 @@ export function ProvinceInputs(props: ProvinceInputsProps) {
   const locked = lockedCodes.includes(code);
   const nameOf = new Map(provinces.map((province) => [province.code, province.name]));
   return (
-    <section id={PROVINCE_INPUTS_ID} aria-labelledby="inputs-title" className="flex scroll-mt-16 flex-col gap-4">
+    <section id={PROVINCE_INPUTS_ID} aria-labelledby="inputs-title" className="flex flex-col gap-4">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="inputs-title" className="text-tagline">
           Voto por provincia

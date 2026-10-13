@@ -25,7 +25,7 @@ export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, 
   const province = provinces.find((candidate) => candidate.code === code)?.name;
   const { rows, lastSeat, runnerUp, belowThreshold } = detail;
   return (
-    <section id={DHONDT_ID} aria-labelledby="dhondt-title" className="flex scroll-mt-16 flex-col gap-4">
+    <section id={DHONDT_ID} aria-labelledby="dhondt-title" className="flex flex-col gap-4">
       <div className="grid gap-4 lg:grid-cols-2 lg:items-end lg:gap-16">
         <div className="flex flex-col gap-1">
           <h2 id="dhondt-title" className="text-tagline">

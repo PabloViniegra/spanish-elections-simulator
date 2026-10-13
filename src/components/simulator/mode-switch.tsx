@@ -20,7 +20,7 @@ export function ModeSwitch({ mode, onChange }: { mode: InputMode; onChange: (mod
           type="button"
           aria-pressed={mode === option.mode}
           onClick={() => onChange(option.mode)}
-          className="relative min-h-11 rounded-full px-4 text-caption font-semibold transition-[color,scale] duration-150 active:scale-[0.97] aria-pressed:text-on-dark motion-reduce:transition-none"
+          className="relative min-h-11 rounded-full px-4 text-caption font-semibold transition-[color,background-color,scale] duration-150 not-aria-pressed:hover:bg-canvas-parchment active:scale-[0.97] aria-pressed:text-on-dark motion-reduce:transition-none"
         >
           {option.label}
         </button>

@@ -40,7 +40,7 @@ export function CustomPartyAdder({ full, onAdd }: CustomPartyAdderProps) {
           type="button"
           onClick={add}
           disabled={!name.trim() || full}
-          className="min-h-11 shrink-0 rounded-sm bg-primary px-4 text-caption font-semibold text-on-primary disabled:bg-ink-muted-48"
+          className="min-h-11 shrink-0 rounded-sm bg-primary px-4 text-caption font-semibold text-on-primary transition-colors duration-150 enabled:hover:bg-primary-focus disabled:bg-ink-muted-48"
         >
           Crear
         </button>

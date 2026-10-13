@@ -45,6 +45,8 @@ export function RegisterForm({ register, errors, onSubmit, error, pending }: Reg
         {...register("email")}
         type="email"
         autoComplete="email"
+        spellCheck={false}
+        autoCapitalize="none"
         required
         error={errors.email?.message}
       />

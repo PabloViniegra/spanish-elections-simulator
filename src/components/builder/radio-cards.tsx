@@ -13,7 +13,7 @@ export function RadioCards<T extends string>({ legend, name, options, value, onC
     <fieldset className={className}>
       <legend className="mb-2 px-1 text-caption font-semibold">{legend}</legend>
       {options.map((option) => (
-        <label key={option.value} className="flex cursor-pointer items-start gap-3 rounded-sm border border-ink-muted-48 px-4 py-3 has-checked:border-ink">
+        <label key={option.value} className="flex cursor-pointer items-start gap-3 rounded-sm border border-ink-muted-48 px-4 py-3 transition-colors duration-150 hover:border-ink has-checked:border-ink">
           <input
             type="radio"
             name={name}

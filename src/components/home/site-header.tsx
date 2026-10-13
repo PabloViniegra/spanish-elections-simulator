@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { signOut } from "@/lib/auth/actions";
 import { MobileMenu } from "./mobile-menu";
-import { NavLink, type NavPage } from "./nav-link";
+import { BAR, NavLink, type NavPage } from "./nav-link";
 
 function SignOut({ className }: { className: string }) {
   return (
@@ -38,13 +38,13 @@ export function AccountLinks({ username, current, variant }: { username?: string
         {bar ? <span className="sr-only">Mi perfil: </span> : "Mi perfil · "}
         <span className={bar ? "max-w-40 truncate" : "truncate"} title={username}>{username}</span>
       </NavLink>
-      <SignOut className={bar ? "flex min-h-11 items-center" : "flex min-h-12 items-center"} />
+      <SignOut className={bar ? `flex items-center ${BAR}` : "flex min-h-12 items-center"} />
     </>
   ) : (
     <>
-      <Link href="/login" className={bar ? "flex min-h-11 items-center" : "flex min-h-12 items-center"}>Iniciar sesión</Link>
-      <Link href="/register" className={bar ? "group flex min-h-11 items-center" : "flex min-h-12 items-center text-primary-on-dark"}>
-        <span className={bar && current !== "simulator" ? "rounded-full bg-primary px-[15px] py-2 text-on-primary transition-transform duration-150 ease-snappy group-active:scale-[0.97]" : undefined}>Crear cuenta</span>
+      <Link href="/login" className={bar ? `flex items-center ${BAR}` : "flex min-h-12 items-center"}>Iniciar sesión</Link>
+      <Link href="/register" className={bar ? (current !== "simulator" ? "group flex min-h-11 items-center" : `flex items-center ${BAR}`) : "flex min-h-12 items-center text-primary-on-dark"}>
+        <span className={bar && current !== "simulator" ? "rounded-full bg-primary px-[15px] py-2 text-on-primary transition-[background-color,scale] duration-150 ease-snappy group-hover:bg-primary-focus group-active:scale-[0.97]" : undefined}>Crear cuenta</span>
       </Link>
     </>
   );

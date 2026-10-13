@@ -66,7 +66,7 @@ export function PartyPicker({ catalog, chosen, full, onAdd, label = "Buscar part
                 type="button"
                 onClick={() => onAdd(party)}
                 disabled={added || full}
-                className="min-h-11 shrink-0 rounded-full border border-ink px-4 text-caption font-semibold disabled:border-ink-muted-48 disabled:text-ink-muted-80"
+                className="min-h-11 shrink-0 rounded-full border border-ink px-4 text-caption font-semibold transition-colors duration-150 enabled:hover:bg-canvas-parchment disabled:border-ink-muted-48 disabled:text-ink-muted-80"
               >
                 {added ? "Añadido" : "Añadir"}
                 <span className="sr-only"> {party.acronym}</span>

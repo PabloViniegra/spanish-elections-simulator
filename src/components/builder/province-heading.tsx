@@ -39,7 +39,7 @@ export function ProvinceHeading({ name, position, seats, census, cast, status, c
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <p className="text-caption text-ink-muted-80">Provincia {position} de 52</p>
-        <h2 id={PROVINCE_HEADING_ID} tabIndex={-1} className="scroll-mt-6 text-display-md focus:outline-none">
+        <h2 id={PROVINCE_HEADING_ID} tabIndex={-1} className="scroll-mt-6 text-display-md">
           {name}
         </h2>
       </div>

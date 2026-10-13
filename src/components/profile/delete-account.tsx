@@ -38,7 +38,7 @@ export function DeleteAccount({ confirming, state, action, pending, onStart, onC
             <button
               type="submit"
               disabled={pending}
-              className="min-h-11 rounded-full bg-error px-[22px] py-[11px] text-body text-on-primary transition-[scale,background-color] duration-150 ease-snappy active:scale-[0.97] disabled:bg-ink-muted-48"
+              className="min-h-11 rounded-full bg-error px-[22px] py-[11px] text-body text-on-primary transition-[scale,background-color] duration-150 ease-snappy enabled:hover:bg-error/85 active:scale-[0.97] disabled:bg-ink-muted-48"
             >
               {pending ? "Eliminando cuenta…" : "Eliminar mi cuenta"}
             </button>

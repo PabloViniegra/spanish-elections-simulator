@@ -26,6 +26,8 @@ export function BlocRow({ bloc, removable, onRename, onRecolour, onRemove }: Blo
       />
       <input
         type="text"
+        name="party-name"
+        autoComplete="off"
         value={draft ?? bloc.name}
         maxLength={BLOC_NAME_MAX}
         onChange={(event) => {
