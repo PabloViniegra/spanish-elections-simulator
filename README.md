@@ -114,6 +114,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser to see the r
 | `pnpm test` | Run unit tests with Vitest |
 | `pnpm test:coverage` | Run unit tests with coverage |
 | `pnpm test:e2e` | Run Playwright end-to-end tests (see [Testing](#testing)) |
+| `pnpm test:e2e:db` | Start the end-to-end database |
+| `pnpm test:e2e:db:down` | Stop and discard the end-to-end database |
 | `pnpm db:generate` | Generate Drizzle migrations |
 | `pnpm db:migrate` | Apply Drizzle migrations |
 | `pnpm db:studio` | Open Drizzle Studio |
@@ -169,10 +171,10 @@ Official per-province figures (seat counts, census, results) are preprocessed in
 The signed-in tests need a real database, so they never touch Neon or the one in `.env.local`. `compose.e2e.yml` starts a throwaway Postgres 17, kept in memory and built from the Drizzle migrations in `drizzle/`, behind [local-neon-http-proxy](https://github.com/TimoWilhelm/local-neon-http-proxy) on port 4444 so the Neon driver can talk to it unchanged.
 
 ```bash
-docker compose -f compose.e2e.yml up -d --wait  # start the database
+pnpm test:e2e:db       # start the database
 pnpm build
 pnpm test:e2e
-docker compose -f compose.e2e.yml down          # throw it away
+pnpm test:e2e:db:down  # throw it away
 ```
 
 - Playwright points the server at `postgres://postgres:postgres@db.localtest.me:5432/main`. `db.localtest.me` resolves to `127.0.0.1`, and only that host switches the driver to the local proxy.
