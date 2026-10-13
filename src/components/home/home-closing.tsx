@@ -8,7 +8,7 @@ import { ElectionReference } from "../legal/election-reference";
 export function HomeClosing() {
   return (
     <>
-      <section aria-labelledby="closing-title" className="rise-scope bg-primary text-on-primary [&_:focus-visible]:outline-on-primary">
+      <section aria-labelledby="closing-title" className="rise-scope overflow-clip bg-primary text-on-primary [&_:focus-visible]:outline-on-primary">
         <div className="mx-auto flex max-w-content flex-col items-center gap-6 px-5 py-section text-center sm:px-8 lg:py-32">
           <h2 id="closing-title" className={`rise [--c:0] ${closingTitle}`}>
             Tú pones los porcentajes.
@@ -25,7 +25,7 @@ export function HomeClosing() {
             src={ballotBox}
             alt=""
             sizes="(max-width: 639px) calc(100vw - 40px), (max-width: 831px) calc(100vw - 64px), 768px"
-            className="mt-6 h-auto w-full max-w-3xl"
+            className="zoom-in mt-6 h-auto w-full max-w-3xl"
           />
         </div>
       </section>

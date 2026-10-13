@@ -1,12 +1,13 @@
+import { cssVar } from "@/lib/css-var";
 import { simulationSeats } from "@/lib/elections/current";
 import { ConstituencyDots } from "./constituency-dots";
 import { sectionTitle } from "./type";
 
 export function SeatContrast() {
   return (
-    <section aria-labelledby="contrast-title" className="bg-canvas-parchment">
+    <section aria-labelledby="contrast-title" className="depth-scope overflow-clip bg-canvas-parchment">
       <div className="mx-auto grid max-w-content gap-12 px-5 py-section sm:px-8 lg:grid-cols-2 lg:items-center lg:gap-16 lg:py-32">
-        <div className="rise-scope flex flex-col gap-5">
+        <div style={cssVar("--d", 4)} className="depth rise-scope flex flex-col gap-5">
           <h2 id="contrast-title" className={`rise [--c:0] ${sectionTitle}`}>
             En Soria, <span className="text-[1.3em] tracking-[-0.04em]">2.</span>
             <br />
@@ -17,7 +18,11 @@ export function SeatContrast() {
             reparten según la población de derecho (padrón) de cada provincia.
           </p>
         </div>
-        <ConstituencyDots />
+        <div style={cssVar("--d", -6)} className="depth">
+          <div className="zoom-in">
+            <ConstituencyDots />
+          </div>
+        </div>
       </div>
     </section>
   );

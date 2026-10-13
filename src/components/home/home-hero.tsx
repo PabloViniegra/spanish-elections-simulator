@@ -4,11 +4,13 @@ import { SeatCount } from "./seat-count";
 import { pageTitle } from "./type";
 import type { ReactNode } from "react";
 
+// The copy lifts away faster than the seat count, which sinks behind it; on wide
+// screens the hero pins while the copy recedes and the hemicycle zooms in.
 export function HomeHero({ actions }: { actions?: ReactNode }) {
   return (
-    <section aria-labelledby="home-title" className="focus-on-dark bg-surface-black text-on-dark">
-      <div className="mx-auto flex max-w-content flex-col items-center gap-14 px-5 pt-12 pb-6 lg:min-h-[calc(100svh-2.75rem)] lg:justify-between lg:gap-8 text-center sm:px-8 lg:pt-16">
-        <div className="flex flex-col items-center gap-6">
+    <section aria-labelledby="home-title" className="lift-scope pin-scope focus-on-dark overflow-clip bg-surface-black text-on-dark">
+      <div className="pin-stage mx-auto flex max-w-content flex-col items-center gap-14 px-5 pt-12 pb-6 lg:min-h-[calc(100svh-2.75rem)] lg:justify-between lg:gap-8 text-center sm:px-8 lg:pt-16">
+        <div className="lift-away pin-copy flex flex-col items-center gap-6">
           <h1 id="home-title" className={`hero-rise [--c:0] ${pageTitle}`}>
             350 escaños. <br className="lg:hidden" />
             52 repartos.
@@ -24,9 +26,11 @@ export function HomeHero({ actions }: { actions?: ReactNode }) {
             Sin cuenta; regístrate solo para guardar. Es una simulación, no una previsión.
           </p>
         </div>
-        <CountReplay>
-          <SeatCount />
-        </CountReplay>
+        <div className="sink pin-zoom w-full">
+          <CountReplay>
+            <SeatCount />
+          </CountReplay>
+        </div>
       </div>
     </section>
   );
