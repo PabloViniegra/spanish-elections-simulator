@@ -1,6 +1,7 @@
 import { APIError } from "better-auth/api";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { Consume, Limit } from "@/lib/rate-limit/rules";
+import { SERVER_ERROR } from "@/lib/server-error";
 import { attemptAuth } from "./attempt";
 
 const values = { identifier: "ana" };
@@ -39,8 +40,11 @@ describe("attemptAuth", () => {
     });
   });
 
-  it("lets unexpected failures reach the error boundary", async () => {
+  it("keeps the form on an unexpected failure, with a generic message", async () => {
     const { call } = fakeCall(new Error("database down"));
-    await expect(attemptAuth(values, limits, allow, call)).rejects.toThrow("database down");
+    const logged = vi.spyOn(console, "error").mockImplementation(() => {});
+    expect(await attemptAuth(values, limits, allow, call)).toEqual({ values, error: SERVER_ERROR });
+    expect(logged).toHaveBeenCalledOnce();
+    logged.mockRestore();
   });
 });

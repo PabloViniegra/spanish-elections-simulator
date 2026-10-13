@@ -76,7 +76,7 @@ test("another user cannot read private save metadata, overwrite, rename or delet
     });
     await page.getByRole("button", { name: `Eliminar «${ownName}»` }).click();
     await page.getByRole("button", { name: "Sí, eliminar" }).click();
-    await expect(page.getByText("No se pudo eliminar", { exact: true })).toBeVisible();
+    await expect(page.getByText("No se ha podido eliminar la simulación", { exact: true })).toBeVisible();
     expect(forged).toBe(true);
     expect(await foreignRow()).toEqual(before);
   } finally {

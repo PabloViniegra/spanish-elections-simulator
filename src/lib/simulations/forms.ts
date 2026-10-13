@@ -9,7 +9,7 @@ export const simulationName = z.string().trim().min(1, "Ponle un nombre a la sim
 const scenario = z
   .string()
   .max(SCENARIO_MAX)
-  .refine((param) => restoreScenario(param) !== null, "El escenario no es válido.");
+  .refine((param) => restoreScenario(param) !== null, "No se ha podido leer este reparto. Recarga la página e inténtalo de nuevo.");
 
 export const saveSimulationSchema = z.object({ name: simulationName, scenario });
 

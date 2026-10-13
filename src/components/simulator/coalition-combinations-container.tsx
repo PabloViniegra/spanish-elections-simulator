@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { Notice } from "@/components/feedback/notice";
 import type { Bloc } from "@/lib/elections/types";
 import { MAJORITY } from "@/lib/hemicycle-layout";
 import type { CoalitionPage, CoalitionRequest } from "@/lib/scenario/coalition-page";
@@ -31,7 +32,16 @@ function CoalitionPageResults({ ranked, page, size, onPage }: { ranked: Ranked; 
     return () => worker.terminate();
   }, [ranked, page, size, attempt]);
 
-  if (failed) return <p role="alert">No se han podido calcular las combinaciones. <button type="button" className="min-h-11 px-3 font-semibold underline underline-offset-2" onClick={() => { setFailed(false); setAttempt(attempt + 1); }}>Reintentar</button></p>;
+  if (failed) {
+    return (
+      <Notice tone="error" role="alert">
+        No se han podido calcular las combinaciones.{" "}
+        <button type="button" className="-my-3 min-h-11 font-semibold underline underline-offset-2" onClick={() => { setFailed(false); setAttempt(attempt + 1); }}>
+          Reintentar
+        </button>
+      </Notice>
+    );
+  }
   if (!result) return <p role="status">Calculando combinaciones…</p>;
   return <CoalitionCombinations rows={result.rows} names={new Map(ranked.map(({ id, name }) => [id, name]))} page={result.page} pages={Math.max(1, Math.ceil(result.total / size))} total={result.total} busy={result.page !== page} onPage={onPage} />;
 }

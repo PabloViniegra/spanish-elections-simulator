@@ -87,6 +87,6 @@ const authErrorMessages = new Map([
 export function authErrorMessage(code: string | undefined): string {
   return (
     authErrorMessages.get(code ?? "") ??
-    "No se ha podido completar la operación. Inténtalo de nuevo."
+    "No se ha podido completar la operación. Revisa los datos e inténtalo de nuevo."
   );
 }

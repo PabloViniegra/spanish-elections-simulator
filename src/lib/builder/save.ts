@@ -3,7 +3,7 @@ import { fieldErrorsOf, formValues } from "@/lib/auth/forms";
 import { MAX_SIMULATIONS, type SaveState, simulationName } from "@/lib/simulations/forms";
 import type { InsertIfRoom } from "@/lib/simulations/save";
 import type { BuilderReference } from "./allocate";
-import { NO_PARTIES } from "./messages";
+import { INVALID_BUILT, NO_PARTIES } from "./messages";
 import { validBuilt } from "./schema";
 
 // Compare-and-swap against the revision loaded by this editor; the new
@@ -15,7 +15,6 @@ export type DraftState = { saved: true; revision: number } | { error: string };
 const signedOut = "Tu sesión ha caducado. Inicia sesión de nuevo para guardar.";
 const full = `Ya tienes ${MAX_SIMULATIONS} simulaciones guardadas. Borra alguna desde tu perfil para crear otra.`;
 const conflict = "No se han guardado los cambios: estas elecciones han cambiado en otra pestaña o ya no están en tu perfil. Conserva tus cambios antes de recargar.";
-const invalid = "Los datos de las elecciones no son válidos. Recarga la página e inténtalo de nuevo.";
 
 const createSchema = z.object({
   name: simulationName,
@@ -39,7 +38,7 @@ export async function createBuiltAs(
   if (!parsed.success) return { fieldErrors: fieldErrorsOf(parsed.error) };
   const { name, seatTable, parties, provinces } = parsed.data;
 
-  const broken: SaveState = provinces ? { error: "Los votos importados no son válidos." } : { fieldErrors: { parties: "La lista de partidos no es válida." } };
+  const broken: SaveState = provinces ? { error: "No se han podido leer los votos importados. Vuelve a importar el archivo." } : { fieldErrors: { parties: "No se ha podido leer la lista de partidos. Recarga la página y vuelve a elegirlos." } };
   let json: string;
   try {
     json = JSON.stringify({ schemaVersion: 1, seatTable, parties: JSON.parse(parties), provinces: provinces ? JSON.parse(provinces) : {} });
@@ -64,7 +63,7 @@ export async function saveBuiltDraftAs(
   revision: number,
 ): Promise<DraftState> {
   if (!userId) return { error: signedOut };
-  if (!id || !validBuilt(json, reference)) return { error: invalid };
+  if (!id || !validBuilt(json, reference)) return { error: INVALID_BUILT };
   const next = await updateOwned(userId, id, json, revision);
   return next === null ? { error: conflict } : { saved: true, revision: next };
 }

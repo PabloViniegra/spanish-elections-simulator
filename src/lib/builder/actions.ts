@@ -7,11 +7,13 @@ import { z } from "zod";
 import { getSession } from "@/lib/auth/session";
 import { autosaveLimits, clientIp, firstBlocked, shortLinkLimits, tooManyAttempts } from "@/lib/rate-limit/rules";
 import { consume } from "@/lib/rate-limit/store";
+import { serverFailure } from "@/lib/server-error";
 import { storeShortLink } from "@/lib/short-links/queries";
 import type { SaveState } from "@/lib/simulations/forms";
 import { insertSimulationIfRoom } from "@/lib/simulations/queries";
 import { builderHref, builderResultsHref } from "./address";
 import { isComplete } from "./allocate";
+import { INVALID_BUILT } from "./messages";
 import { findBuilt, updateOwnedBuilt } from "./queries";
 import { builderReference } from "./reference";
 import { createBuiltAs, type DraftState, saveBuiltDraftAs } from "./save";
@@ -25,7 +27,7 @@ const json = z.string().max(BUILT_SCENARIO_MAX);
 // were imported, or returns why it was not created.
 export async function createBuilt(_prev: SaveState, formData: FormData): Promise<SaveState> {
   const session = await getSession();
-  const state = await createBuiltAs(session?.user.id, formData, insertSimulationIfRoom, builderReference);
+  const state: SaveState = await createBuiltAs(session?.user.id, formData, insertSimulationIfRoom, builderReference).catch(serverFailure);
   if (!state?.id) return state;
   revalidatePath("/profile");
   redirect(formData.get("provinces") ? builderResultsHref(state.id) : builderHref(state.id));
@@ -34,7 +36,7 @@ export async function createBuilt(_prev: SaveState, formData: FormData): Promise
 export async function saveBuiltDraft(simulationId: string, scenario: string, revision: number): Promise<DraftState> {
   const session = await getSession();
   const input = z.tuple([id, json, z.int().nonnegative()]).safeParse([simulationId, scenario, revision]);
-  if (!input.success) return { error: "Los datos de las elecciones no son válidos." };
+  if (!input.success) return { error: INVALID_BUILT };
   const blocked = session ? await firstBlocked(autosaveLimits(session.user.id), consume) : null;
   if (blocked !== null) return { error: tooManyAttempts(blocked) };
   // No revalidation: it would re-render the wizard with every save and could

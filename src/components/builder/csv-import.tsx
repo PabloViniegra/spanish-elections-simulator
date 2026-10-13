@@ -1,4 +1,5 @@
 import type { ComponentProps } from "react";
+import { Notice } from "@/components/feedback/notice";
 import type { ImportIssue } from "@/lib/builder/import";
 import { CsvFilePicker } from "./csv-file-picker";
 import { CsvImportIssues } from "./csv-import-issues";
@@ -38,16 +39,16 @@ export function CsvImport({ censusYear, clashes, picker, issues, preview, progre
         </div>
         <div className="flex min-w-0 flex-col gap-6">
           {clashes.length > 0 ? (
-            <p role="alert" className="text-caption text-error">
+            <Notice tone="error" role="alert">
               Dos columnas se llamarían {clashes.map((name) => `«${name}»`).join(", ")}. Quita uno de esos partidos de tu lista para poder usar la plantilla.
-            </p>
+            </Notice>
           ) : (
             <CsvFilePicker {...picker} />
           )}
           {issues && <CsvImportIssues issues={issues} />}
           {preview && (
             <CsvImportPreview rows={preview.rows} blank={preview.blank} valid={preview.valid}>
-              <p className={`text-caption ${preview.replaced > 0 ? "text-error" : "text-ink-muted-80"}`}>
+              <p className={`text-caption ${preview.replaced > 0 ? "font-semibold text-warning" : "text-ink-muted-80"}`}>
                 {preview.replaced === 0
                   ? "Todavía no has escrito votos, así que no se pierde nada."
                   : `Se reemplazarán los votos de ${preview.replaced === 1 ? "la provincia que ya habías empezado" : `las ${preview.replaced} provincias que ya habías empezado`}. No se puede deshacer.`}

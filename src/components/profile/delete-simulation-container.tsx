@@ -11,7 +11,7 @@ export function DeleteSimulationContainer({ id, name }: { id: string; name: stri
     startTransition(async () => {
       const deleted = await deleteSimulation(id).catch(() => false);
       if (!deleted) {
-        notify.error({ title: "No se pudo eliminar", description: "Comprueba tu conexión e inténtalo de nuevo." });
+        notify.error({ title: "No se ha podido eliminar la simulación", description: "Comprueba tu conexión e inténtalo de nuevo." });
         return;
       }
       notify.success({ title: "Simulación eliminada", description: `«${name}» ya no está en tu perfil.` });

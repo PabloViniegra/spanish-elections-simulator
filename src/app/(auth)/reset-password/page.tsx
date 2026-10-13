@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { ResetPasswordFormContainer } from "@/components/auth/reset-password-form-container";
+import { Notice } from "@/components/feedback/notice";
 
 export const metadata: Metadata = { title: "Cambiar la contraseña" };
 
@@ -28,13 +29,13 @@ export default async function ResetPasswordPage({ searchParams }: ResetPasswordP
       {token && !error ? (
         <ResetPasswordFormContainer token={token} />
       ) : (
-        <p role="alert" className="text-body text-error">
+        <Notice tone="error" role="alert">
           El enlace para cambiar la contraseña no es válido o ha caducado.{" "}
           <Link href="/forgot-password" className="underline">
             Pide uno nuevo
           </Link>
           .
-        </p>
+        </Notice>
       )}
     </AuthCard>
   );

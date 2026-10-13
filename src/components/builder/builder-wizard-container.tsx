@@ -39,7 +39,7 @@ export function BuilderWizardContainer({ id, name, initial, revision, start }: B
   const discard = () =>
     startDiscard(async () => {
       if (!(await deleteSimulation(id).catch(() => false))) {
-        notify.error({ title: "No se pudieron descartar", description: "Comprueba tu conexión e inténtalo de nuevo." });
+        notify.error({ title: "No se han podido descartar las elecciones", description: "Comprueba tu conexión e inténtalo de nuevo." });
         return;
       }
       autosave.discard();

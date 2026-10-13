@@ -25,7 +25,7 @@ async function HomeActions() {
 
 async function AccountDeletedNotice({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
   const { "account-deleted": accountDeleted } = await searchParams;
-  return accountDeleted ? <FlashToast title="Cuenta eliminada" description="Hemos borrado tus datos y te hemos enviado un correo de confirmación." /> : null;
+  return accountDeleted ? <FlashToast param="account-deleted" title="Cuenta eliminada" description="Hemos borrado tus datos y te hemos enviado un correo de confirmación." /> : null;
 }
 
 export default function Home({ searchParams }: PageProps<"/">) {

@@ -23,7 +23,7 @@ test("email verification rejects invalid tokens and enables sign-in with a valid
   await page.goto("/login?next=%2Fprofile");
   await page.getByLabel("Usuario o correo electrónico").fill(email);
   await page.getByLabel("Contraseña", { exact: true }).fill(password);
-  await page.getByRole("button", { name: "Iniciar sesión" }).click();
+  await page.getByRole("button", { name: "Iniciar sesión", exact: true }).click();
   await expect(page).toHaveURL(/\/login\?next=%2Fprofile$/);
   await expect(page.getByRole("alert").filter({ hasText: "Confirma tu correo" })).toBeVisible();
   await page.goto("/profile");
@@ -41,9 +41,11 @@ test("email verification rejects invalid tokens and enables sign-in with a valid
   }
   await page.goto(`/api/auth/verify-email?token=${token}&callbackURL=${encodeURIComponent(callback)}`);
   expect(await verified()).toBe(true);
-  await expect(page).toHaveURL(/\/login\?verified=1&next=%2Fprofile$/);
+  await expect(page.getByText("Correo confirmado", { exact: true })).toBeVisible();
+  // The toast drops its trigger but keeps where to go after signing in.
+  await expect(page).toHaveURL(/\/login\?next=%2Fprofile$/);
   await page.getByLabel("Usuario o correo electrónico").fill(email);
   await page.getByLabel("Contraseña", { exact: true }).fill(password);
-  await page.getByRole("button", { name: "Iniciar sesión" }).click();
+  await page.getByRole("button", { name: "Iniciar sesión", exact: true }).click();
   await expect(page).toHaveURL(/\/profile$/);
 });

@@ -6,13 +6,14 @@ import { z } from "zod";
 import { getSession } from "@/lib/auth/session";
 import { db } from "@/lib/db/client";
 import { simulation } from "@/lib/db/schema";
+import { serverFailure } from "@/lib/server-error";
 import type { SaveState } from "./forms";
 import { insertSimulationIfRoom, updateOwnedSimulation } from "./queries";
 import { saveSimulationAs, updateSimulationAs } from "./save";
 
 export async function saveSimulation(_prev: SaveState, formData: FormData): Promise<SaveState> {
   const session = await getSession();
-  const state = await saveSimulationAs(session?.user.id, formData, insertSimulationIfRoom);
+  const state: SaveState = await saveSimulationAs(session?.user.id, formData, insertSimulationIfRoom).catch(serverFailure);
   if (state?.saved) revalidatePath("/profile");
   return state;
 }
@@ -20,7 +21,7 @@ export async function saveSimulation(_prev: SaveState, formData: FormData): Prom
 // Renames a saved simulation, or overwrites it with the scenario sent.
 export async function updateSimulation(_prev: SaveState, formData: FormData): Promise<SaveState> {
   const session = await getSession();
-  const state = await updateSimulationAs(session?.user.id, formData, updateOwnedSimulation);
+  const state: SaveState = await updateSimulationAs(session?.user.id, formData, updateOwnedSimulation).catch(serverFailure);
   if (state?.saved) revalidatePath("/profile");
   return state;
 }

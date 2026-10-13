@@ -1,8 +1,10 @@
+import { Notice } from "@/components/feedback/notice";
+
 export function FormAlert({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <p role="alert" tabIndex={-1} className="settle rounded-sm border border-error px-4 py-3 text-caption text-error">
+    <Notice tone="error" role="alert" focusable>
       {message}
-    </p>
+    </Notice>
   );
 }

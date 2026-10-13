@@ -1,3 +1,5 @@
+import { Notice } from "@/components/feedback/notice";
+
 const iconProps = {
   "aria-hidden": true,
   viewBox: "0 0 20 20",
@@ -35,9 +37,9 @@ export function ShareLink({ brokenLink, copied, onCopy }: ShareLinkProps) {
   return (
     <div className="contents">
       {brokenLink && (
-        <p role="status" className="w-full rounded-sm border border-error p-3 text-caption">
+        <Notice tone="warning" role="status" className="w-full">
           El enlace no es válido o es de otra versión. Se muestran los resultados de 2023.
-        </p>
+        </Notice>
       )}
       <button
         type="button"

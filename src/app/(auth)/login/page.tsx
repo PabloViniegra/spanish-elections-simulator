@@ -3,6 +3,8 @@ import Link from "next/link";
 import { AuthCard } from "@/components/auth/auth-card";
 import { LoginFormContainer } from "@/components/auth/login-form-container";
 import { SimulatorGate } from "@/components/auth/simulator-gate";
+import { FlashToast } from "@/components/feedback/flash-toast";
+import { Notice } from "@/components/feedback/notice";
 import { leadsToSimulator, safeNextPath, withNext } from "@/lib/auth/next-path";
 
 export const metadata: Metadata = { title: "Iniciar sesión" };
@@ -29,20 +31,12 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         </>
       }
     >
-      {verified && (
-        <p role="status" className="mb-5 rounded-sm border border-primary px-4 py-3 text-caption text-primary">
-          Correo confirmado. Ya puedes iniciar sesión.
-        </p>
-      )}
-      {reset && (
-        <p role="status" className="mb-5 rounded-sm border border-primary px-4 py-3 text-caption text-primary">
-          Contraseña cambiada. Inicia sesión con la nueva.
-        </p>
-      )}
+      {verified && <FlashToast param="verified" title="Correo confirmado" description="Ya puedes iniciar sesión." />}
+      {reset && <FlashToast param="reset" title="Contraseña cambiada" description="Inicia sesión con la nueva." />}
       {error && (
-        <p role="alert" className="mb-5 rounded-sm border border-error px-4 py-3 text-caption text-error">
+        <Notice tone="error" role="alert" className="mb-5">
           El enlace de confirmación no es válido o ha caducado. Inicia sesión para recibir uno nuevo.
-        </p>
+        </Notice>
       )}
       <LoginFormContainer next={next} />
     </AuthCard>

@@ -71,7 +71,7 @@ describe("authErrorMessage", () => {
   });
 
   it("falls back to a generic message", () => {
-    expect(authErrorMessage(undefined)).toMatch(/Inténtalo de nuevo/);
-    expect(authErrorMessage("SOMETHING_ELSE")).toMatch(/Inténtalo de nuevo/);
+    expect(authErrorMessage(undefined)).toMatch(/inténtalo de nuevo/);
+    expect(authErrorMessage("SOMETHING_ELSE")).toMatch(/inténtalo de nuevo/);
   });
 });

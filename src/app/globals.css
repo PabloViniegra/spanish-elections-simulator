@@ -30,6 +30,7 @@
 
   /* Not in DESIGN.md (no validation states documented); AA on white. */
   --color-error: #d70015;
+  --color-warning: #b25000;
 
   /* Hanken Grotesk: a neutral, clean grotesque; variable 100-900. */
   --font-sans: "Hanken Grotesk Variable", system-ui, sans-serif;

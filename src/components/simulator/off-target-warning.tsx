@@ -1,3 +1,4 @@
+import { Notice } from "@/components/feedback/notice";
 import type { Bloc } from "@/lib/elections/types";
 import { formatShare } from "./format";
 
@@ -11,7 +12,7 @@ export function OffTargetWarning({ blocs, offTarget }: OffTargetWarningProps) {
   if (offTarget.length === 0) return null;
   const nameOf = new Map(blocs.map((bloc) => [bloc.id, bloc.name]));
   return (
-    <div role="status" className="settle rounded-sm border border-error p-3 text-caption">
+    <Notice tone="warning" role="status">
       <p className="font-semibold">No se pueden cumplir todos los porcentajes.</p>
       <p className="text-ink-muted-80">
         Algún partido solo se presenta en ciertas provincias, o las provincias fijadas a mano no dejan sitio para tantos
@@ -21,6 +22,6 @@ export function OffTargetWarning({ blocs, offTarget }: OffTargetWarningProps) {
           .join(", ")}
         .
       </p>
-    </div>
+    </Notice>
   );
 }

@@ -29,7 +29,7 @@ test("a forgotten password can be replaced through the emailed link", async ({ p
   await expect(page).toHaveURL(/\/reset-password\?token=/);
   await page.getByLabel("Contraseña nueva").fill(newPassword);
   await page.getByRole("button", { name: "Cambiar contraseña" }).click();
-  await expect(page.getByText("Contraseña cambiada. Inicia sesión con la nueva.")).toBeVisible();
+  await expect(page.getByText("Contraseña cambiada", { exact: true })).toBeVisible();
 
   await page.getByLabel("Usuario o correo electrónico").fill(account.username);
   await page.getByLabel("Contraseña", { exact: true }).fill(account.password);

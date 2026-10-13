@@ -96,7 +96,7 @@ describe("createBuiltAs", () => {
   it("rejects imported votes that are broken or name another party or province", async () => {
     const { calls, insertIfRoom } = fakeInsert(true);
     for (const provinces of ["{", JSON.stringify({ "28": { votes: { x: 1 }, blank: 0, null: 0 } }), JSON.stringify({ "99": { votes: {}, blank: 0, null: 0 } })]) {
-      expect(await createBuiltAs("u1", form({ ...fields, provinces }), insertIfRoom, reference)).toEqual({ error: "Los votos importados no son válidos." });
+      expect(await createBuiltAs("u1", form({ ...fields, provinces }), insertIfRoom, reference)).toEqual({ error: "No se han podido leer los votos importados. Vuelve a importar el archivo." });
     }
     expect(calls).toEqual([]);
   });
