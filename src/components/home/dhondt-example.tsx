@@ -36,9 +36,9 @@ const columnClass = (d: number) =>
 
 export function DhondtExample() {
   return (
-    <section aria-labelledby="dhondt-title" className="bg-canvas">
+    <section aria-labelledby="dhondt-title" className="depth-scope overflow-clip bg-canvas">
       <div className="mx-auto grid max-w-content gap-10 px-5 py-section sm:px-8 xl:grid-cols-[5fr_6fr] xl:items-start xl:gap-16 xl:py-32">
-        <div className="rise-scope flex max-w-[44rem] flex-col gap-4">
+        <div style={cssVar("--d", 4)} className="depth rise-scope flex max-w-[44rem] flex-col gap-4">
           <h2 id="dhondt-title" className={`rise [--c:0] ${sectionTitle}`}>
             Cada escaño tiene su cociente.
           </h2>
@@ -47,7 +47,7 @@ export function DhondtExample() {
             3… Cada resultado es un cociente, y los escaños van a los más altos.
           </p>
         </div>
-        <div className="flex flex-col gap-4">
+        <div style={cssVar("--d", -4)} className="depth flex flex-col gap-4">
           <p id="dhondt-caption" className="max-w-prose text-caption text-pretty text-ink-muted-80">
             Ejemplo con datos inventados: una provincia que reparte {seatCount} escaños. Los
             recuadros oscuros son los escaños, numerados por orden de asignación.
@@ -56,7 +56,7 @@ export function DhondtExample() {
             role="region"
             aria-label="Tabla del ejemplo"
             tabIndex={0}
-            className="max-w-[52rem] overflow-x-auto rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-focus"
+            className="zoom-in max-w-[52rem] overflow-x-auto rounded-sm focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary-focus"
           >
             <table aria-labelledby="dhondt-title" aria-describedby="dhondt-caption" className="w-full border-collapse text-left tabular-nums sm:min-w-[30rem]">
               <thead>

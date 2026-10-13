@@ -544,6 +544,62 @@
   }
 }
 
+/* Home page. On wide screens the hero pins for one screen of scroll: the copy
+   recedes while the hemicycle zooms in to fill the view (this overrides the
+   lift-away/sink fallback used below lg). Figures zoom in as they arrive. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) and (width >= 64rem) {
+    .pin-scope {
+      height: 200svh;
+      view-timeline: --pin block;
+    }
+    .pin-stage {
+      position: sticky;
+      top: 0;
+      min-height: 100svh;
+    }
+    .pin-copy {
+      animation: pin-copy linear both;
+      animation-timeline: --pin;
+      animation-range: contain 0% contain 45%;
+    }
+    .pin-zoom {
+      transform-origin: bottom;
+      animation: pin-zoom var(--ease-in-out) both;
+      animation-timeline: --pin;
+      animation-range: contain 0% contain 100%;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .zoom-in {
+      animation: zoom-in var(--ease-smooth) both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 45%;
+    }
+  }
+}
+@keyframes pin-copy {
+  to {
+    opacity: 0;
+    scale: 0.8;
+    translate: 0 -10rem;
+    filter: blur(16px);
+  }
+}
+@keyframes pin-zoom {
+  to {
+    scale: 2;
+    translate: 0 -12svh;
+  }
+}
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    scale: 0.6;
+    translate: 0 8rem;
+  }
+}
+
 @keyframes menu-in {
   from {
     clip-path: inset(0 0 100% 0);
