@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 
-// One numbered heading of a legal page; its body is plain prose and lists.
 export function LegalSection({ id, title, children }: { id: string; title: string; children: ReactNode }) {
   return (
     <section

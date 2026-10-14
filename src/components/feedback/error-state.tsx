@@ -8,7 +8,6 @@ function reportHref(digest: string) {
   return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}`;
 }
 
-// Fallback for a page that failed to render or an action that failed past its form.
 export function ErrorState({ digest, onRetry }: { digest?: string; onRetry: () => void }) {
   return (
     <main id="contenido" className="flex flex-1 flex-col items-center justify-center gap-6 px-6 py-24 text-center">

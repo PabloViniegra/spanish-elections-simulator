@@ -23,11 +23,9 @@ const savedAt = (date: Date) => `${longDate(date)}, a las ${date.toLocaleTimeStr
 
 function projectionRow(id: string, scenario: string) {
   const summary = summarizeSimulation(scenario);
-  // By id: the simulator loads the scenario, so the page does not carry it.
   return { href: savedSimulatorHref(id), summary: summary && { lead: `Desde ${summary.baseLabel}`, ranked: summary.ranked } };
 }
 
-// Finished elections open on their Congreso; the rest, on the next province to fill.
 function builtRow(id: string, scenario: string) {
   const summary = summarizeBuilt(scenario, builderReference);
   const ranked = summary?.ranked;

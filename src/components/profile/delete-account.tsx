@@ -13,7 +13,6 @@ type DeleteAccountProps = {
 
 const linkButton = "flex min-h-11 items-center text-caption font-semibold underline underline-offset-2";
 
-// Deleting the account cannot be undone, so it asks for the password first.
 export function DeleteAccount({ confirming, state, action, pending, onStart, onCancel }: DeleteAccountProps) {
   return (
     <section aria-labelledby="eliminar-cuenta" className="flex flex-col gap-3">

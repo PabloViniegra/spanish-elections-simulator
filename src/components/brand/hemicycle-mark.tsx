@@ -2,8 +2,7 @@ import { HEMICYCLE_HEIGHT, HEMICYCLE_WIDTH, hemicycleSeats } from "@/lib/hemicyc
 
 const seats = hemicycleSeats();
 
-// Decorative: 350 neutral seats, the first 176 (the absolute majority) a
-// shade darker. No party colours, so no party is favoured.
+// Decorative: no party colours, so no party is favoured.
 export function HemicycleMark({ className }: { className?: string }) {
   return (
     <svg

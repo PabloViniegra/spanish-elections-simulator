@@ -15,23 +15,15 @@ const seats = hemicycleSeats();
 const sweepStyle = (index: number): CSSProperties & Record<`--${string}`, number> => ({ "--i": index });
 
 type ResultsHemicycleProps = {
-  // Blocs with seats, largest first; they fill the chamber from the left.
   ranked: readonly (Bloc & { seats: number })[];
-  // The shares in the sliders do not fit in 100%, so this is the last split that did.
   stale?: boolean;
-  // Blocs picked in the coalition calculator; the rest of the chamber steps back.
   selected?: ReadonlySet<string>;
-  // Whose votes these are, under the chamber.
   disclaimer: string;
 };
 
-// FR-06: 350 seats coloured by bloc, with the 176 majority line. The chips of
-// the coalition calculator below double as the legend, and the label of the
-// image names every bloc with its seats, so colour is never the only signal.
+// FR-06: the label names every bloc with its seats, so colour is never the only signal.
 export function ResultsHemicycle({ ranked, stale = false, selected, disclaimer }: ResultsHemicycleProps) {
   const picking = selected !== undefined && selected.size > 0;
-  // A picked coalition sits first, so it fills from the left up to the line
-  // or past it; the colour sweep animates the regrouping.
   const order = picking ? [...ranked.filter((bloc) => selected.has(bloc.id)), ...ranked.filter((bloc) => !selected.has(bloc.id))] : ranked;
   const owners = order.flatMap((bloc) => Array<Bloc>(bloc.seats).fill(bloc));
   const summary = ranked.map((bloc) => `${bloc.name} ${bloc.seats}`).join(", ");
@@ -67,7 +59,6 @@ export function ResultsHemicycle({ ranked, stale = false, selected, disclaimer }
       </svg>
       <figcaption className="text-center text-caption text-ink-muted-80">
         {stale && <strong className="font-semibold text-ink">Último reparto válido. </strong>}La línea marca la mayoría absoluta: {MAJORITY} escaños.
-        {/* Travels with the seats, sticky on wide screens and in any screenshot. */}
         <span className="block font-semibold text-ink">{disclaimer}</span>
       </figcaption>
     </figure>

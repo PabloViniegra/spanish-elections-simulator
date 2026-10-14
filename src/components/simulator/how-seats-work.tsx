@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-// Reference for the casual reader; the full story is on the explainer page.
 export function HowSeatsWork() {
   return (
     <details className="border-b border-hairline text-caption">

@@ -6,16 +6,13 @@ export type CandidacyRow = { id: string; acronym: string; name: string; share: n
 type CandidacyListProps = {
   candidacies: readonly CandidacyRow[];
   blocs: readonly Bloc[];
-  // Election the shares come from, e.g. "2023".
   baseLabel: string;
   onMove: (candidacyId: string, blocId: string | null) => void;
 };
 
-// Value of the "Others" option, apart from any bloc id.
 const OTHERS = "";
 
-// FR-11: every local candidacy of the base election and the bloc it counts
-// with, largest first; regional lists can join their national party.
+// FR-11: every local candidacy of the base election and the bloc it counts with.
 export function CandidacyList({ candidacies, blocs, baseLabel, onMove }: CandidacyListProps) {
   return (
     <details className="border-b border-hairline">

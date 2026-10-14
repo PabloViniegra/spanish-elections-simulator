@@ -33,10 +33,6 @@ function Destinations({ current, variant }: { current: NavPage; variant: "bar" |
 
 export type Variant = "bar" | "row" | "pill";
 
-// The sign-up pill is the loudest thing in the header, so it appears on every
-// page except the simulator, where it drops to a plain link. One treatment,
-// three places: the desktop bar, the mobile bar and the panel, so the product's
-// one ask reads the same wherever it is found.
 const pillClasses =
   "inline-flex items-center gap-1.5 rounded-full bg-action-blue px-[15px] py-2 text-ink transition-[background-color,scale] duration-150 ease-snappy group-hover/cta:bg-action-blue-hover group-active/cta:scale-[0.97]";
 
@@ -55,9 +51,6 @@ export function AccountLinks({ username, current, variant }: { username?: string
   const bar = variant === "bar";
   const signUpIsThePoint = current !== "simulator";
 
-  // The mobile bar carries only the pill: it is the one commitment the header
-  // asks for, and it used to be two taps deep in the panel. Never for a
-  // signed-in user — the panel already offers profile and sign-out.
   if (variant === "pill") return !username && signUpIsThePoint ? <RegisterPill /> : null;
 
   return username ? (
@@ -80,8 +73,6 @@ export function AccountLinks({ username, current, variant }: { username?: string
   );
 }
 
-// `current` marks the page in the nav; where the sign-up pill appears is
-// AccountLinks' rule above — every page but the simulator, never signed in.
 export function SiteHeader({ username, current, accountBar, accountRows, accountPill }: { username?: string; current: NavPage; accountBar?: ReactNode; accountRows?: ReactNode; accountPill?: ReactNode }) {
   return (
     <header className="focus-on-dark relative bg-surface-black text-on-dark">
@@ -96,7 +87,6 @@ export function SiteHeader({ username, current, accountBar, accountRows, account
         className="mx-auto flex h-11 max-w-content items-center justify-between gap-2 px-5 text-caption whitespace-nowrap lg:gap-6"
       >
         <Link href="/" className="group flex min-h-11 shrink-0 items-center gap-2.5 text-body font-semibold">
-          {/* The app icon's two arcs on one path: hover or focus swings the majority. */}
           <svg viewBox="3 9 26 16" aria-hidden="true" className="h-5 w-8 shrink-0 fill-none stroke-[6]">
             <path
               d="M6 22.5A10 10 0 0 1 26 22.5"

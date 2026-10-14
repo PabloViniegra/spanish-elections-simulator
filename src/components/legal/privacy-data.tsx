@@ -7,7 +7,6 @@ const processors = [
   { name: "Resend (Plus Five Five Inc.)", role: "Envío de correos electrónicos", country: "EE. UU." },
 ];
 
-// Who is responsible, what is collected, why and who else processes it.
 export function PrivacyData() {
   return (
     <>

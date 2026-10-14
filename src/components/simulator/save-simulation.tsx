@@ -6,21 +6,16 @@ import { TextField } from "@/components/forms/text-field";
 import type { SaveState } from "@/lib/simulations/forms";
 import { NAME_MAX } from "@/lib/simulations/limits";
 
-// The saved simulation "Guardar cambios" overwrites.
 export type SavedTarget = { id: string; name: string };
 
-// The button that overwrites the saved simulation instead of adding one.
 export const UPDATE_INTENT = "update";
 
 type SaveSimulationProps = {
   state: SaveState;
   action: (formData: FormData) => void;
   pending: boolean;
-  // The scenario as its URL parameter.
   scenario: string;
-  // A name to start from, so saving takes one click.
   defaultName: string;
-  // The inputs do not add up to 100%: what gets saved is the last scenario that did.
   stale: boolean;
   saved: SavedTarget | null;
 };
@@ -29,8 +24,7 @@ const button =
   "min-h-11 rounded-full border border-ink px-[22px] text-body font-semibold transition-[scale,background-color,color] duration-150 ease-snappy active:scale-[0.97] disabled:border-ink-muted-48 disabled:bg-transparent disabled:text-ink-muted-48";
 
 export function SaveSimulation({ state, action, pending, scenario, defaultName, stale, saved }: SaveSimulationProps) {
-  // Which button sent the form, so only that one reads "Guardando…". Enter
-  // clicks the first one too.
+  // Which button sent the form; Enter clicks the first one too.
   const [updating, setUpdating] = useState(false);
   const label = (text: string, mine: boolean) => (pending && mine ? "Guardando…" : text);
   return (

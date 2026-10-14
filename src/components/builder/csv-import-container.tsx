@@ -13,7 +13,6 @@ import { downloadCsv, readCsvFile, type CsvFile } from "./csv-file";
 type CsvImportContainerProps = {
   scenario: BuiltScenario;
   onImport: (provinces: Record<string, BuiltProvince>) => void;
-  // Stores the scenario as it is now; false when it could not.
   onSave: () => Promise<boolean>;
 };
 

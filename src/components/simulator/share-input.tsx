@@ -5,23 +5,17 @@ import { formatShare } from "./format";
 type ShareInputProps = {
   id: string;
   label: string;
-  // Basis points of national valid votes.
   value: number;
   onChange: (value: number) => void;
-  // Party colour for the slider; neutral ink when the row is not a party.
   colour?: string;
 };
 
-// No bloc has passed 50% in a general election, so the slider stops there.
-// Its travel is a square-root scale: most blocs sit under 3%, and a linear
-// track would leave them a few pixels to work with. The field stays exact.
+// No bloc has passed 50%; square-root travel since most blocs sit under 3%.
 const SLIDER_MAX = FULL_SHARE / 2;
 const SLIDER_STEPS = 1000;
 const toPosition = (value: number) => Math.round(Math.sqrt(Math.min(value, SLIDER_MAX) / SLIDER_MAX) * SLIDER_STEPS);
 const fromPosition = (position: number) => Math.round((position / SLIDER_STEPS) ** 2 * SLIDER_MAX);
 
-// One national share as a slider plus an exact field, both in percent.
-// The page's scroll padding keeps both clear of the pinned strip and share budget.
 export function ShareInput({ id, label, value, onChange, colour = "var(--color-ink)" }: ShareInputProps) {
   const update = (percent: number) =>
     onChange(Number.isNaN(percent) ? 0 : Math.min(FULL_SHARE, Math.max(0, Math.round(percent * 100))));

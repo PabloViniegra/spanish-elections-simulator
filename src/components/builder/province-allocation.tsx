@@ -10,7 +10,6 @@ type ProvinceAllocationProps = {
   blocs: ReadonlyMap<string, Bloc>;
 };
 
-// The province's seats as they stand, redrawn on every keystroke.
 export function ProvinceAllocation({ provinceName, result, blocs }: ProvinceAllocationProps) {
   const { rows, lastSeat, runnerUp } = dhondtDetail(result);
   const nameOf = (id: string) => blocs.get(id)?.name ?? id;

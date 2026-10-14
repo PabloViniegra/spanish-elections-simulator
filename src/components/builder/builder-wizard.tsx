@@ -17,7 +17,6 @@ import { SaveStatus } from "./save-status";
 type BuilderWizardProps = {
   name: string;
   completed: number;
-  // Once all 52 are complete and saved.
   resultsHref: string | null;
   save: ComponentProps<typeof SaveStatus>;
   discard: ComponentProps<typeof DiscardBuilt>;

@@ -2,11 +2,9 @@
 
 import { useState } from "react";
 
-// The list heading: once a row is gone, focus lands there instead of on the
-// page body.
+// Focus lands here once a row is gone, instead of on the page body.
 export const LIST_HEADING_ID = "simulaciones";
 
-// Deleting cannot be undone, so it asks once more before going ahead.
 export function DeleteSimulation({ name, pending, onDelete }: { name: string; pending: boolean; onDelete: () => void }) {
   const [confirming, setConfirming] = useState(false);
   const button = "flex min-h-11 items-center text-caption font-semibold underline underline-offset-2";

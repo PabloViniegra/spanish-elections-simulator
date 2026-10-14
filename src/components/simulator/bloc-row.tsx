@@ -10,9 +10,7 @@ type BlocRowProps = {
   onRemove: () => void;
 };
 
-// One bloc's colour and name (FR-11). The name field keeps what is typed, but
-// only a name with letters reaches the scenario; leaving it empty brings the
-// last one back.
+// FR-11: only a name with letters reaches the scenario; an empty field brings the last one back.
 export function BlocRow({ bloc, removable, onRename, onRecolour, onRemove }: BlocRowProps) {
   const [draft, setDraft] = useState<string | null>(null);
   return (

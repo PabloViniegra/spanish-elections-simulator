@@ -6,13 +6,11 @@ type CsvImportPreviewProps = {
   rows: readonly NationalRow[];
   blank: number;
   valid: number;
-  // What to do with it.
   children: ReactNode;
 };
 
 const share = (fraction: number) => formatShare(Math.round(fraction * 10_000));
 
-// The Congreso the file would give, before anything is stored.
 export function CsvImportPreview({ rows, blank, valid, children }: CsvImportPreviewProps) {
   return (
     <div className="settle flex min-w-0 flex-col gap-4">

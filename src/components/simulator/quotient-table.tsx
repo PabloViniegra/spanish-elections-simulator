@@ -6,7 +6,6 @@ type QuotientTableProps = {
   caption: string;
   rows: readonly QuotientRow[];
   blocs: ReadonlyMap<string, Bloc>;
-  // The last seat handed out and the best quotient left, both highlighted.
   last: { candidacyId: string; divisor: number } | null;
   runnerUp: { candidacyId: string; divisor: number } | null;
 };
@@ -14,9 +13,7 @@ type QuotientTableProps = {
 const isCell = (target: { candidacyId: string; divisor: number } | null, candidacyId: string, divisor: number) =>
   target?.candidacyId === candidacyId && target.divisor === divisor;
 
-// FR-09: votes divided by 1, 2, 3… for each party past the threshold. Winning
-// quotients carry their place in the seat order; the last seat is filled in
-// ink and the runner-up outlined, each also named in words.
+// FR-09: the last seat and the runner-up are also named in words.
 export function QuotientTable({ caption, rows, blocs, last, runnerUp }: QuotientTableProps) {
   const columns = rows[0]?.quotients.length ?? 0;
   return (

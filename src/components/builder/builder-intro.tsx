@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ballotPapers from "@/assets/images/ballot-papers.webp";
+import tallySheet from "@/assets/images/tally-sheet.webp";
 import { sectionTitle } from "@/components/home/type";
 
 export function BuilderIntro() {
@@ -13,14 +13,14 @@ export function BuilderIntro() {
           </p>
           <p className="hero-rise text-caption text-ink-muted-80 [--c:2]">Son unas elecciones construidas a mano, no una previsión.</p>
         </div>
-        <div className="relative hidden aspect-[18/13] w-full max-w-80 justify-self-center sm:block lg:max-w-md">
+        <div className="relative hidden aspect-[3/2] w-full max-w-80 justify-self-center sm:block lg:max-w-md">
           <Image
-            src={ballotPapers}
+            src={tallySheet}
             alt=""
             fill
             loading="eager"
             sizes="(max-width: 639px) 0px, (max-width: 1023px) 320px, (max-width: 1231px) calc(40vw - 45px), 448px"
-            className="object-contain"
+            className="object-contain mix-blend-multiply"
           />
         </div>
       </div>

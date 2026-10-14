@@ -6,8 +6,7 @@ type BaseSelectProps = {
   onChange: (id: string) => void;
 };
 
-// FR-01: the election whose votes the simulation starts from. Seats stay the
-// 2026 ones whatever the base, and switching can be undone from the notice.
+// FR-01: seats stay the 2026 ones whatever the base.
 export function BaseSelect({ bases, value, onChange }: BaseSelectProps) {
   return (
     <SelectField

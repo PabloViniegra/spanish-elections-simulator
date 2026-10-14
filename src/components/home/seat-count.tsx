@@ -15,13 +15,11 @@ import { INSET_CODES, INSET_SHIFT, mapFrame, seatMapPositions } from "@/lib/seat
 const { seats, steps, totalMs } = seatCount();
 const PAD = 12;
 const origins = seatMapPositions(steps, PAD);
-// Each seat's flight; the count ends once the last one has landed.
 const FLIGHT_MS = 1100;
 const endMs = totalMs + FLIGHT_MS;
 const frame = mapFrame(PAD);
 const insetShift = `translate(${INSET_SHIFT.x} ${INSET_SHIFT.y})`;
 
-// Point on the circle around the hemicycle centre, in SVG units.
 function polar(radius: number, angle: number) {
   return {
     x: (HEMICYCLE_CENTER.x + radius * Math.cos(angle)).toFixed(1),
@@ -34,11 +32,7 @@ const slot = (startMs: number, durationMs: number) => ({
   animationDuration: `${durationMs}ms`,
 });
 
-// The finished count is the markup's default state; the CSS in globals.css
-// replays the count over it only when motion is allowed: the seats start as a
-// dot map of Spain and each constituency flies to its wedge as it is counted.
-// The group carries the horizontal leg and the circle the vertical one, so
-// their different easings draw an arc.
+// The group carries the horizontal leg and the circle the vertical one, so their easings draw an arc.
 export function SeatCount() {
   return (
     <figure className="flex w-full flex-col items-center gap-5">
@@ -48,7 +42,6 @@ export function SeatCount() {
         aria-label={`Hemiciclo del Congreso: ${TOTAL_SEATS} escaños repartidos en ${steps.length} circunscripciones. La mayoría absoluta está en ${MAJORITY}.`}
         className="w-full max-w-[min(64rem,max(18rem,calc((100svh-40rem)*2)))] min-w-0"
       >
-        {/* The provinces the seats leave from, fading as the count empties them. */}
         <g
           transform={`translate(${frame.x.toFixed(1)} ${frame.y}) scale(${frame.scale.toFixed(4)})`}
           style={{ animationDuration: `${endMs}ms` }}
@@ -90,7 +83,6 @@ export function SeatCount() {
             />
           );
         })}
-        {/* The majority line stops short of the seats instead of crossing them. */}
         <path
           d={`M${HEMICYCLE_CENTER.x} ${-PAD}V${HEMICYCLE_CENTER.y - HEMICYCLE_OUTER_RADIUS - 5}M${HEMICYCLE_CENTER.x} ${HEMICYCLE_CENTER.y - HEMICYCLE_INNER_RADIUS + 5}V${HEMICYCLE_HEIGHT}`}
           fill="none"

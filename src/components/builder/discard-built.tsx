@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 
-// Discarding deletes the election, so it asks once more before going ahead.
 export function DiscardBuilt({ pending, onDiscard }: { pending: boolean; onDiscard: () => void }) {
   const [confirming, setConfirming] = useState(false);
   const button = "flex min-h-11 items-center text-caption font-semibold underline underline-offset-2";

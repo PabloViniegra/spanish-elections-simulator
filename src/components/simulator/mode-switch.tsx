@@ -9,7 +9,6 @@ const MODES: readonly { mode: InputMode; label: string }[] = [
 export function ModeSwitch({ mode, onChange }: { mode: InputMode; onChange: (mode: InputMode) => void }) {
   return (
     <div role="group" aria-label="Modo de simulación" className="relative grid grid-cols-2 rounded-full border border-hairline p-1">
-      {/* One pill slides under the pressed option instead of two fading. */}
       <span
         aria-hidden="true"
         className={`absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-ink transition-transform duration-250 ease-in-out motion-reduce:transition-none ${mode === "province" ? "translate-x-full" : ""}`}

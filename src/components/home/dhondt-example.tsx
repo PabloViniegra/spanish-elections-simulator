@@ -2,8 +2,6 @@ import { cssVar } from "@/lib/css-var";
 import { sectionTitle } from "./type";
 
 // Invented figures for a five-seat constituency; labelled as such on screen.
-// Three divisors are enough to fill five seats and still expose the first
-// quotient left out, which is the only thing the table has to prove.
 const SEATS = 5;
 const DIVISORS = [1, 2, 3];
 const blocs = [
@@ -23,7 +21,6 @@ const quotients = qualifying
   .flatMap((bloc) => DIVISORS.map((d) => ({ bloc, d, q: bloc.votes / d })))
   .sort((a, b) => b.q - a.q || b.bloc.votes - a.bloc.votes);
 const ranked = quotients.slice(0, SEATS);
-// The highest quotient left without a seat shows why the last seat went where it did.
 const firstOut = quotients[SEATS];
 
 function seatOrder(bloc: string, d: number) {
@@ -31,8 +28,7 @@ function seatOrder(bloc: string, d: number) {
   return index === -1 ? undefined : index + 1;
 }
 
-// es-ES leaves four-digit numbers ungrouped by default; force it so 7.500
-// lines up with 10.000 in the same column.
+// es-ES leaves four-digit numbers ungrouped by default; force it so columns line up.
 const format = (n: number) => n.toLocaleString("es-ES", { useGrouping: "always" });
 const share = (n: number) => ((n / validVotes) * 100).toLocaleString("es-ES", { maximumFractionDigits: 1 });
 
@@ -40,16 +36,16 @@ export function DhondtExample() {
   return (
     <section aria-labelledby="dhondt-title" className="depth-scope overflow-clip bg-canvas">
       <div className="mx-auto grid max-w-content gap-10 px-5 py-section sm:px-8 xl:grid-cols-[5fr_6fr] xl:items-center xl:gap-16 xl:py-32">
-        <div style={cssVar("--d", 4)} className="depth rise-scope flex max-w-[44rem] flex-col gap-4">
+        <div style={cssVar("--d", 1.5)} className="depth rise-scope rise-unmask flex max-w-[44rem] flex-col gap-4">
           <h2 id="dhondt-title" className={`rise [--c:0] ${sectionTitle}`}>
-            Cada escaño tiene su cociente.
+            Así decide D’Hondt quién se lleva cada escaño
           </h2>
           <p className="rise text-body text-pretty text-ink-muted-80 [--c:1]">
             Los votos de cada partido se dividen entre 1, 2, 3… y los escaños van a los cocientes más
             altos. Solo compite quien alcanza al menos el 3 % de los votos válidos.
           </p>
         </div>
-        <div style={cssVar("--d", -4)} className="depth flex min-w-0 flex-col gap-4">
+        <div style={cssVar("--d", -1.5)} className="depth flex min-w-0 flex-col gap-4">
           <p id="dhondt-caption" className="max-w-prose text-caption text-pretty text-ink-muted-80">
             Datos inventados: una provincia que reparte {SEATS} escaños. Cada recuadro oscuro es un
             escaño, numerado por orden de asignación.

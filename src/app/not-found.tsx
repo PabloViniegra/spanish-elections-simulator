@@ -16,7 +16,7 @@ export default function NotFound() {
           <Link href="/" className="inline-flex min-h-11 items-center text-caption underline underline-offset-4">Volver al inicio</Link>
         </div>
       </main>
-      <SiteFooter>Es una simulación, no una previsión.</SiteFooter>
+      <SiteFooter />
     </>
   );
 }

@@ -4,12 +4,10 @@ import type { ProvinceSplitProps } from "./province-seats";
 type ProvinceTableProps = {
   rows: readonly (ProvinceSplitProps["province"] & { code: string })[];
   lockedCodes: readonly string[];
-  // Provincial mode: each province opens in the inputs.
   onEdit?: (code: string) => void;
 };
 
-// Text alternative to the map (NFR-05) and its keyboard route: every province
-// with its seats, the leaders in bold, and in provincial mode a way to edit it.
+// Text alternative to the map (NFR-05) and its keyboard route.
 export function ProvinceTable({ rows, lockedCodes, onEdit }: ProvinceTableProps) {
   return (
     <details className="text-caption">

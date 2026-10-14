@@ -12,7 +12,6 @@ type ProvinceHeadingProps = {
   cast: number;
   status: ProvinceStatus;
   censusYear: string;
-  // Catalogue parties marked here that never ran here.
   outside: readonly string[];
 };
 
@@ -24,7 +23,6 @@ const warnings = {
   complete: null,
 } satisfies Record<ProvinceStatus, string | null>;
 
-// Which province this is, what it hands out and how full its census is.
 const list = new Intl.ListFormat("es", { type: "conjunction" });
 
 function outsideWarning(outside: readonly string[]) {

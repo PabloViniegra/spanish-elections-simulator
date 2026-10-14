@@ -3,7 +3,6 @@ const perks = [
   "Pon un nombre a cada escenario para encontrarlo después.",
 ];
 
-// Authentication is requested only when saving a scenario.
 export function SimulatorGate() {
   return (
     <aside aria-labelledby="gate-title" className="flex flex-col gap-3 rounded-lg border border-hairline bg-canvas p-5 sm:p-6">

@@ -26,7 +26,6 @@ async function paramOf(searchParams: SimulatorPageProps["searchParams"], name: P
   return Array.isArray(value) ? value[0] : value;
 }
 
-// A shared link previews its own chamber.
 export async function generateMetadata({ searchParams }: SimulatorPageProps): Promise<Metadata> {
   const param = await paramOf(searchParams, SCENARIO_PARAM);
   if (!param) return metadata;
@@ -42,9 +41,7 @@ export async function generateMetadata({ searchParams }: SimulatorPageProps): Pr
 export default async function SimulatorPage({ searchParams }: SimulatorPageProps) {
   const shared = await paramOf(searchParams, SCENARIO_PARAM);
   const savedId = await paramOf(searchParams, SAVED_PARAM);
-  // A saved simulation opened by id alone needs its owner signed in.
   const session = savedId && !shared ? await requireSession(savedSimulatorHref(savedId)) : await getSession();
-  // The profile links by id alone; the page then restores the stored scenario.
   const opened = session && savedId && !shared ? await findSavedProjection(session.user.id, savedId) : null;
   const param = shared ?? opened?.scenario;
   const saved = opened ? { id: opened.id, name: opened.name } : session && param && savedId ? await findSimulation(session.user.id, savedId) : null;
@@ -71,15 +68,14 @@ export default async function SimulatorPage({ searchParams }: SimulatorPageProps
             <p className="max-w-xl text-body text-pretty text-ink-muted-80">
               Votos reales de unas generales con el reparto de escaños de referencia. Si cambias un partido, su voto varía aproximadamente en la
               misma proporción en cada provincia, con un ajuste para que cada provincia sume el 100 % y el total nacional coincida con tu
-              cifra.{" "}
-              <span className="font-semibold text-ink">Es una simulación, no una previsión.</span>
+              cifra.
             </p>
           </div>
         </div>
         <SimulatorContainer signedIn={Boolean(session)} initial={simulatorInitialState(param ?? null)} saved={saved} />
       </main>
       <SiteFooter>
-        <ElectionReference /> Es una simulación, no una previsión, y no favorece a ningún partido.
+        <ElectionReference /> Aplica la misma ley a todos los partidos.
       </SiteFooter>
     </>
   );

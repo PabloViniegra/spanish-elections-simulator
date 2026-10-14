@@ -11,7 +11,6 @@ import type { SaveState } from "@/lib/simulations/forms";
 import { SaveSimulation, type SavedTarget, UPDATE_INTENT } from "./save-simulation";
 
 type SaveSimulationContainerProps = {
-  // The scenario the results show: the last one that fits in 100%.
   scenario: Scenario;
   ranked: readonly { name: string; seats: number }[];
   stale: boolean;

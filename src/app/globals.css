@@ -1,20 +1,13 @@
 @import "tailwindcss";
 @import "@fontsource-variable/hanken-grotesk/wght.css";
 
-/* Design tokens from DESIGN.md. Default palette, radii and shadows are reset
-   so only the documented grammar is available. */
 @theme {
   --color-*: initial;
   --color-primary: #1d1d1f;
   --color-primary-focus: #48484a;
   --color-primary-on-dark: #ffffff;
 
-  /* On-dark accent (surface brief): the constituency being counted, the
-     majority line and actions sitting on surface-black. Ink on it is 5.6:1;
-     white would be 3.0:1 and fail a body label. Never used on light surfaces.
-     The lighter sibling below is the hover fill — an opacity tint over black
-     would darken it and drop the ink label under 4.5:1. The keyboard ring on
-     dark stays white, so a ring is never mistaken for either fill. */
+  /* Ink on action-blue is 5.6:1; white would be 3.0:1 and fail a body label. */
   --color-action-blue: #2997ff;
   --color-action-blue-hover: #4dabff;
 
@@ -37,15 +30,11 @@
   --color-divider-soft: #f0f0f0;
   --color-hairline: #e0e0e0;
 
-  /* Not in DESIGN.md (no validation states documented); AA on white. */
   --color-error: #d70015;
   --color-warning: #b25000;
 
-  /* Hanken Grotesk: a neutral, clean grotesque; variable 100-900. */
   --font-sans: "Hanken Grotesk Variable", system-ui, sans-serif;
 
-  /* Letter-spacing in em, retuned for Hanken Grotesk: it sets narrower than
-     SF Pro, so tracking tightens less than DESIGN.md's px values. */
   --text-hero-display: 3.5rem;
   --text-hero-display--line-height: 1.07;
   --text-hero-display--letter-spacing: -0.025em;
@@ -95,8 +84,6 @@
   --shadow-*: initial;
   --shadow-product: 3px 5px 30px 0 rgb(0 0 0 / 0.22);
 
-  /* Motion: long, soft ease-outs with no overshoot. Every transition-*
-     utility without its own timing uses these. */
   --ease-smooth: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-snappy: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -125,8 +112,7 @@
     @apply outline-2 outline-offset-2 outline-primary-focus;
   }
 
-  /* Keep focused fields and anchor targets clear of the simulator's sticky
-     bars: the results strip (h-15, below lg) and the share budget under it. */
+  /* Clears the results strip (h-15, below lg) and the share budget under it. */
   html:has([data-results-strip]) {
     @apply scroll-pt-16;
     @variant lg {
@@ -156,9 +142,7 @@
   }
 }
 
-/* Frosted bar over scrolling content (DESIGN.md backdrop blur). Opaque when
-   the blur is missing or transparency is unwanted. Safari lacks
-   prefers-reduced-transparency, so glass is the default, not the opt-in. */
+/* Safari lacks prefers-reduced-transparency, so glass is the default, not the opt-in. */
 @utility glass {
   background-color: var(--color-canvas);
   @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
@@ -183,12 +167,10 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* No double-tap zoom delay on controls. */
   :is(a, button, summary, label, input, select, textarea) {
     touch-action: manipulation;
   }
 
-  /* Underlined links and text buttons thicken their line under the pointer. */
   @media (hover: hover) {
     :is(a, button:enabled, summary):hover {
       text-decoration-thickness: 2px;
@@ -196,18 +178,12 @@
   }
 }
 
-/* Home seat count: the markup renders the finished count; with motion
-   allowed, each seat lights blue as its constituency is counted and settles
-   white, the per-constituency labels and ticks show only during their slot,
-   and the summary and majority line appear when the count ends. */
 .count-step,
 .count-map {
   opacity: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* Seats wait on the map of Spain, then fly in an arc to the hemicycle: the
-     group eases across while the circle rises and drops, lit while airborne. */
   .count-fly {
     animation: count-fly-x linear both;
   }
@@ -318,9 +294,6 @@
   }
 }
 
-/* Scroll-linked reveals: the markup is the finished state; where scroll
-   timelines exist and motion is allowed, dots arrive and winning quotients
-   darken in assignment order as their block scrolls into view. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .reveal-scope {
@@ -356,8 +329,6 @@
   }
 }
 
-/* Hero copy: on load, the title, line and actions rise in turn; the seat
-   count starts once they have settled. */
 @media (prefers-reduced-motion: no-preference) {
   .hero-rise {
     animation: hero-rise 600ms var(--ease-smooth) both;
@@ -372,8 +343,6 @@
   }
 }
 
-/* Section copy: each group's title, line and actions rise in turn as the
-   group enters the viewport. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .rise-scope {
@@ -385,6 +354,19 @@
       animation-timeline: --rise;
       animation-range: entry calc(var(--c) * 8%) entry calc(45% + var(--c) * 8%);
     }
+
+    /* Variants set on the scope, so sections don't all enter the same way. */
+    .rise-side .rise {
+      animation-name: rise-side;
+    }
+
+    .rise-unmask .rise {
+      animation-name: rise-unmask;
+    }
+
+    .rise-focus .rise {
+      animation-name: rise-focus;
+    }
   }
 }
 
@@ -395,22 +377,39 @@
   }
 }
 
+@keyframes rise-side {
+  from {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+}
+
+@keyframes rise-unmask {
+  from {
+    clip-path: inset(0 0 100% 0);
+    transform: translateY(0.75rem);
+  }
+}
+
+@keyframes rise-focus {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: scale(0.96);
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
-  /* A changed figure is remounted with this class and fades in, instead of
-     swapping its digits in one frame. Not for figures that follow a slider:
-     it would replay on every drag step. */
+  /* Not for figures that follow a slider: it would replay on every drag step. */
   .tick {
     animation: tick 150ms var(--ease-snappy) both;
   }
 
-  /* A newly shown panel settles in from just below. */
   .settle {
     animation: settle 200ms var(--ease-snappy) both;
   }
 
-  /* Simulated seats change colour in a sweep from left to right; while a
-     share slider is held they follow it at once, so the sweep doesn't keep
-     restarting behind the thumb. */
+  /* While a slider is held seats follow it at once, so the sweep doesn't restart behind the thumb. */
   .seat {
     transition:
       fill 300ms var(--ease-snappy) calc(var(--i) * 0.6ms),
@@ -421,15 +420,12 @@
     transition-delay: 0s;
   }
 
-  /* Profile: each saved chamber's colours sweep in from the left over its
-     grey seats, the list one chamber after another (--row is capped so the
-     last ones don't wait). One clip per chamber, not a fill per seat. */
+  /* --row is capped so the last chambers don't wait. */
   .chamber-fill {
     animation: chamber-fill 600ms var(--ease-in-out) both;
     animation-delay: calc(150ms + var(--row) * 110ms);
   }
 
-  /* Disclosures open and close by height where the browser can animate it. */
   :root {
     interpolate-size: allow-keywords;
   }
@@ -466,16 +462,12 @@
   }
 }
 
-/* Scrollable regions (wide tables) get the page's slim scrollbar, not the
-   browser's arrowed one. */
 .scroll-slim {
   scrollbar-width: thin;
   scrollbar-color: var(--color-ink-muted-48) transparent;
 }
 
-/* Share slider: browsers paint the unfilled track depending on the accent
-   luminance, which turns it dark for light party colours. Drawing the track
-   keeps every row identical; --fill and --slider-colour come from the input. */
+/* Browsers darken the unfilled track for light accent colours, so it is drawn by hand. */
 .share-slider {
   appearance: none;
   height: 2.75rem;
@@ -483,7 +475,6 @@
   cursor: pointer;
 }
 
-/* Touch screens get a 44px grab area; a pointer needs less. */
 @media (min-width: 834px) {
   .share-slider {
     height: 1.5rem;
@@ -528,7 +519,6 @@
     box-shadow 250ms var(--ease-snappy);
 }
 
-/* The thumb swells while held, like a native control picked up. */
 .share-slider:active::-webkit-slider-thumb {
   scale: 1.2;
   box-shadow:
@@ -553,11 +543,6 @@
   }
 }
 
-/* Explainer page: the markup is the finished, still scene. Where scroll
-   timelines exist and motion is allowed, layers drift at different speeds
-   as their scene crosses the viewport (--d sets depth and direction), the
-   hero title lifts away faster than the hemicycle behind it, and bars grow
-   as they come into view. */
 @media (prefers-reduced-motion: no-preference) {
   .seat-in {
     animation: seat-in 700ms var(--ease-smooth) both;
@@ -601,8 +586,7 @@
     }
   }
 }
-/* Reading progress follows the page scroll; it is plain state, so it also runs
-   with reduced motion. Without scroll timelines it would sit full, so it hides. */
+/* Without scroll timelines it would sit full, so it hides. */
 .read-progress {
   display: none;
 }
@@ -642,12 +626,7 @@
   }
 }
 
-/* Home page. On wide screens the hero pins for part of one screen of scroll:
-   the copy recedes while the hemicycle zooms in to fill the view (this
-   overrides the lift-away/sink fallback used below lg). Figures zoom in as they
-   arrive. The pin is capped at 150svh: pin-copy is spent by contain 45%, so a
-   taller scope left most of a screen with no headline, no action and no
-   simulation notice on it. */
+/* pin-copy is spent by contain 45%, so a pin taller than 150svh leaves a screen with no headline. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) and (width >= 64rem) and (height >= 40rem) {
     .pin-scope {
@@ -733,8 +712,7 @@
   }
 }
 
-/* Toasts (Sileo) sit on an ink pill, so states take the on-dark tones; on the
-   viewport, since Sileo injects its own :root defaults after this sheet. */
+/* On the viewport, since Sileo injects its own :root defaults after this sheet. */
 [data-sileo-viewport] {
   --sileo-state-success: #30d158;
   --sileo-state-error: #ff453a;

@@ -10,7 +10,6 @@ type BuiltNationalTableProps = {
 
 const share = (fraction: number) => formatShare(Math.round(fraction * 10_000));
 
-// Every party across Spain: votes, share of the valid vote and seats.
 export function BuiltNationalTable({ rows, blank, blankShare }: BuiltNationalTableProps) {
   return (
     <section aria-labelledby="resultado-nacional" className="flex flex-col gap-4">

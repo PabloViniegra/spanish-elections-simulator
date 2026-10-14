@@ -24,7 +24,6 @@ type BuilderImportFormProps = {
   onSeatTable: (seatTable: SeatTable) => void;
   picker: ComponentProps<typeof CsvFilePicker>;
   issues: readonly ImportIssue[] | null;
-  // The election the file makes, once it has no errors.
   scenario: BuiltScenario | null;
   preview: Omit<ComponentProps<typeof CsvImportPreview>, "children"> | null;
   onCancel: () => void;

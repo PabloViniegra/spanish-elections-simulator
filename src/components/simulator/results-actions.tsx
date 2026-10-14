@@ -7,15 +7,13 @@ type Panel = "downloads" | "save";
 type ResultsActionsProps = {
   share: ReactNode;
   downloads: ReactNode;
-  // Either the save form or the account notice.
   save?: ReactNode;
 };
 
 const toggleClass =
   "inline-flex min-h-11 items-center gap-2 rounded-full border border-hairline px-5 text-caption font-semibold transition-[background-color,scale] duration-150 hover:bg-canvas-parchment aria-expanded:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus active:scale-[0.96] motion-reduce:transition-none";
 
-// The link stays in view; downloads and saving open on demand so the results
-// lead the column. Kept outside the keyed save form so an edit leaves it open.
+// Kept outside the keyed save form so an edit leaves it open.
 export function ResultsActions({ share, downloads, save }: ResultsActionsProps) {
   const [open, setOpen] = useState<Panel | null>(null);
   const panelId = useId();

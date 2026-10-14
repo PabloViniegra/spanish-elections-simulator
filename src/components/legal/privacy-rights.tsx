@@ -2,7 +2,6 @@ import Link from "next/link";
 import { CONTACT_EMAIL } from "@/lib/legal";
 import { LegalSection } from "./legal-section";
 
-// How long data is kept, the cookie in use and how to exercise each right.
 export function PrivacyRights() {
   return (
     <>

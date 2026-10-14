@@ -6,13 +6,10 @@ import { VoteInput } from "./vote-input";
 
 type ProvinceVotesProps = {
   provinceName: string;
-  // Each with its votes here in the census election, when it ran.
   parties: readonly (BuiltParty & { fullName?: string; previous?: number })[];
   previousYear: string;
-  // Parties of the list that never ran here.
   elsewhere: number;
   province: BuiltProvince;
-  // Parties under the 3% threshold, as the engine counts it.
   excluded: ReadonlySet<string>;
   onRunning: (partyId: string, running: boolean) => void;
   onVotes: (partyId: string, votes: number) => void;
@@ -20,7 +17,6 @@ type ProvinceVotesProps = {
   onFill: () => void;
 };
 
-// Which parties run here and their votes, then blank and null votes.
 export function ProvinceVotes({ provinceName, parties, previousYear, elsewhere, province, excluded, onRunning, onVotes, onOther, onFill }: ProvinceVotesProps) {
   const id = useId();
   const valid = Object.values(province.votes).reduce((sum, votes) => sum + votes, province.blank);

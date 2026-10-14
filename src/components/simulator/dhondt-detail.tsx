@@ -12,13 +12,11 @@ type DhondtDetailProps = {
   code: string;
   deputies: number;
   detail: ReturnType<typeof dhondtDetail>;
-  // Seats are out of date while the shares do not fit in 100%.
   stale: boolean;
   onSelect: (code: string) => void;
 };
 
-// FR-09: how D'Hondt hands out one province's seats in the simulation, which
-// party took the last one and how many votes the next in line needs for it.
+// FR-09: how D'Hondt hands out one province's seats.
 export function DhondtDetail({ blocs, provinces, code, deputies, detail, stale, onSelect }: DhondtDetailProps) {
   const blocById = new Map(blocs.map((bloc) => [bloc.id, bloc]));
   const nameOf = (id: string) => blocById.get(id)?.name ?? id;

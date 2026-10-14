@@ -7,7 +7,6 @@ type ResetPasswordFormProps = {
   state: FormState;
   action: (formData: FormData) => void;
   pending: boolean;
-  // From the emailed link.
   token: string;
 };
 

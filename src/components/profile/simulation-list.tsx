@@ -13,11 +13,8 @@ export type SavedSimulation = {
   name: string;
   href: string;
   savedOn: string;
-  // Absent until it is renamed or overwritten.
   updatedOn?: string;
-  // Null when the scenario no longer restores, or a built one is unfinished.
   summary: { lead: string; ranked: readonly (Bloc & { seats: number })[] } | null;
-  // Built by hand: how many of the 52 provinces are complete.
   built?: { completed: number };
 };
 
@@ -51,7 +48,6 @@ function EmptyList() {
   );
 }
 
-// A row steps back while its deletion is being confirmed, and further while it runs.
 const row =
   "group grid grid-cols-[minmax(0,1fr)] gap-x-8 gap-y-4 py-6 transition-opacity duration-300 has-[[data-deleting]]:opacity-50 sm:grid-cols-[11rem_minmax(0,1fr)] sm:items-center";
 const chamber =
@@ -59,7 +55,6 @@ const chamber =
 
 type SimulationListProps = {
   simulations: readonly SavedSimulation[];
-  // Saved in all, across every page.
   total: number;
   page: number;
   pages: number;

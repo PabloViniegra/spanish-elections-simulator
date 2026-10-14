@@ -1,6 +1,5 @@
 import type { ImportIssue } from "@/lib/builder/import";
 
-// Why the file was refused, one problem per row, by where it is in the file.
 export function CsvImportIssues({ issues }: { issues: readonly ImportIssue[] }) {
   return (
     <div className="settle flex min-w-0 flex-col gap-3">

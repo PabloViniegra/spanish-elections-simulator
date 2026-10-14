@@ -5,11 +5,9 @@ import { type CandidacyRow, CandidacyList } from "./candidacy-list";
 type BlocManagerProps = {
   blocs: readonly Bloc[];
   candidacies: readonly CandidacyRow[];
-  // The base election, as "julio de 2023" and "2023".
   baseLabel: string;
   baseShort: string;
   canAdd: boolean;
-  // True once the blocs differ from the default ones.
   edited: boolean;
   onRename: (blocId: string, name: string) => void;
   onRecolour: (blocId: string, colour: string) => void;
@@ -19,8 +17,7 @@ type BlocManagerProps = {
   onRestore: () => void;
 };
 
-// FR-11: rename and recolour the blocs, choose which candidacies count with
-// each one, and add or take away blocs. Folded away: most users never need it.
+// FR-11: edit the blocs and which candidacies count with each.
 export function BlocManager(props: BlocManagerProps) {
   const { blocs } = props;
   return (

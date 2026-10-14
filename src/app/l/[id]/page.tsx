@@ -10,9 +10,7 @@ import { findShortLink } from "@/lib/short-links/queries";
 
 export const metadata: Metadata = { title: "Elecciones construidas", robots: { index: false, follow: false } };
 
-// A short link opens its scenario; link previews follow it to the chamber
-// image. A built election has no public address, so the link shows it here,
-// read-only and as it was when shared.
+// A built election has no public address, so the short link shows it here, read-only.
 export default async function ShortLinkPage({ params }: PageProps<"/l/[id]">) {
   const { id } = await params;
   const scenario = await findShortLink(id);

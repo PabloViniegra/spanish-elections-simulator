@@ -7,7 +7,6 @@ type RadioCardsProps<T extends string> = {
   className?: string;
 };
 
-// One choice among a few, each with a line that explains it.
 export function RadioCards<T extends string>({ legend, name, options, value, onChange, className = "flex flex-col gap-3" }: RadioCardsProps<T>) {
   return (
     <fieldset className={className}>

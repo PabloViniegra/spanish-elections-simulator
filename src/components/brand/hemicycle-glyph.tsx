@@ -1,5 +1,3 @@
-// A seven-seat hemicycle that fills in, seat by seat, when its parent
-// `group/cta` is hovered or focused. Static (fully lit) without motion.
 const seats = Array.from({ length: 7 }, (_, i) => {
   const angle = Math.PI - (i * Math.PI) / 6;
   return { x: 11 + 8 * Math.cos(angle), y: 11 - 8 * Math.sin(angle) };

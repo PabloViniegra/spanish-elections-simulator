@@ -26,13 +26,13 @@ export function DhondtAuction() {
   return (
     <section aria-labelledby="auction-title" className="depth-scope overflow-clip bg-canvas">
       <div className="mx-auto grid max-w-content gap-12 px-5 py-section sm:px-8 lg:grid-cols-[5fr_7fr] lg:items-center lg:gap-16 lg:py-40">
-        <div className="rise-scope flex flex-col gap-5">
+        <div className="rise-scope rise-unmask flex flex-col gap-5">
           <h2 id="auction-title" className={`rise [--c:0] ${sectionTitle}`}>
-            Un escaño. Una comparación. Y vuelta a empezar.
+            D’Hondt reparte los escaños de uno en uno
           </h2>
           <p className="rise max-w-[30rem] text-body text-pretty text-ink-muted-80 [--c:1]">
-            D’Hondt reparte los escaños de uno en uno. Entre los partidos que alcanzan el 3 % de los votos válidos en la
-            provincia, cada turno funciona así:
+            Solo compiten los partidos que alcanzan el 3 % de los votos válidos en la provincia. En cada turno pasa
+            esto:
           </p>
           <ol className="rise flex max-w-[30rem] flex-col gap-4 text-body text-ink-muted-80 [--c:2]">
             <li><strong className="font-semibold text-ink">1. Compara.</strong> Al principio, cada partido compite con todos sus votos. La cifra más alta gana un escaño.</li>

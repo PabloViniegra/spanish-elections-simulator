@@ -5,8 +5,7 @@ type UndoNoticeProps = {
   onUndo: () => void;
 };
 
-// FR-04: after a reset or a change of base, says what happened and offers to
-// take it back. Focus moves to the notice when its button goes away.
+// FR-04: focus moves to the notice when its button goes away.
 export function UndoNotice({ notice, onUndo }: UndoNoticeProps) {
   const ref = useRef<HTMLDivElement>(null);
   return (

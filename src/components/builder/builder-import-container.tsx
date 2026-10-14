@@ -12,10 +12,8 @@ import { BuilderImportForm } from "./builder-import-form";
 import { downloadCsv, readCsvFile, type CsvFile } from "./csv-file";
 
 const year = censusElection.slice(0, 4);
-// The template starts with the parties that ran last time, most voted first.
 const TEMPLATE_PARTIES = 10;
 
-// A new election whose parties and votes all come from one file.
 export function BuilderImportContainer({ catalog }: { catalog: readonly CatalogParty[] }) {
   const [state, action, pending] = useActionState(createBuilt, undefined);
   const ref = useFocusOnError(state);

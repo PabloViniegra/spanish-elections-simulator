@@ -7,7 +7,6 @@ import { ShareRows } from "./share-rows";
 
 type NationalInputsProps = {
   blocs: readonly Bloc[];
-  // The election the votes start from and seats compare against (FR-01).
   base: Pick<Base, "label" | "short">;
   shares: Readonly<Record<string, number>>;
   blank: number;
@@ -15,10 +14,8 @@ type NationalInputsProps = {
   seats: ReadonlyMap<string, number>;
   baseSeats: ReadonlyMap<string, number>;
   offTarget: readonly { blocId: string; requested: number; reached: number }[];
-  // Provinces edited by hand, which the national shares work around.
   lockedCount: number;
   stale: boolean;
-  // Square the shares by hand instead of scaling the other parties.
   free: boolean;
   onFreeChange: (free: boolean) => void;
   onShareChange: (blocId: string, value: number) => void;

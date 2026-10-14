@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-// The header is black on every page; the site has no dark theme.
 export const viewport: Viewport = { themeColor: "#000000", colorScheme: "light" };
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

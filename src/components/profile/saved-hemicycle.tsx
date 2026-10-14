@@ -12,14 +12,10 @@ import {
 const SEAT_RADIUS = 2.9;
 const seats = hemicycleSeats();
 const viewBox = `0 0 ${HEMICYCLE_WIDTH} ${HEMICYCLE_HEIGHT}`;
-// Every empty seat as one path: the grey chamber beneath the coloured one.
 const emptySeats = seats
   .map(({ x, y }) => `M${(x - SEAT_RADIUS).toFixed(1)} ${y.toFixed(1)}a${SEAT_RADIUS} ${SEAT_RADIUS} 0 1 0 ${2 * SEAT_RADIUS} 0a${SEAT_RADIUS} ${SEAT_RADIUS} 0 1 0 ${-2 * SEAT_RADIUS} 0`)
   .join("");
-// A saved scenario's chamber in miniature, with the majority line. Decorative:
-// the summary next to it names every bloc with its seats. The coloured seats
-// are revealed from the left over the grey chamber (.chamber-fill in
-// globals.css); `order` staggers it so the list fills one chamber at a time.
+// Decorative: the summary next to it names every bloc with its seats.
 export function SavedHemicycle({ ranked, order }: { ranked: readonly (Bloc & { seats: number })[]; order: number }) {
   const owners = ranked.flatMap((bloc) => Array<string>(bloc.seats).fill(bloc.colour));
   return (

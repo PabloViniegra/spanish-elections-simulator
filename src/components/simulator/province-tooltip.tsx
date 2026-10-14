@@ -1,22 +1,17 @@
 import { ProvinceSplit, type ProvinceSplitProps } from "./province-seats";
 
-// Gap between the cursor and the card.
 const OFFSET = 14;
 
 type ProvinceTooltipProps = ProvinceSplitProps & {
-  // Cursor position within the map, and the map's size.
   x: number;
   y: number;
   width: number;
   height: number;
-  // What a click does to the province under the cursor, if anything.
   hint: string | null;
 };
 
-// Follows the mouse over the map. Visual only: the panel below and the table
-// carry the same figures for touch screens and assistive technology.
+// Visual only: the panel below and the table carry the same figures for touch and assistive technology.
 export function ProvinceTooltip({ province, x, y, width, height, hint }: ProvinceTooltipProps) {
-  // Open towards the middle of the map so the card never leaves it.
   const left = x > width / 2;
   const above = y > height / 2;
   return (

@@ -3,9 +3,6 @@
 import { Toaster as SileoToaster } from "sileo";
 import { STATUS_ID } from "./notify";
 
-// One toaster for the whole site: a dark ink pill at the bottom, clear of
-// the sticky results strip and share budget at the top on small screens.
-// State colours and type live in globals.css.
 export function Toaster() {
   return (
     <>

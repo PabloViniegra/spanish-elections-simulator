@@ -2,15 +2,13 @@ import type { Bloc } from "@/lib/elections/types";
 import { MAJORITY, TOTAL_SEATS } from "@/lib/hemicycle-layout";
 
 type CoalitionBarProps = {
-  // Picked blocs with their seats, in the order of the chips.
   picked: readonly (Bloc & { seats: number })[];
   total: number;
 };
 
 const percent = (seats: number) => `${(seats / TOTAL_SEATS) * 100}%`;
 
-// The picked blocs side by side against the 176 line. Decorative: the text
-// below it states the same sum, so colour carries nothing on its own.
+// Decorative: the text below states the same sum.
 export function CoalitionBar({ picked, total }: CoalitionBarProps) {
   const reached = total >= MAJORITY;
   return (

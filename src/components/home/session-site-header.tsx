@@ -13,9 +13,7 @@ export function SessionSiteHeader({ current }: { current: NavPage }) {
     <SiteHeader
       current={current}
       accountBar={<Suspense fallback={<span aria-hidden="true" className="block h-11 w-60" />}><SessionAccountLinks current={current} variant="bar" /></Suspense>}
-      // The reservation mirrors the desktop bar's: it holds the pill's width
-      // for the anonymous majority and collapses once a signed-in session
-      // resolves to nothing, the same trade the accountBar fallback makes.
+      // Holds the pill's width for anonymous users; collapses once a signed-in session resolves.
       accountPill={<Suspense fallback={<span aria-hidden="true" className="block h-11 w-28" />}><SessionAccountLinks current={current} variant="pill" /></Suspense>}
       accountRows={<Suspense fallback={<span aria-hidden="true" className="block h-24" />}><SessionAccountLinks current={current} variant="row" /></Suspense>}
     />

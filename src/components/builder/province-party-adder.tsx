@@ -5,7 +5,6 @@ import { PartyPicker } from "./party-picker";
 
 type ProvincePartyAdderProps = {
   provinceName: string;
-  // Catalogue parties that ran in this province, most voted here first.
   catalog: readonly CatalogParty[];
   chosen: ReadonlySet<string>;
   full: boolean;
@@ -13,7 +12,6 @@ type ProvincePartyAdderProps = {
   onAddCustom: (name: string) => void;
 };
 
-// A party missing from the list joins it, and runs here, without leaving the province.
 export function ProvincePartyAdder({ provinceName, catalog, chosen, full, onAddCatalog, onAddCustom }: ProvincePartyAdderProps) {
   return (
     <details className="min-w-0 rounded-sm border border-hairline">

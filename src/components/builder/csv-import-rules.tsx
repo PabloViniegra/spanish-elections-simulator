@@ -1,10 +1,8 @@
 type CsvImportRulesProps = {
-  // Which party columns the file may have.
   partyRule: string;
   censusYear: string;
 };
 
-// What a file must hold to be imported; nothing is guessed.
 export function CsvImportRules({ partyRule, censusYear }: CsvImportRulesProps) {
   const rules = [
     "Una fila por circunscripción: las 52, una vez cada una, con su código INE de dos cifras y su nombre exactamente como en la plantilla.",

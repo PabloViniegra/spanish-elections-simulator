@@ -5,7 +5,6 @@ type SimulationPagesProps = { page: number; pages: number };
 const pageHref = (page: number) => (page === 1 ? "/profile" : `/profile?page=${page}`);
 const step = "flex min-h-11 min-w-11 items-center text-caption font-semibold text-primary underline underline-offset-2";
 
-// Previous and next links between pages of saved simulations.
 export function SimulationPages({ page, pages }: SimulationPagesProps) {
   if (pages <= 1) return null;
   return (

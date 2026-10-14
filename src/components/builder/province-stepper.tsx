@@ -19,7 +19,6 @@ function Chevron({ back }: { back?: boolean }) {
   );
 }
 
-// The direction above the province name: the eye reads where, then which.
 function Label({ direction, name, muted }: { direction: string; name: string; muted: string }) {
   return (
     <span className="flex min-w-0 flex-col gap-0.5 leading-none">
@@ -29,7 +28,6 @@ function Label({ direction, name, muted }: { direction: string; name: string; mu
   );
 }
 
-// Previous and next province in INE order, the path through the wizard.
 export function ProvinceStepper({ previous, next, onGo }: ProvinceStepperProps) {
   return (
     <nav aria-label="Provincia anterior y siguiente" className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2">

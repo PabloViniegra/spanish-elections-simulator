@@ -1,24 +1,19 @@
 import type { Bloc } from "@/lib/elections/types";
 import { MAJORITY, TOTAL_SEATS } from "@/lib/hemicycle-layout";
 
-// Anchor of the results column the strip jumps to.
 export const RESULTS_ID = "resultados";
 
 type ResultsStripProps = {
-  // Blocs with seats, largest first.
   ranked: readonly (Bloc & { seats: number })[];
   stale?: boolean;
-  // Blocs picked in the coalition calculator.
   selected: ReadonlySet<string>;
   edited?: { name: string; seats: number };
 };
 
-// How far a seat count stands from the 176 line.
 export function versusMajority(seats: number) {
   return seats >= MAJORITY ? `mayoría (${MAJORITY})` : `faltan ${MAJORITY - seats} para ${MAJORITY}`;
 }
 
-// The picked coalition, or the largest bloc, against the 176 line.
 export function summaryOf(ranked: ResultsStripProps["ranked"], selected: ReadonlySet<string>) {
   const picked = ranked.filter((bloc) => selected.has(bloc.id));
   const coalition = picked.reduce((sum, bloc) => sum + bloc.seats, 0);
@@ -28,12 +23,7 @@ export function summaryOf(ranked: ResultsStripProps["ranked"], selected: Readonl
   return { picked, summary };
 }
 
-// Narrow screens only: the hemicycle scrolls out of view while the sliders are
-// used, so this strip keeps the seat split and the 176 line in sight: the
-// largest bloc, or the picked coalition, against the majority. It links down to
-// the hemicycle, which carries the accessible description.
-// Its height is fixed (h-15) because the share budget pins itself right below
-// it with the same value (top-15); change both together.
+// h-15 matches the share budget's top-15, which pins it right below; change both together.
 export function ResultsStrip({ ranked, stale = false, selected, edited }: ResultsStripProps) {
   const { picked, summary } = summaryOf(ranked, selected);
   const feedback = edited && picked.length === 0 ? `${edited.name} ${edited.seats} escaños` : summary;

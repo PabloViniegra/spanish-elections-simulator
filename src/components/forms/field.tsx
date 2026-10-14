@@ -12,7 +12,6 @@ type FieldProps = {
 
 export function Field({ label, hint, error, children }: FieldProps) {
   const id = useId();
-  // The hint gives way to the error so the two never repeat each other.
   const hintId = hint && !error ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
   const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;

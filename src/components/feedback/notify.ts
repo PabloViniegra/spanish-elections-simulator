@@ -1,10 +1,8 @@
 import { sileo, type SileoOptions } from "sileo";
 
-// Sileo only mounts its live region when a toast appears, and screen readers
-// tend to skip a region that arrives with its text. This one is always there.
+// Sileo mounts its live region with the toast, which screen readers tend to skip; this one is always there.
 export const STATUS_ID = "toast-status";
 
-// Descriptions are plain text, so they can be read out as they are.
 type Toast = Omit<SileoOptions, "description"> & { description?: string };
 
 function announce({ title, description }: Toast) {

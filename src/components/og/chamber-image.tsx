@@ -11,14 +11,12 @@ import {
 } from "@/lib/hemicycle-layout";
 import { OG_SIZE } from "@/lib/site";
 
-// Static SemiBold cut of the site's Hanken Grotesk: the image renderer reads neither
-// woff2 nor variable fonts.
+// The image renderer reads neither woff2 nor variable fonts.
 const font = await readFile(join(process.cwd(), "src/assets/fonts/hanken-grotesk-latin-600.ttf"));
 
 const seats = hemicycleSeats();
 const { x: cx, y: cy } = HEMICYCLE_CENTER;
 
-// Seat `i` takes `fills[i]`, with the majority line down the middle.
 function hemicycleSvg(fills: readonly string[]) {
   const dots = seats.map(({ x, y }, index) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.7" fill="${fills[index] ?? "#333333"}"/>`);
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-12 -12 ${HEMICYCLE_WIDTH + 24} ${HEMICYCLE_HEIGHT + 12}">${dots.join("")}<path d="M${cx} -12V${cy - HEMICYCLE_OUTER_RADIUS - 5}M${cx} ${cy - HEMICYCLE_INNER_RADIUS + 5}V${HEMICYCLE_HEIGHT}" fill="none" stroke="#2997ff" stroke-width="0.6" stroke-dasharray="1.5 1.5"/></svg>`;
@@ -27,7 +25,6 @@ function hemicycleSvg(fills: readonly string[]) {
 type ChamberImageProps = {
   title: string;
   fills: readonly string[];
-  // Named next to their colour, so colour is not the only signal.
   legend?: readonly { name: string; colour: string; seats: number }[];
   hemicycleWidth?: number;
 };

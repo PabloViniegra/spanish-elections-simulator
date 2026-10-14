@@ -9,9 +9,6 @@ const compared = [
 // Every constituency starts from the same 2 seats; the rest follow population.
 const BASE_SEATS = 2;
 
-// One dot per seat on a shared 13-column grid, so both constituencies are
-// drawn at the same scale and the difference reads as area. The 2 base seats
-// are solid ink in both; Madrid's population seats are the lighter surplus.
 export function ConstituencyDots() {
   return (
     <div className="flex flex-col gap-10">

@@ -1,10 +1,6 @@
 import { FULL_SHARE } from "@/lib/scenario/types";
 import { formatShare } from "./format";
 
-// Basis points left for other parties once the blocs and blank vote are set;
-// negative when they add up to more than 100%. Pinned so it stays in view
-// while the sliders below move it. Over budget it offers to scale every party
-// down in proportion instead of leaving that arithmetic to the user.
 export function ShareBudget({ others, onRebalance }: { others: number; onRebalance: () => void }) {
   const over = others < 0;
   return (

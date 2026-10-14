@@ -24,9 +24,7 @@ const SimulatorInputs = dynamic(() => import("./simulator-inputs").then((module)
 const ExportResultsContainer = dynamic(() => import("./export-results-container").then((module) => module.ExportResultsContainer), { loading: () => <p role="status">Cargando descargas…</p> });
 const SaveSimulationContainer = dynamic(() => import("./save-simulation-container").then((module) => module.SaveSimulationContainer), { loading: () => <p role="status">Cargando formulario…</p> });
 
-// National (FR-02) and provincial (FR-03) modes over one scenario: the votes
-// of a bundled election as the base (FR-01). Results follow the last valid
-// scenario, which the address mirrors. Only saving requires authentication.
+// FR-01, FR-02, FR-03: national and provincial modes over one scenario.
 export function SimulatorContainer({ signedIn, initial, saved }: { signedIn: boolean; initial: SimulatorInitialState; saved: SavedTarget | null }) {
   const state = useSimulator(initial);
   const [target, keepTarget] = useSavedTarget(saved);
@@ -39,7 +37,7 @@ export function SimulatorContainer({ signedIn, initial, saved }: { signedIn: boo
     <>
       <ResultsStrip ranked={ranked} stale={stale} selected={picked} edited={state.editedBloc ? { name: state.editedBloc.name, seats: simulation.seats.get(state.editedBloc.id) ?? 0 } : undefined} />
       <div className="mx-auto flex max-w-content flex-col gap-10 px-5 py-10 sm:px-8">
-        {/* Two columns with the results pinned on the right; the rows below take the full width, so they sit outside this grid (a sticky box stays within the grid container, not its area). */}
+        {/* A sticky box stays within its grid container, so the full-width rows sit outside this grid. */}
         <div className="grid grid-cols-[minmax(0,1fr)] gap-10 [&>*]:min-w-0 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:items-start lg:gap-x-16 lg:gap-y-6">
           <div className="flex flex-col gap-6">
             <SimulatorInputs state={state} />

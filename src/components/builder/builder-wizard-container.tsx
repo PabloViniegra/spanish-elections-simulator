@@ -23,7 +23,6 @@ type BuilderWizardContainerProps = {
   name: string;
   initial: BuiltScenario;
   revision: number;
-  // Where to start when the address names no province.
   start: string;
 };
 
@@ -47,13 +46,11 @@ export function BuilderWizardContainer({ id, name, initial, revision, start }: B
       router.replace("/profile");
     });
 
-  // Name the province in the address, so going back returns to it and not to
-  // wherever the server would start then.
+  // Name the province in the address so going back returns to it.
   useEffect(() => {
     if (requested !== code) window.history.replaceState(null, "", builderHref(id, code));
   }, [requested, code, id]);
 
-  // A new province takes the reader, and the focus, to its name.
   const shown = useRef(code);
   useEffect(() => {
     if (shown.current === code) return;
@@ -79,13 +76,11 @@ export function BuilderWizardContainer({ id, name, initial, revision, start }: B
   const complete = statuses.filter(({ status }) => status === "complete");
   const winners = provinceWinners(complete.map((each) => allocateProvince(scenario, each.code, seats)));
   const leaders = new Map([...winners].map(([each, { leaders: ids }]) => [each, ids.flatMap((leader) => blocById.get(leader) ?? [])]));
-  // A province not started yet shows, and starts with, the parties that ran there last time.
   const latest = latestResults.get(code);
   const province = startProvince(scenario, code, reference, latest).provinces[code];
   const edit = (change: (current: BuiltScenario) => BuiltScenario) => setScenario((current) => change(startProvince(current, code, reference, latest)));
   const result = allocateProvince(scenario, code, seats);
   const eligible = new Set(eligibleParties(scenario, code, reference).map((party) => party.id));
-  // Parties marked where they never ran stay listed, so they can be unmarked.
   const listed = scenario.parties.filter((party) => eligible.has(party.id) || party.id in province.votes);
   const status = statuses.find((each) => each.code === code)?.status ?? "empty";
   const year = censusElection.slice(0, 4);

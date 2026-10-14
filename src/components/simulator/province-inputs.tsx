@@ -9,16 +9,12 @@ import { PROVINCE_INPUTS_ID } from "./ids";
 
 type ProvinceInputsProps = {
   blocs: readonly Bloc[];
-  // The election the votes start from and seats compare against (FR-01).
   base: Pick<Base, "label" | "short">;
-  // The blocs with a row here: those that run in the province.
   rowBlocs: readonly Bloc[];
   provinces: readonly { code: string; name: string }[];
   code: string;
-  // Deputies the selected province elects.
   deputies: number;
   lockedCodes: readonly string[];
-  // Shares of the province's valid votes: the locked ones, or the projection.
   shares: Readonly<Record<string, number>>;
   blank: number;
   others: number;
@@ -26,7 +22,6 @@ type ProvinceInputsProps = {
   baseSeats: ReadonlyMap<string, number>;
   offTarget: readonly { blocId: string; requested: number; reached: number }[];
   stale: boolean;
-  // Square the shares by hand instead of scaling the other parties.
   free: boolean;
   onFreeChange: (free: boolean) => void;
   onSelect: (code: string) => void;
@@ -37,8 +32,7 @@ type ProvinceInputsProps = {
   onReset: () => void;
 };
 
-// FR-03: the shares of one province. Editing any of them locks it (P-07), and
-// the national shares are then met with the other provinces.
+// FR-03: editing any share locks the province (P-07).
 export function ProvinceInputs(props: ProvinceInputsProps) {
   const { blocs, provinces, code, deputies, lockedCodes, offTarget, stale } = props;
   const locked = lockedCodes.includes(code);

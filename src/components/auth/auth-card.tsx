@@ -7,7 +7,6 @@ type AuthCardProps = {
   description: string;
   children: ReactNode;
   footer: ReactNode;
-  // Context shown between the heading and the form.
   notice?: ReactNode;
 };
 

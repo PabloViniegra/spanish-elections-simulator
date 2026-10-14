@@ -20,8 +20,6 @@ type PartyPickerProps = {
   label?: string;
 };
 
-// Search the parties that ran since 2016. With no search, the catalogue
-// order stands: the most voted parties of the latest election first.
 export function PartyPicker({ catalog, chosen, full, onAdd, label = "Buscar partidos que se presentaron desde 2016" }: PartyPickerProps) {
   const id = useId();
   const [query, setQuery] = useState("");

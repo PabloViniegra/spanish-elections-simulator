@@ -12,13 +12,10 @@ import { BuiltResults } from "./built-results";
 
 type BuiltResultsContainerProps = {
   scenario: BuiltScenario;
-  // Absent in a shared link, which only carries the votes.
   name?: string;
-  // The owner's own copy, which can be edited and shared.
   ownerId?: string;
 };
 
-// The Congreso of a complete built election, with the same views as the simulator.
 export function BuiltResultsContainer({ scenario, name, ownerId }: BuiltResultsContainerProps) {
   const [selected, setSelected] = useState<ReadonlySet<string>>(new Set());
   const [code, setCode] = useState("28");
@@ -32,7 +29,6 @@ export function BuiltResultsContainer({ scenario, name, ownerId }: BuiltResultsC
     if (!next.delete(id)) next.add(id);
     setSelected(next);
   };
-  // The detail sits below the map, off-screen on a phone: bring it there.
   const showDetail = (next: string) => {
     setCode(next);
     const panel = document.getElementById(DHONDT_ID);

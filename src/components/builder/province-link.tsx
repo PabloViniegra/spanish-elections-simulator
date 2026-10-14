@@ -4,15 +4,13 @@ type ProvinceLinkProps = {
   href: string;
   code: string;
   current?: boolean;
-  // Read instead of the visible text.
   label?: string;
   className: string;
   onGo: (code: string) => void;
   children: ReactNode;
 };
 
-// A real link, so it opens in a new tab, that changes province in place on a
-// plain click and keeps the unsaved edits.
+// A real link so it opens in a new tab; a plain click changes province in place and keeps unsaved edits.
 export function ProvinceLink({ href, code, current, label, className, onGo, children }: ProvinceLinkProps) {
   const go = (event: MouseEvent<HTMLAnchorElement>) => {
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;

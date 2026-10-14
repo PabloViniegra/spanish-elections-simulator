@@ -45,13 +45,11 @@ export function useAutosave(id: string, json: string, revision: number) {
     return () => {
       window.removeEventListener("beforeunload", warn);
       document.removeEventListener("click", navigate, true);
-      // History traversal can unmount without clicking a link; drain rather
-      // than cancelling the pending edit with the debounce timer.
+      // History traversal can unmount without a link click; drain rather than cancel the pending edit.
       void saver.flush();
     };
   }, [router, saver]);
 
-  // Sends the latest draft now and says whether it was stored.
   const save = useCallback(() => saver.flush(), [saver]);
   return { status, flush: () => { void saver.flush(); }, save, discard: () => saver.discard() };
 }

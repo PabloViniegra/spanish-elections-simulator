@@ -2,9 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Below lg the destinations and the account live in this panel; below sm the
-// bar keeps only the brand icon, the register pill and this trigger. Any link
-// or button inside closes it.
 export function MobileMenu({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const button = useRef<HTMLButtonElement>(null);

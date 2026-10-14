@@ -16,19 +16,14 @@ const provinceCount = (count: number) => (count === 1 ? "1 provincia" : `${count
 type ProvinceMapContainerProps = {
   blocs: readonly Bloc[];
   results: readonly ConstituencyResult[];
-  // The shares in the sliders do not fit in 100%, so these are the last valid results.
   stale: boolean;
-  // Provincial mode: the province being edited, and a tap on the map picks it.
   selected: string | null;
   lockedCodes: readonly string[];
   onPick?: (code: string) => void;
-  // Takes the reader to the D'Hondt detail of a province.
   onDetail: (code: string) => void;
 };
 
-// FR-07: provinces coloured by the bloc with the most seats, ties striped,
-// with the split of the one pointed at in a tooltip or tapped in a panel, a count of provinces per bloc and a
-// table for every province.
+// FR-07: provinces coloured by the bloc with the most seats, ties striped.
 export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCodes, onPick, onDetail }: ProvinceMapContainerProps) {
   const [active, setActive] = useState<string | null>(null);
   const [mouse, setMouse] = useState(false);
@@ -51,16 +46,12 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
     .map((bloc) => ({ bloc, count: rows.filter((row) => !row.tied && row.leaders[0]?.id === bloc.id).length }))
     .filter(({ count }) => count > 0)
     .sort((a, b) => b.count - a.count);
-  // Area misleads: the province with the most deputies against the one with
-  // the fewest, leaving out Ceuta and Melilla, which the map draws as dots.
   const mainland = rows.filter((row) => !CITY_CODES.has(row.code));
   const largest = mainland.reduce((most, row) => (row.deputies > most.deputies ? row : most));
   const smallest = mainland.reduce((least, row) => (row.deputies < least.deputies ? row : least));
   const summary = [...led.map(({ bloc, count }) => `${bloc.name} en ${provinceCount(count)}`), ...(ties > 0 ? [`empate en ${provinceCount(ties)}`] : [])].join(", ");
-  // A mouse gets the tooltip; the panel keeps a tap, or the province edited.
   const hovered = mouse ? rows.find((row) => row.code === active) ?? null : null;
   const shown = (mouse ? null : active) ?? selected;
-  // The inputs sit above the map, off-screen on a phone: bring them back.
   const edit = () => {
     const inputs = document.getElementById(PROVINCE_INPUTS_ID);
     inputs?.scrollIntoView();
@@ -78,7 +69,6 @@ export function ProvinceMapContainer({ blocs, results, stale, selected, lockedCo
           <span className="text-ink-muted-80">El mapa se actualiza cuando los porcentajes vuelven a caber en el 100 %.</span>
         </p>
       )}
-      {/* Stale results lose their colour, not their contrast. */}
       <div className={`flex flex-col gap-3 ${stale ? "grayscale" : ""}`}>
         <ul aria-label="Provincias donde cada partido saca más escaños" className="flex flex-wrap gap-x-4 gap-y-1 text-caption">
           {led.map(({ bloc, count }) => (

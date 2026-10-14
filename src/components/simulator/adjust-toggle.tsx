@@ -1,5 +1,3 @@
-// Off by default: editing a party scales the others so the shares always fit
-// in 100% and the seats never go stale. On, the user squares them by hand.
 export function AdjustToggle({ free, onChange }: { free: boolean; onChange: (free: boolean) => void }) {
   return (
     <div className="flex items-start gap-3">

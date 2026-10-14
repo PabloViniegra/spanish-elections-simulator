@@ -2,14 +2,11 @@ import { useId } from "react";
 
 type CsvImportProgressProps = {
   steps: readonly string[];
-  // Steps finished so far.
   done: number;
   label: string;
-  // Set when the next step failed and can be tried again.
   onRetry?: () => void;
 };
 
-// How far a confirmed import has gone, step by step.
 export function CsvImportProgress({ steps, done, label, onRetry }: CsvImportProgressProps) {
   const id = useId();
   const failed = onRetry !== undefined;

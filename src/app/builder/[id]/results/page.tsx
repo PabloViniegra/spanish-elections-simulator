@@ -15,7 +15,6 @@ type BuiltResultsPageProps = {
   params: Promise<{ id: string }>;
 };
 
-// The Congreso, once all 52 provinces are complete; until then, the wizard.
 export default async function BuiltResultsPage({ params }: BuiltResultsPageProps) {
   const { id } = await params;
   const { user } = await requireSession(builderResultsHref(id));

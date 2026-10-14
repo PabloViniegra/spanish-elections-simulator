@@ -23,11 +23,8 @@ type ExportResultsContainerProps = {
   results: readonly ConstituencyResult[];
   blocs: readonly Bloc[];
   ranked: readonly (Bloc & { seats: number })[];
-  // Names both files after the prefix.
   filename: string;
-  // The line under the title of the PNG.
   subtitle: string;
-  // The address printed in the PNG to get back to these results.
   link: () => string | Promise<string>;
   stale: boolean;
 };
@@ -56,7 +53,6 @@ export function ExportResultsContainer({ results, blocs, ranked, filename, subti
         },
       );
     } catch {
-      // The toast already says so; the buttons come back for a retry.
     } finally {
       setBusy(false);
     }

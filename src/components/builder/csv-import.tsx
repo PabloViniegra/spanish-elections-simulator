@@ -12,16 +12,13 @@ export const IMPORT_ID = "importar";
 
 type CsvImportProps = {
   censusYear: string;
-  // Party names that would make two columns alike.
   clashes: readonly string[];
   picker: ComponentProps<typeof CsvFilePicker>;
   issues: readonly ImportIssue[] | null;
-  // `replaced`: provinces with votes already, which the file replaces.
   preview: (Omit<ComponentProps<typeof CsvImportPreview>, "children"> & { replaced: number; onConfirm: () => void; onCancel: () => void }) | null;
   progress: ComponentProps<typeof CsvImportProgress> | null;
 };
 
-// Votes of the 52 provinces at once, from a spreadsheet that follows the template.
 export function CsvImport({ censusYear, clashes, picker, issues, preview, progress }: CsvImportProps) {
   return (
     <section aria-labelledby={IMPORT_ID} className="scroll-mt-6 border-t border-hairline">

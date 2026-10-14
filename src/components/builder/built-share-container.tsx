@@ -5,14 +5,12 @@ import { notify } from "@/components/feedback/notify";
 import { ShareLink } from "@/components/simulator/share-link";
 import { shareBuilt } from "@/lib/builder/actions";
 
-// The public short link to a complete built election, as it is now.
 export async function builtShortUrl(id: string) {
   const link = await shareBuilt(id);
   if (!link) throw new Error("No short link");
   return new URL(`/l/${link}`, window.location.origin).href;
 }
 
-// Copies a read-only link to the results; later edits do not reach it.
 export function BuiltShareContainer({ id }: { id: string }) {
   const [copied, setCopied] = useState(false);
   useEffect(() => {

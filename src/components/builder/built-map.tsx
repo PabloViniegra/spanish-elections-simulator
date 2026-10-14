@@ -3,7 +3,6 @@ import { ProvinceMap } from "@/components/simulator/province-map";
 import type { Bloc } from "@/lib/elections/types";
 
 type BuiltMapProps = {
-  // Parties tied for the most seats in each complete province.
   leaders: ReadonlyMap<string, readonly Bloc[]>;
   current: string;
   onGo: (code: string) => void;
@@ -11,8 +10,7 @@ type BuiltMapProps = {
 
 const NO_LOCKS: ReadonlySet<string> = new Set();
 
-// Complete provinces in the colour of their winner; a click opens one. The
-// index beside it reaches the same provinces from the keyboard.
+// The province index beside it is the keyboard route to the same provinces.
 export function BuiltMap({ leaders, current, onGo }: BuiltMapProps) {
   const [active, setActive] = useState<string | null>(null);
   return (

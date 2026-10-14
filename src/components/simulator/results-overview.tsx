@@ -3,13 +3,9 @@ import { ResultsHemicycle } from "./results-hemicycle";
 import { summaryOf } from "./results-strip";
 
 type ResultsOverviewProps = ComponentProps<typeof ResultsHemicycle> & {
-  // The national table already names every bloc beside the hemicycle on wide
-  // screens; without it the legend stays.
   legendOnWide: boolean;
 };
 
-// Wide screens: the headline the sticky strip gives on narrow ones, then the
-// hemicycle and a legend that names every colour with its seats.
 export function ResultsOverview({ legendOnWide, ...props }: ResultsOverviewProps) {
   const { ranked, selected, stale = false } = props;
   const { summary: headline } = summaryOf(ranked, selected ?? new Set());

@@ -8,7 +8,6 @@ type ProvinceIndexProps = {
   onGo: (code: string) => void;
 };
 
-// Every province with how far along it is, to jump to any of them.
 export function ProvinceIndex({ provinces, current, onGo }: ProvinceIndexProps) {
   return (
     <details className="min-w-0">

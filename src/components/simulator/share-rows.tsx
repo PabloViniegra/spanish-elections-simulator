@@ -3,23 +3,19 @@ import { formatDelta } from "./format";
 import { ShareInput } from "./share-input";
 
 type ShareRowsProps = {
-  // Prefix for field ids, unique per mode.
   idPrefix: string;
   legend: string;
   blocs: readonly Bloc[];
-  // The base election the seat changes compare against, e.g. "2023".
   baseLabel: string;
   shares: Readonly<Record<string, number>>;
   blank: number;
   seats: ReadonlyMap<string, number>;
   baseSeats: ReadonlyMap<string, number>;
-  // Seats are out of date while the shares do not fit in 100%.
   stale: boolean;
   onShareChange: (blocId: string, value: number) => void;
   onBlankChange: (value: number) => void;
 };
 
-// One row per bloc with its share and the seats it gets, then the blank vote.
 export function ShareRows(props: ShareRowsProps) {
   const { idPrefix, legend, blocs, baseLabel, shares, blank, seats, baseSeats, stale, onShareChange, onBlankChange } = props;
   return (

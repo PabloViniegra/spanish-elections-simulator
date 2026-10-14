@@ -8,7 +8,6 @@ type BlocManagerContainerProps = {
   base: Base;
   scenario: Scenario;
   onChange: (next: Scenario) => void;
-  // For the changes that throw edits away, which can be undone (FR-04).
   onRestart: (next: Scenario, message: string) => void;
 };
 

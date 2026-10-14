@@ -10,8 +10,7 @@ type CoalitionCalculatorProps = {
   children: ReactNode;
 };
 
-// FR-08: the user picks blocs and sees their sum against 176, plus every
-// minimal combination that reaches it.
+// FR-08: picked blocs against 176, plus every minimal combination that reaches it.
 export function CoalitionCalculator({ ranked, selected, onToggle, children }: CoalitionCalculatorProps) {
   const pickedBlocs = ranked.filter((bloc) => selected.has(bloc.id));
   const total = pickedBlocs.reduce((sum, bloc) => sum + bloc.seats, 0);

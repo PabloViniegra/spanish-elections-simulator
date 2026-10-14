@@ -35,7 +35,6 @@ type BuiltResultsProps = {
 const NO_LOCKS: readonly string[] = [];
 
 export function BuiltResults({ name, seatTable, ownerId, ranked, selected, onToggle, table, blocs, results, detail, onDetail }: BuiltResultsProps) {
-  // The owner prints a link others can open; a shared link prints itself.
   const link = () => (ownerId ? builtShortUrl(ownerId).catch(() => window.location.href) : window.location.href);
   return (
     <>

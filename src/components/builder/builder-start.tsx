@@ -13,7 +13,6 @@ const modes: { value: Mode; label: string; hint: string }[] = [
   { value: "imported", label: "Importar los votos desde un CSV", hint: "Las 52 provincias de una vez; los partidos salen de la cabecera del archivo." },
 ];
 
-// How the new election gets its votes.
 export function BuilderStart({ catalog }: { catalog: readonly CatalogParty[] }) {
   const [mode, setMode] = useState<Mode>("typed");
   return (

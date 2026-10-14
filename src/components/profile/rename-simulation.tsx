@@ -23,7 +23,6 @@ type RenameSimulationProps = {
   onCancel: () => void;
 };
 
-// Takes a line of its own below the row actions.
 export function RenameSimulation({ id, name, state, action, pending, onCancel }: RenameSimulationProps) {
   return (
     <form action={action} noValidate aria-label={`Renombrar «${name}»`} className="settle order-last flex basis-full flex-col gap-3">

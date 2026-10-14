@@ -11,7 +11,6 @@ const rows = [
   { name: "En blanco", share: 2.1, blank: true },
 ];
 const THRESHOLD = 3;
-// The longest bar fills the track; the threshold line sits at the same scale.
 const SCALE = 40;
 const width = (share: number) => `${(share / SCALE) * 100}%`;
 const percent = (share: number) => `${share.toLocaleString("es-ES")} %`;
@@ -20,9 +19,9 @@ export function ThresholdBars() {
   return (
     <section aria-labelledby="threshold-title" className="depth-scope overflow-clip bg-canvas-parchment">
       <div className="mx-auto grid max-w-content gap-12 px-5 py-section sm:px-8 lg:grid-cols-[5fr_7fr] lg:items-center lg:gap-16 lg:py-40">
-        <div className="rise-scope flex flex-col gap-5">
+        <div className="rise-scope rise-side flex flex-col gap-5">
           <h2 id="threshold-title" className={`rise [--c:0] ${sectionTitle}`}>
-            Por debajo del 3 %, fuera.
+            Quien no llega al 3 % se queda fuera
           </h2>
           <p className="rise max-w-[30rem] text-body text-pretty text-ink-muted-80 [--c:1]">
             En cada provincia, los partidos que no llegan al 3 % de los votos válidos se quedan sin reparto. El voto en blanco no
@@ -57,7 +56,6 @@ export function ThresholdBars() {
                           style={{ ...cssVar("--i", i), width: width(share) }}
                           className={`bar-grow h-full rounded-xs ${blank ? "border border-dashed border-ink-muted-48" : out ? "bg-ink-muted-48" : "bg-ink"}`}
                         />
-                        {/* Drawn per row so it runs through the bars, not behind them. */}
                         <span aria-hidden="true" style={{ left: width(THRESHOLD) }} className="absolute -inset-y-2 w-0.5 -translate-x-1/2 bg-primary" />
                       </div>
                     </td>

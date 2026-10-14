@@ -11,8 +11,6 @@ const ballots: { kind: string; verdict: string; detail: string; paper: PaperKind
   { kind: "No votar", verdict: "No cuenta", detail: "La abstención solo cambia la participación.", paper: "none", tilt: "rotate-3", depth: -0.5 },
 ];
 
-// A ballot paper drawn in a few strokes: a printed list, an empty sheet, a
-// list struck through, or no paper at all.
 function Paper({ paper }: { paper: PaperKind }) {
   if (paper === "none") return <div aria-hidden="true" className="aspect-[3/4] w-full rounded-xs border border-dashed border-ink-muted-48" />;
   return (
@@ -38,7 +36,7 @@ export function BallotCards() {
       <div className="mx-auto flex max-w-content flex-col gap-14 px-5 py-section sm:px-8 lg:py-40">
         <div className="rise-scope flex max-w-[44rem] flex-col gap-5">
           <h2 id="ballots-title" className={`rise [--c:0] ${sectionTitle}`}>
-            Qué votos entran en el reparto.
+            Qué votos cuentan para el reparto
           </h2>
           <p className="rise text-body text-pretty text-on-dark-muted [--c:1]">
             Los votos válidos son los de las candidaturas más los votos en blanco. Con ellos se calcula todo lo demás.
@@ -47,7 +45,6 @@ export function BallotCards() {
         <ul className="grid grid-cols-2 gap-x-5 gap-y-12 lg:grid-cols-4 lg:gap-8">
           {ballots.map(({ kind, verdict, detail, paper, tilt, depth }) => (
             <li key={kind} className="flex flex-col gap-8">
-              {/* Only the paper drifts, so the four labels stay on one line. */}
               <div style={cssVar("--d", depth)} className={`depth mx-auto w-full max-w-44 ${tilt}`}>
                 <Paper paper={paper} />
               </div>

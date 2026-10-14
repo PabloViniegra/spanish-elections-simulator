@@ -1,7 +1,5 @@
 import { IMPORT_MAX_BYTES } from "@/lib/builder/import";
 
-// A file the user chose, kept as text so it is checked again whenever what it
-// is checked against changes, or why it was not read.
 export type CsvFile = { name: string; text: string } | { name: string; refused: string };
 
 export async function readCsvFile(file: File): Promise<CsvFile> {

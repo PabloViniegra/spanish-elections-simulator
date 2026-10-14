@@ -9,7 +9,6 @@ type LoginFormProps = {
   state: FormState;
   action: (formData: FormData) => void;
   pending: boolean;
-  // Where to go once signed in.
   next: string;
 };
 

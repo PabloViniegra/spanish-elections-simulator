@@ -2,9 +2,7 @@ import type { ReactNode } from "react";
 
 export type NoticeTone = "error" | "warning";
 
-// Lasting messages tied to a form or a section; passing feedback is a toast
-// (`notify`). The tone shows in the border, the tint and the icon's shape, so
-// it does not rely on colour alone; the text stays in ink, like the page.
+// Tone shows in the border, tint and icon shape, so it does not rely on colour alone.
 const tones = {
   error: { box: "border-error bg-error/5", icon: "text-error" },
   warning: { box: "border-warning bg-warning/5", icon: "text-warning" },

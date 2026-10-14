@@ -4,8 +4,6 @@ export type ProvinceSplitProps = {
   province: { name: string; deputies: number; tied: boolean; seats: readonly { bloc: Bloc; seats: number }[] };
 };
 
-// Name, deputies and seats per bloc of one province: in the map's tooltip and
-// in the panel below it.
 export function ProvinceSplit({ province }: ProvinceSplitProps) {
   return (
     <>
@@ -29,16 +27,12 @@ export function ProvinceSplit({ province }: ProvinceSplitProps) {
 }
 
 type ProvinceSeatsProps = {
-  // Province tapped on a touch screen, or the one being edited; null for the hint.
   province: ProvinceSplitProps["province"] | null;
-  // The province shown is the one being edited.
   editing: boolean;
   onEdit: () => void;
   onDetail: () => void;
 };
 
-// Below the map: what a mouse sees in the tooltip, for touch screens, and in
-// provincial mode which province the inputs edit, since they may be off-screen.
 export function ProvinceSeats({ province, editing, onEdit, onDetail }: ProvinceSeatsProps) {
   return (
     <div className="min-h-16 text-caption">
