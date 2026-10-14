@@ -31,7 +31,7 @@ export function ConstituencyDots() {
                 <li
                   key={i}
                   style={cssVar("--i", i)}
-                  className={`reveal-dot size-[clamp(1rem,4.2vw,1.5rem)] rounded-full transition-transform duration-200 hover:scale-125 lg:size-[clamp(1.5rem,2.6vw,2rem)] ${
+                  className={`reveal-dot size-[clamp(1rem,4.2vw,1.5rem)] rounded-full lg:size-[clamp(1.5rem,2.6vw,2rem)] ${
                     i < BASE_SEATS ? "bg-ink" : "bg-ink-muted-48"
                   }`}
                 />

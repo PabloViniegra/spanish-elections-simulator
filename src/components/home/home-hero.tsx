@@ -20,10 +20,10 @@ export function HomeHero({ actions }: { actions?: ReactNode }) {
             estimación de voto y mira cómo queda el Congreso.
           </p>
           <div className="hero-rise [--c:2]">
-            {actions ?? <CtaLinks tone="dark" />}
+            {actions ?? <CtaLinks tone="dark" size="hero" />}
           </div>
           <p className="hero-rise text-caption text-on-dark-muted [--c:3]">
-            Sin cuenta; regístrate solo para guardar. Es una simulación, no una previsión.
+            Sin cuenta; regístrate solo para guardar.
           </p>
         </div>
         <div className="sink pin-zoom w-full">
@@ -31,6 +31,9 @@ export function HomeHero({ actions }: { actions?: ReactNode }) {
             <SeatCount />
           </CountReplay>
         </div>
+        {/* Outside the pin copy and the zoom: the notice has to survive both, so
+            it still answers "is this a forecast?" while the hemicycle fills. */}
+        <p className="text-caption text-on-dark-muted">Es una simulación, no una previsión.</p>
       </div>
     </section>
   );

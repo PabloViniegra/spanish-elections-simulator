@@ -9,6 +9,15 @@
   --color-primary-focus: #48484a;
   --color-primary-on-dark: #ffffff;
 
+  /* On-dark accent (surface brief): the constituency being counted, the
+     majority line and actions sitting on surface-black. Ink on it is 5.6:1;
+     white would be 3.0:1 and fail a body label. Never used on light surfaces.
+     The lighter sibling below is the hover fill — an opacity tint over black
+     would darken it and drop the ink label under 4.5:1. The keyboard ring on
+     dark stays white, so a ring is never mistaken for either fill. */
+  --color-action-blue: #2997ff;
+  --color-action-blue-hover: #4dabff;
+
   --color-canvas: #ffffff;
   --color-canvas-parchment: #f5f5f7;
   --color-surface-pearl: #fafafc;
@@ -222,7 +231,7 @@
   }
   6%,
   45% {
-    fill: var(--color-primary-on-dark);
+    fill: var(--color-action-blue);
   }
   100% {
     fill: var(--color-on-dark);
@@ -570,13 +579,16 @@
   }
 }
 
-/* Home page. On wide screens the hero pins for one screen of scroll: the copy
-   recedes while the hemicycle zooms in to fill the view (this overrides the
-   lift-away/sink fallback used below lg). Figures zoom in as they arrive. */
+/* Home page. On wide screens the hero pins for part of one screen of scroll:
+   the copy recedes while the hemicycle zooms in to fill the view (this
+   overrides the lift-away/sink fallback used below lg). Figures zoom in as they
+   arrive. The pin is capped at 150svh: pin-copy is spent by contain 45%, so a
+   taller scope left most of a screen with no headline, no action and no
+   simulation notice on it. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) and (width >= 64rem) {
     .pin-scope {
-      height: 200svh;
+      height: 150svh;
       view-timeline: --pin block;
     }
     .pin-stage {
@@ -610,6 +622,7 @@
     scale: 0.8;
     translate: 0 -10rem;
     filter: blur(16px);
+    visibility: hidden;
   }
 }
 @keyframes pin-zoom {

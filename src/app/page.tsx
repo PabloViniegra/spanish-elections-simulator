@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 async function HomeActions() {
   const session = await getSession();
-  return <CtaLinks tone="dark" withLogin={!session} />;
+  return <CtaLinks tone="dark" withLogin={!session} size="hero" />;
 }
 
 async function AccountDeletedNotice({ searchParams }: Pick<PageProps<"/">, "searchParams">) {
@@ -34,7 +34,7 @@ export default function Home({ searchParams }: PageProps<"/">) {
       <JsonLd data={{ "@context": "https://schema.org", "@type": "WebSite", name: SITE_NAME, url: SITE_URL, inLanguage: "es" }} />
       <SessionSiteHeader current="home" />
       <main id="contenido" className="flex-1">
-        <HomeHero actions={<Suspense fallback={<CtaLinks tone="dark" withLogin={false} />}><HomeActions /></Suspense>} />
+        <HomeHero actions={<Suspense fallback={<CtaLinks tone="dark" withLogin={false} size="hero" />}><HomeActions /></Suspense>} />
         <SeatContrast />
         <DhondtExample />
         <HomeClosing />

@@ -30,11 +30,35 @@ function Destinations({ current, variant }: { current: NavPage; variant: "bar" |
   );
 }
 
-export function AccountLinks({ username, current, variant }: { username?: string; current: NavPage; variant: "bar" | "row" }) {
+export type Variant = "bar" | "row" | "pill";
+
+// The sign-up pill is the loudest thing in the header, so it appears on every
+// page except the simulator, where it drops to a plain link. One treatment,
+// three places: the desktop bar, the mobile bar and the panel, so the product's
+// one ask reads the same wherever it is found.
+const pillClasses =
+  "rounded-full bg-action-blue px-[15px] py-2 text-ink transition-[background-color,scale] duration-150 ease-snappy group-hover:bg-action-blue-hover group-active:scale-[0.97]";
+
+function RegisterPill({ className = "min-h-11" }: { className?: string }) {
+  return (
+    <Link href="/register" className={`group flex items-center ${className}`}>
+      <span className={pillClasses}>Crear cuenta</span>
+    </Link>
+  );
+}
+
+export function AccountLinks({ username, current, variant }: { username?: string; current: NavPage; variant: Variant }) {
   const bar = variant === "bar";
+  const signUpIsThePoint = current !== "simulator";
+
+  // The mobile bar carries only the pill: it is the one commitment the header
+  // asks for, and it used to be two taps deep in the panel. Never for a
+  // signed-in user — the panel already offers profile and sign-out.
+  if (variant === "pill") return !username && signUpIsThePoint ? <RegisterPill /> : null;
+
   return username ? (
     <>
-      <NavLink href="/profile" page="profile" current={current} variant={variant}>
+      <NavLink href="/profile" page="profile" current={current} variant={bar ? "bar" : "row"}>
         {bar ? <span className="sr-only">Mi perfil: </span> : "Mi perfil · "}
         <span className={bar ? "max-w-40 truncate" : "truncate"} title={username}>{username}</span>
       </NavLink>
@@ -43,17 +67,18 @@ export function AccountLinks({ username, current, variant }: { username?: string
   ) : (
     <>
       <Link href="/login" className={bar ? `flex items-center ${BAR}` : "flex min-h-12 items-center"}>Iniciar sesión</Link>
-      <Link href="/register" className={bar ? (current !== "simulator" ? "group flex min-h-11 items-center" : `flex items-center ${BAR}`) : "flex min-h-12 items-center text-primary-on-dark"}>
-        <span className={bar && current !== "simulator" ? "rounded-full bg-primary px-[15px] py-2 text-on-primary transition-[background-color,scale] duration-150 ease-snappy group-hover:bg-primary-focus group-active:scale-[0.97]" : undefined}>Crear cuenta</span>
-      </Link>
+      {signUpIsThePoint ? (
+        <RegisterPill className={bar ? "min-h-11" : "min-h-12"} />
+      ) : (
+        <Link href="/register" className={bar ? `flex items-center ${BAR}` : "flex min-h-12 items-center"}>Crear cuenta</Link>
+      )}
     </>
   );
 }
 
-// `current` marks the page in the nav. The sign-up pill is the loudest thing
-// on the bar, so it only appears where signing up is the point (home and
-// explainer); inside the simulator it drops to a plain link.
-export function SiteHeader({ username, current, accountBar, accountRows }: { username?: string; current: NavPage; accountBar?: ReactNode; accountRows?: ReactNode }) {
+// `current` marks the page in the nav; where the sign-up pill appears is
+// AccountLinks' rule above — every page but the simulator, never signed in.
+export function SiteHeader({ username, current, accountBar, accountRows, accountPill }: { username?: string; current: NavPage; accountBar?: ReactNode; accountRows?: ReactNode; accountPill?: ReactNode }) {
   return (
     <header className="focus-on-dark relative bg-surface-black text-on-dark">
       <a
@@ -80,7 +105,7 @@ export function SiteHeader({ username, current, accountBar, accountRows }: { use
               className="stroke-primary-on-dark transition-[stroke-dasharray] duration-500 ease-snappy [stroke-dasharray:52_100] group-hover:[stroke-dasharray:62_100] group-focus-visible:[stroke-dasharray:62_100] motion-reduce:duration-0"
             />
           </svg>
-          Simulador de Elecciones
+          <span className="sr-only sm:not-sr-only">Simulador de Elecciones</span>
         </Link>
         <div className="ml-6 mr-auto hidden items-center gap-6 lg:flex">
           <Destinations current={current} variant="bar" />
@@ -88,12 +113,15 @@ export function SiteHeader({ username, current, accountBar, accountRows }: { use
         <div className="hidden items-center gap-5 lg:flex">
           {accountBar ?? <AccountLinks username={username} current={current} variant="bar" />}
         </div>
-        <MobileMenu>
-          <Destinations current={current} variant="row" />
-          <div className="mt-1 border-t border-white/15 pt-1">
-            {accountRows ?? <AccountLinks username={username} current={current} variant="row" />}
-          </div>
-        </MobileMenu>
+        <div className="flex items-center gap-4 lg:hidden">
+          {accountPill ?? <AccountLinks username={username} current={current} variant="pill" />}
+          <MobileMenu>
+            <Destinations current={current} variant="row" />
+            <div className="mt-1 border-t border-white/15 pt-1">
+              {accountRows ?? <AccountLinks username={username} current={current} variant="row" />}
+            </div>
+          </MobileMenu>
+        </div>
       </nav>
     </header>
   );

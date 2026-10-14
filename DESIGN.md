@@ -9,7 +9,7 @@ Store and shop surfaces retain the same chassis but switch modes. The product co
 **Key Characteristics:**
 - Photography-first presentation; UI recedes so the product can speak.
 - Alternating full-bleed tile sections: white/parchment ↔ near-black, with the color change itself acting as the section divider.
-- Single neutral accent (`{colors.primary}` — #1d1d1f, the ink tone) carries every interactive element. No hue is used for actions, so no party colour is echoed by a button.
+- One accent per surface: `{colors.primary}` (#1d1d1f, the ink tone) carries every interactive element on light surfaces, and `{colors.action-blue}` (#2997ff) carries them on dark ones. Neither encodes a party, so no button echoes one.
 - Two button grammars: tiny blue pill CTAs (`{rounded.pill}`) and compact utility rects (`{rounded.sm}`).
 - SF Pro Display + SF Pro Text — negative letter-spacing at display sizes for the signature "Apple tight" headline feel.
 - Whisper-soft elevation used only when a product image needs to breathe — exactly one drop-shadow in the entire system.
@@ -21,9 +21,10 @@ Store and shop surfaces retain the same chassis but switch modes. The product co
 > **Source pages analyzed:** homepage, environment, store, iPhone 17 Pro buy page, accessories index. The color system is identical across all five surfaces; only the surface-mode mix differs.
 
 ### Brand & Accent
-- **Action Ink** (`{colors.primary}` — #1d1d1f): The single brand-level interactive color, deliberately hueless so that no action resembles a party colour. All text links, all pill CTAs, and the focus ring root. Press state shifts via the active scale transform rather than a hex change.
-- **Focus Graphite** (`{colors.primary-focus}` — #48484a): A lighter sibling of Action Ink, used for hover fills and the keyboard focus ring on buttons (`outline: 2px solid`).
-- **Link On Dark** (`{colors.primary-on-dark}` — #ffffff): Used on dark surfaces for in-copy links and inline callouts, where Action Ink would disappear against the tile background.
+- **Action Ink** (`{colors.primary}` — #1d1d1f): The brand-level interactive color on light surfaces, deliberately hueless so that no action resembles a party colour. All text links, all pill CTAs and the focus ring root there; on dark surfaces it hands actions over to Action Blue. Press state shifts via the active scale transform rather than a hex change.
+- **Action Blue** (`{colors.action-blue}` — #2997ff): The interactive color on dark surfaces only — buttons sitting on `{colors.surface-black}`, the constituency being counted as it lights up, and the majority line. A system azure rather than a party blue: it never encodes a candidacy. Fill it and the label goes in `{colors.ink}` (5.6:1); white on it measures 3.0:1, so a white label on an Action Blue fill is a defect, not a variant. Never use it on a light surface. Its lighter sibling `{colors.action-blue-hover}` (#4dabff, ink on it 6.9:1) is the hover fill on dark, because an opacity tint of Action Blue over black darkens it below 4.5:1 for an ink label; the keyboard ring there stays `{colors.primary-on-dark}`, so a ring is never mistaken for a fill.
+- **Focus Graphite** (`{colors.primary-focus}` — #48484a): A lighter sibling of Action Ink, used for hover fills and the keyboard focus ring on buttons (`outline: 2px solid`). On dark surfaces the ring is `{colors.primary-on-dark}` (white) instead, so a ring is never mistaken for an Action Blue fill.
+- **Link On Dark** (`{colors.primary-on-dark}` — #ffffff): Used on dark surfaces for in-copy links and inline callouts, where Action Ink would disappear against the tile background, and as the outline and label of the secondary pill there. It is not the action color on dark — that is Action Blue.
 
 ### Surface
 - **Pure White** (`{colors.canvas}` — #ffffff): The dominant canvas. Content, utility cards, store tiles, configurator grids.
@@ -171,6 +172,10 @@ Apple's whitespace is the product's pedestal. Every tile begins with at least 64
 
 **`button-store-hero`** — A larger primary CTA used on store hero surfaces. Same Action Ink + Paper White as `{component.button-primary}`, but with `{typography.button-large}` (18px / 300 — note the rare weight 300) and slightly more padding (14px × 28px). Used sparingly on the store landing.
 
+**`button-hero-dark`** — The primary action of a dark hero. Background `{colors.action-blue}` (#2997ff), label `{colors.ink}`, rounded `{rounded.pill}`, padding 14px × 28px in `{typography.button-large}` (18px / 300). Always paired with the secondary pill in its on-dark form (`{colors.primary-on-dark}` outline and label), which stays on the default rung: the primary wins on size and fill at once, so the pair never reads as two monochrome twins. At most one per page, in the hero — `{component.action-band}` keeps its own inverted `{colors.canvas}` pill, because that band paints the whole surface Action Ink and has no second action beside it.
+
+**`nav-register-pill`** — The account ask in the header. Background `{colors.action-blue}`, label `{colors.ink}` in `{typography.caption}`, rounded `{rounded.pill}`, padding 8px × 15px. Shown in the desktop bar and, below lg, beside the menu trigger; hidden to signed-in users and replaced by a plain link inside the simulator, where signing up is not the point. The mobile panel repeats it at full row height while open — the same treatment at two scales, deliberately, so the ask is never two taps deep in the hamburger.
+
 **`button-icon-circular`** — Floats over photography. 44 × 44px, background `{colors.surface-chip-translucent}` at ~64% alpha, icon in `{colors.ink}`, rounded `{rounded.full}`. Used for carousel controls, close buttons, and in-image controls (product image thumbnails on the iPhone buy page).
 
 **`text-link`** — Inline body links in `{colors.primary}` (Action Ink). Underlined or non-underlined per context.
@@ -216,7 +221,7 @@ Error and validation states were not surfaced in the analyzed pages.
 ## Do's and Don'ts
 
 ### Do
-- Use `{colors.primary}` (Action Ink #1d1d1f) for every interactive element — links, pill CTAs, focus signals — and nothing else. The single accent is non-negotiable.
+- Use `{colors.primary}` (Action Ink #1d1d1f) for every interactive element on light surfaces — links, pill CTAs, focus signals — and `{colors.action-blue}` (Action Blue) on dark ones. Exactly one accent per surface, and nothing else.
 - Set headlines in `{typography.hero-display}` or `{typography.display-lg}` with negative letter-spacing (`-0.28 → -0.374px`) to get the signature "Apple tight" cadence.
 - Run body copy at `{typography.body}` (17px / 400 / 1.47 / -0.374px) — not 16px. The extra pixel defines the brand's reading pace.
 - Alternate `{component.product-tile-light}` (or parchment) and `{component.product-tile-dark}` for full-bleed section rhythm. The color change IS the divider.
@@ -227,14 +232,14 @@ Error and validation states were not surfaced in the analyzed pages.
 - Keep the global nav `{colors.surface-black}` (true black) — it's the only place pure black appears on most pages.
 
 ### Don't
-- Don't introduce a second accent color; every "click me" signal is `{colors.primary}` (Action Ink).
+- Don't introduce a third accent color. The only sanctioned hue is `{colors.action-blue}` (Action Blue), and only on dark surfaces; every "click me" signal on a light surface is `{colors.primary}` (Action Ink).
 - Don't add shadows to cards, buttons, or text — shadow is reserved for product imagery.
 - Don't use gradients as decorative backgrounds; atmosphere comes from photography.
 - Don't set body copy at weight 500 — Apple's ladder is 300 / 400 / 600 / 700, with 500 deliberately absent. Body is always 400; strong inline is 600; display is 600.
 - Don't round full-bleed tiles — tiles are rectangular and edge-to-edge; the color change is the divider.
 - Don't tighten line-height below 1.47 for body copy — the editorial leading is part of the brand.
 - Don't mix radii grammars — use `{rounded.sm}` for compact utility, `{rounded.lg}` for utility cards, `{rounded.pill}` for pills, and nothing in between (except the rare `{rounded.md}` Pearl Button).
-- Don't use `{colors.primary-on-dark}` (Sky Link Blue) on light surfaces — it's the dark-tile-only variant. Action Ink is for light surfaces.
+- Don't use `{colors.primary-on-dark}` (#ffffff) or `{colors.action-blue}` on light surfaces — both are dark-surface-only. Action Ink is for light surfaces.
 
 ## Responsive Behavior
 

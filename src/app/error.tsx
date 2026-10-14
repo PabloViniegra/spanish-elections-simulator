@@ -9,7 +9,7 @@ import { SiteFooter } from "@/components/layout/site-footer";
 export default function Error({ error, retry }: { error: Error & { digest?: string }; retry: () => void }) {
   return (
     <>
-      <SiteHeader current="home" accountBar={<></>} accountRows={<></>} />
+      <SiteHeader current="home" accountBar={<></>} accountRows={<></>} accountPill={<></>} />
       <ErrorState digest={error.digest} onRetry={retry} />
       <SiteFooter>Es una simulación, no una previsión.</SiteFooter>
     </>

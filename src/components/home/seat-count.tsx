@@ -58,7 +58,7 @@ export function SeatCount() {
               y2={to.y}
               strokeWidth={0.8}
               style={slot(startMs, durationMs)}
-              className="count-step stroke-primary-on-dark"
+              className="count-step stroke-action-blue"
             />
           );
         })}
@@ -69,7 +69,7 @@ export function SeatCount() {
           strokeWidth={0.6}
           strokeDasharray="1.5 1.5"
           style={{ animationDuration: `${totalMs}ms` }}
-          className="count-final stroke-primary-on-dark"
+          className="count-final stroke-action-blue"
         />
       </svg>
       <figcaption className="grid text-center text-caption text-on-dark-muted tabular-nums">
@@ -82,7 +82,7 @@ export function SeatCount() {
         <span style={{ animationDuration: `${totalMs}ms` }} className="count-final col-start-1 row-start-1">
           {steps.length} circunscripciones · {TOTAL_SEATS} escaños
           <span className="hidden sm:inline"> · </span>
-          <span className="block font-semibold text-primary-on-dark sm:inline">mayoría absoluta en {MAJORITY}</span>
+          <span className="block font-semibold text-action-blue sm:inline">mayoría absoluta en {MAJORITY}</span>
         </span>
       </figcaption>
     </figure>

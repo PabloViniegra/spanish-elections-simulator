@@ -24,6 +24,7 @@ export function HomeClosing() {
           <Image
             src={ballotBox}
             alt=""
+            placeholder="blur"
             sizes="(max-width: 639px) calc(100vw - 40px), (max-width: 831px) calc(100vw - 64px), 768px"
             className="zoom-in mt-6 h-auto w-full max-w-3xl"
           />

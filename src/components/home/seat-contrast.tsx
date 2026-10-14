@@ -1,5 +1,6 @@
 import { cssVar } from "@/lib/css-var";
 import { simulationSeats } from "@/lib/elections/current";
+import { ElectionReference } from "../legal/election-reference";
 import { ConstituencyDots } from "./constituency-dots";
 import { sectionTitle } from "./type";
 
@@ -16,6 +17,11 @@ export function SeatContrast() {
           <p className="rise max-w-[30rem] text-body [--c:1] text-pretty text-ink-muted-80">
             Cada provincia parte de 2 escaños, y Ceuta y Melilla tienen 1. Los 248 restantes se
             reparten según la población de derecho (padrón) de cada provincia.
+          </p>
+          {/* The citation sits with the seat figures it validates, not only in
+              the footer where nobody reading "2 y 38" will look. */}
+          <p className="rise max-w-[30rem] text-caption text-pretty text-ink-muted-80 [--c:2]">
+            <ElectionReference />
           </p>
         </div>
         <div style={cssVar("--d", -6)} className="depth">

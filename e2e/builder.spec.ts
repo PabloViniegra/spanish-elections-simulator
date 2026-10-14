@@ -36,6 +36,11 @@ async function signUpTo(page: Page, next: string) {
 test("a signed-in user creates a built election and fills it in province by province", async ({ page, browser }) => {
   await signUpTo(page, "/builder/new");
   await page.setViewportSize({ width: 360, height: 800 });
+  const principalNav = page.getByRole("navigation", { name: "Principal" });
+  await page.getByRole("button", { name: "Menú" }).click();
+  await expect(principalNav.getByRole("link", { name: /Mi perfil/ })).toBeVisible();
+  await expect(principalNav.getByRole("link", { name: "Crear cuenta" })).toHaveCount(0);
+  await page.getByRole("button", { name: "Menú" }).click();
   await expect(page.getByText("Son unas elecciones construidas a mano, no una previsión.")).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   await page.setViewportSize({ width: 1440, height: 900 });
