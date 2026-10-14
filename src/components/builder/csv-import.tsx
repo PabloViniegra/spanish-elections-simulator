@@ -1,3 +1,4 @@
+import { HemicycleGlyph } from "@/components/brand/hemicycle-glyph";
 import type { ComponentProps } from "react";
 import { Notice } from "@/components/feedback/notice";
 import type { ImportIssue } from "@/lib/builder/import";
@@ -57,9 +58,10 @@ export function CsvImport({ censusYear, clashes, picker, issues, preview, progre
                 <button
                   type="button"
                   onClick={preview.onConfirm}
-                  className="min-h-11 rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-150 hover:bg-primary-focus active:scale-[0.96]"
+                  className="group/cta inline-flex min-h-11 items-center gap-2 rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-150 hover:bg-primary-focus active:scale-[0.96]"
                 >
                   {preview.replaced > 0 ? "Reemplazar los votos" : "Importar los votos"}
+                  <HemicycleGlyph />
                 </button>
                 <button type="button" onClick={preview.onCancel} className="flex min-h-11 items-center text-caption font-semibold underline underline-offset-2">
                   Cancelar

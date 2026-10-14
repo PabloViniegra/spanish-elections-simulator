@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { signOut } from "@/lib/auth/actions";
+import { HemicycleGlyph } from "@/components/brand/hemicycle-glyph";
 import { MobileMenu } from "./mobile-menu";
 import { BAR, NavLink, type NavPage } from "./nav-link";
 
@@ -37,12 +38,15 @@ export type Variant = "bar" | "row" | "pill";
 // three places: the desktop bar, the mobile bar and the panel, so the product's
 // one ask reads the same wherever it is found.
 const pillClasses =
-  "rounded-full bg-action-blue px-[15px] py-2 text-ink transition-[background-color,scale] duration-150 ease-snappy group-hover:bg-action-blue-hover group-active:scale-[0.97]";
+  "inline-flex items-center gap-1.5 rounded-full bg-action-blue px-[15px] py-2 text-ink transition-[background-color,scale] duration-150 ease-snappy group-hover/cta:bg-action-blue-hover group-active/cta:scale-[0.97]";
 
 function RegisterPill({ className = "min-h-11" }: { className?: string }) {
   return (
-    <Link href="/register" className={`group flex items-center ${className}`}>
-      <span className={pillClasses}>Crear cuenta</span>
+    <Link href="/register" className={`group/cta flex items-center ${className}`}>
+      <span className={pillClasses}>
+        Crear cuenta
+        <HemicycleGlyph className="h-2.5 w-4" />
+      </span>
     </Link>
   );
 }

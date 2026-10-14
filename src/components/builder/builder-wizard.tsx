@@ -1,3 +1,4 @@
+import { HemicycleGlyph } from "@/components/brand/hemicycle-glyph";
 import type { ComponentProps } from "react";
 import Link from "next/link";
 import { BuiltMap } from "./built-map";
@@ -45,8 +46,9 @@ export function BuilderWizard({ name, completed, resultsHref, save, discard, hea
             </p>
             <p className="text-caption text-ink-muted-80">Son unas elecciones construidas a mano, no una previsión.</p>
             {resultsHref && (
-              <Link href={resultsHref} className="mt-2 inline-flex min-h-11 w-fit items-center rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-150 hover:bg-primary-focus active:scale-[0.96]">
+              <Link href={resultsHref} className="group/cta mt-2 inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-150 hover:bg-primary-focus active:scale-[0.96]">
                 Ver el Congreso
+                <HemicycleGlyph />
               </Link>
             )}
             <a href={`#${IMPORT_ID}`} className="inline-flex min-h-11 w-fit items-center text-caption font-semibold underline underline-offset-2">

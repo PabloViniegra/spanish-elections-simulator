@@ -1,3 +1,4 @@
+import { HemicycleGlyph } from "@/components/brand/hemicycle-glyph";
 import Link from "next/link";
 import { CONTACT_EMAIL } from "@/lib/legal";
 
@@ -19,9 +20,10 @@ export function ErrorState({ digest, onRetry }: { digest?: string; onRetry: () =
         <button
           type="button"
           onClick={onRetry}
-          className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-150 ease-snappy hover:bg-primary-focus active:scale-[0.96]"
+          className="group/cta inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-primary px-6 text-caption font-semibold text-on-primary transition-[background-color,scale] duration-150 ease-snappy hover:bg-primary-focus active:scale-[0.96]"
         >
           Reintentar
+          <HemicycleGlyph />
         </button>
         <Link href="/" className="inline-flex min-h-11 items-center text-caption text-ink underline-offset-4 hover:underline">
           Volver al inicio
