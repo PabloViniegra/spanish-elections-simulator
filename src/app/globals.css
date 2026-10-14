@@ -586,7 +586,7 @@
    taller scope left most of a screen with no headline, no action and no
    simulation notice on it. */
 @supports (animation-timeline: view()) {
-  @media (prefers-reduced-motion: no-preference) and (width >= 64rem) {
+  @media (prefers-reduced-motion: no-preference) and (width >= 64rem) and (height >= 40rem) {
     .pin-scope {
       height: 150svh;
       view-timeline: --pin block;
@@ -610,9 +610,9 @@
   }
   @media (prefers-reduced-motion: no-preference) {
     .zoom-in {
-      animation: zoom-in var(--ease-smooth) both;
+      animation: zoom-in linear both;
       animation-timeline: view();
-      animation-range: entry 0% cover 45%;
+      animation-range: entry 20% entry 90%;
     }
   }
 }
@@ -634,8 +634,8 @@
 @keyframes zoom-in {
   from {
     opacity: 0;
-    scale: 0.6;
-    translate: 0 8rem;
+    scale: 0.92;
+    translate: 0 2rem;
   }
 }
 
