@@ -7,10 +7,19 @@ import {
   MAJORITY,
   TOTAL_SEATS,
 } from "@/lib/hemicycle-layout";
+import { cssVar } from "@/lib/css-var";
 import { seatCount } from "@/lib/seat-count";
+import map from "@/data/map/provinces.json";
+import { INSET_CODES, INSET_SHIFT, mapFrame, seatMapPositions } from "@/lib/seat-map";
 
 const { seats, steps, totalMs } = seatCount();
 const PAD = 12;
+const origins = seatMapPositions(steps, PAD);
+// Each seat's flight; the count ends once the last one has landed.
+const FLIGHT_MS = 1100;
+const endMs = totalMs + FLIGHT_MS;
+const frame = mapFrame(PAD);
+const insetShift = `translate(${INSET_SHIFT.x} ${INSET_SHIFT.y})`;
 
 // Point on the circle around the hemicycle centre, in SVG units.
 function polar(radius: number, angle: number) {
@@ -26,7 +35,10 @@ const slot = (startMs: number, durationMs: number) => ({
 });
 
 // The finished count is the markup's default state; the CSS in globals.css
-// replays the count over it only when motion is allowed.
+// replays the count over it only when motion is allowed: the seats start as a
+// dot map of Spain and each constituency flies to its wedge as it is counted.
+// The group carries the horizontal leg and the circle the vertical one, so
+// their different easings draw an arc.
 export function SeatCount() {
   return (
     <figure className="flex w-full flex-col items-center gap-5">
@@ -36,15 +48,31 @@ export function SeatCount() {
         aria-label={`Hemiciclo del Congreso: ${TOTAL_SEATS} escaños repartidos en ${steps.length} circunscripciones. La mayoría absoluta está en ${MAJORITY}.`}
         className="w-full max-w-[min(64rem,max(18rem,calc((100svh-40rem)*2)))] min-w-0"
       >
-        {seats.map(({ x, y, delayMs }) => (
-          <circle
+        {/* The provinces the seats leave from, fading as the count empties them. */}
+        <g
+          transform={`translate(${frame.x.toFixed(1)} ${frame.y}) scale(${frame.scale.toFixed(4)})`}
+          style={{ animationDuration: `${endMs}ms` }}
+          className="count-map fill-on-dark/5 stroke-on-dark/15"
+        >
+          <path d={map.inset} transform={insetShift} fill="none" strokeWidth={2} />
+          {map.provinces.map(({ code, d }) => (
+            <path key={code} d={d} transform={INSET_CODES.has(code) ? insetShift : undefined} strokeWidth={2} />
+          ))}
+        </g>
+        {seats.map(({ x, y, delayMs }, index) => (
+          <g
             key={`${x}-${y}`}
-            cx={x.toFixed(1)}
-            cy={y.toFixed(1)}
-            r={2.7}
-            style={{ animationDelay: `${delayMs}ms` }}
-            className="count-seat fill-on-dark"
-          />
+            style={{ ...slot(delayMs, FLIGHT_MS), ...cssVar("--fly-x", +(origins[index].x - x).toFixed(1)) }}
+            className="count-fly"
+          >
+            <circle
+              cx={x.toFixed(1)}
+              cy={y.toFixed(1)}
+              r={2.7}
+              style={{ ...slot(delayMs, FLIGHT_MS), ...cssVar("--fly-y", +(origins[index].y - y).toFixed(1)) }}
+              className="count-seat fill-on-dark"
+            />
+          </g>
         ))}
         {steps.map(({ code, angle, startMs, durationMs }) => {
           const from = polar(HEMICYCLE_OUTER_RADIUS + 4, angle);
@@ -68,7 +96,7 @@ export function SeatCount() {
           fill="none"
           strokeWidth={0.6}
           strokeDasharray="1.5 1.5"
-          style={{ animationDuration: `${totalMs}ms` }}
+          style={{ animationDuration: `${endMs}ms` }}
           className="count-final stroke-action-blue"
         />
       </svg>
@@ -79,7 +107,7 @@ export function SeatCount() {
             {steps.length} · {seatsSoFar} de {TOTAL_SEATS}
           </span>
         ))}
-        <span style={{ animationDuration: `${totalMs}ms` }} className="count-final col-start-1 row-start-1">
+        <span style={{ animationDuration: `${endMs}ms` }} className="count-final col-start-1 row-start-1">
           {steps.length} circunscripciones · {TOTAL_SEATS} escaños
           <span className="hidden sm:inline"> · </span>
           <span className="block font-semibold text-action-blue sm:inline">mayoría absoluta en {MAJORITY}</span>

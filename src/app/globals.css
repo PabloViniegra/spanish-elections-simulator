@@ -200,13 +200,28 @@
    allowed, each seat lights blue as its constituency is counted and settles
    white, the per-constituency labels and ticks show only during their slot,
    and the summary and majority line appear when the count ends. */
-.count-step {
+.count-step,
+.count-map {
   opacity: 0;
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* Seats wait on the map of Spain, then fly in an arc to the hemicycle: the
+     group eases across while the circle rises and drops, lit while airborne. */
+  .count-fly {
+    animation: count-fly-x linear both;
+  }
+
+  .count-map {
+    animation: count-map linear both;
+  }
+
   .count-seat {
-    animation: count-seat 900ms var(--ease-snappy) both;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation:
+      count-fly-y linear both,
+      count-seat linear both;
   }
 
   .count-step {
@@ -227,14 +242,62 @@
 
 @keyframes count-seat {
   0% {
-    fill: color-mix(in srgb, var(--color-on-dark) 16%, transparent);
+    fill: color-mix(in srgb, var(--color-on-dark) 55%, transparent);
+    scale: 0.6;
   }
-  6%,
-  45% {
+  12% {
     fill: var(--color-action-blue);
+    scale: 0.9;
+  }
+  70% {
+    fill: var(--color-action-blue);
+    scale: 1.3;
+  }
+  84% {
+    scale: 0.9;
   }
   100% {
     fill: var(--color-on-dark);
+    scale: 1;
+  }
+}
+
+@keyframes count-map {
+  from,
+  20% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes count-fly-x {
+  from {
+    translate: calc(var(--fly-x) * 1px) 0;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.35, 1);
+  }
+  72%,
+  to {
+    translate: 0 0;
+  }
+}
+
+@keyframes count-fly-y {
+  from {
+    translate: 0 calc(var(--fly-y) * 1px);
+    animation-timing-function: cubic-bezier(0.2, 0.6, 0.4, 1);
+  }
+  40% {
+    translate: 0 calc(var(--fly-y) * 0.55px - 18px);
+    animation-timing-function: cubic-bezier(0.6, 0, 0.8, 0.4);
+  }
+  72% {
+    translate: 0 0;
+    animation-timing-function: var(--ease-snappy);
+  }
+  to {
+    translate: 0 0;
   }
 }
 
