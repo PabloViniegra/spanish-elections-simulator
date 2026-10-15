@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BallotCards } from "@/components/explainer/ballot-cards";
+import { CongressMachine } from "@/components/explainer/congress-machine/congress-machine";
 import { ConstituencyMap } from "@/components/explainer/constituency-map";
 import { DhondtAuction } from "@/components/explainer/dhondt-auction";
 import { ExplainerClosing } from "@/components/explainer/explainer-closing";
@@ -40,6 +41,7 @@ export default function ExplainerPage() {
         <BallotCards />
         <ThresholdBars />
         <DhondtAuction />
+        <CongressMachine />
         <ExplainerTakeaways />
         <ExplainerClosing />
       </main>
