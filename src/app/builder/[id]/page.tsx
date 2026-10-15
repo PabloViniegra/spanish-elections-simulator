@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { BuilderWizardContainer } from "@/components/builder/builder-wizard-container";
 import { SiteHeader } from "@/components/home/site-header";
 import { requireSession } from "@/lib/auth/session";
@@ -26,7 +27,9 @@ export default async function BuilderPage({ params }: BuilderPageProps) {
     <>
       <SiteHeader username={user.name} current="builder" />
       <main id="contenido" className="flex-1">
-        <BuilderWizardContainer key={found.id} id={found.id} name={found.name} initial={scenario} revision={found.revision} start={nextOpen(scenario, builderReference)} />
+        <Suspense>
+          <BuilderWizardContainer key={found.id} id={found.id} name={found.name} initial={scenario} revision={found.revision} start={nextOpen(scenario, builderReference)} />
+        </Suspense>
       </main>
     </>
   );

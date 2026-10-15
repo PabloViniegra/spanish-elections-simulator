@@ -19,6 +19,8 @@ function download(blob: Blob, filename: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+const loadHemicyclePng = () => import("@/lib/scenario/export-png").then((module) => module.hemicyclePng);
+
 type ExportResultsContainerProps = {
   results: readonly ConstituencyResult[];
   blocs: readonly Bloc[];
@@ -40,22 +42,20 @@ export function ExportResultsContainer({ results, blocs, ranked, filename, subti
       notify.error({ title: "No se ha podido descargar el CSV", description: "Vuelve a intentarlo." });
     }
   };
-  const png = async () => {
+  const png = () => {
     if (stale || busy) return;
     setBusy(true);
-    try {
-      await notify.promise(
-        Promise.all([import("@/lib/scenario/export-png"), link()]).then(([{ hemicyclePng }, href]) => hemicyclePng(ranked, subtitle, href)).then((blob) => download(blob, `hemiciclo-${filename}.png`)),
+    notify
+      .promise(
+        Promise.all([loadHemicyclePng(), link()]).then(([hemicyclePng, href]) => hemicyclePng(ranked, subtitle, href)).then((blob) => download(blob, `hemiciclo-${filename}.png`)),
         {
           loading: { title: "Preparando PNG…" },
           success: { title: "PNG descargado", description: "El hemiciclo con el enlace a esta simulación." },
           error: { title: "No se ha podido descargar el PNG", description: "Vuelve a intentarlo." },
         },
-      );
-    } catch {
-    } finally {
-      setBusy(false);
-    }
+      )
+      .catch(() => {})
+      .finally(() => setBusy(false));
   };
   return <ExportResults stale={stale} busy={busy} onCsv={csv} onPng={png} />;
 }
