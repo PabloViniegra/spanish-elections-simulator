@@ -17,7 +17,7 @@ A public web app where anyone can enter a vote estimate and instantly see the re
 
 **Non-goals (v1)**
 
-- Senado, autonómicas, municipales, europeas.
+- Simulating the Senado, autonómicas, municipales, europeas. The Senado has an explainer page only (2023 results, no simulation).
 - Saved scenario history and server-side scenario storage.
 - Poll aggregation or forecasting models: the user supplies the estimate.
 - Pre-electoral coalition logic beyond treating a coalition as one candidacy.
@@ -243,5 +243,5 @@ The early general election of 29 November 2026 turned the main risk into a deadl
 2. **M1 – Data for 29N.** Done: build script and 2016–2023 bases; 2026 seat table from Real Decreto 806/2026, checked against R-03 with RD 1117/2025 population; default bloc mapping for 2023.
 3. **M2 – Launch before the campaign (13 Nov 2026). Done.** National mode on 2023 votes and 2026 seats, hemicycle, coalition calculator, URL sharing, "simulation, not a forecast" notice, accessibility of the shipped views, Spanish UI, Vercel production.
 4. **M3 – Depth, after 29N. In progress.** Provincial mode with locks (FR-03), map (FR-07) and D'Hondt detail (FR-09) are implemented; bundle official 29 November 2026 results after election day.
-5. **M4 – Completion. In progress.** Explainer page and election builder (FR-16) implemented; remaining: full accessibility pass and English UI.
-6. **Later.** Saved scenario history, Senado, autonómicas, population what-ifs (R-03).
+5. **M4 – Completion. In progress.** Explainer pages for the Congreso and the Senado and election builder (FR-16) implemented; remaining: full accessibility pass and English UI.
+6. **Later.** Saved scenario history, Senado simulation, autonómicas, population what-ifs (R-03).
