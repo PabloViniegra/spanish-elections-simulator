@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { SiteFooter } from "../layout/site-footer";
 import { CtaLinks } from "../home/cta-links";
 import { closingTitle } from "../home/type";
@@ -12,7 +13,12 @@ export function ExplainerClosing() {
             Ahora te toca hacer el reparto
           </h2>
           <p className="rise max-w-[34rem] text-body text-pretty [--c:1]">
-            Pon un porcentaje a cada partido y el simulador aplica estas mismas reglas en las 52 circunscripciones.
+            Pon un porcentaje a cada partido y el simulador aplica estas mismas reglas en las 52 circunscripciones. El Senado se
+            elige de otra manera:{" "}
+            <Link href="/how-it-works/senate" className="underline underline-offset-2">
+              así funciona
+            </Link>
+            .
           </p>
           <div className="rise [--c:2]">
             <CtaLinks tone="blue" withLogin={false} />

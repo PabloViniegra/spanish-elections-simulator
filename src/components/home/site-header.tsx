@@ -27,6 +27,9 @@ function Destinations({ current, variant }: { current: NavPage; variant: "bar" |
       <NavLink href="/how-it-works" page="how-it-works" current={current} variant={variant}>
         Cómo funciona
       </NavLink>
+      <NavLink href="/how-it-works/senate" page="senate" current={current} variant={variant}>
+        Senado
+      </NavLink>
     </>
   );
 }

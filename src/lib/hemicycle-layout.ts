@@ -12,12 +12,12 @@ export const HEMICYCLE_CENTER = { x: HEMICYCLE_WIDTH / 2, y: HEMICYCLE_HEIGHT - 
 
 // Seats spread over concentric half rings in proportion to the length of each
 // ring, then numbered from the left edge sweeping to the right, as in a parliament.
-export function hemicycleSeats() {
+export function hemicycleSeats(total = TOTAL_SEATS) {
   const radii = Array.from({ length: ROWS }, (_, row) => HEMICYCLE_INNER_RADIUS + row * ROW_GAP);
   const radiiSum = radii.reduce((sum, radius) => sum + radius, 0);
-  const exact = radii.map((radius) => (radius / radiiSum) * TOTAL_SEATS);
+  const exact = radii.map((radius) => (radius / radiiSum) * total);
   const counts = exact.map(Math.floor);
-  let missing = TOTAL_SEATS - counts.reduce((sum, count) => sum + count, 0);
+  let missing = total - counts.reduce((sum, count) => sum + count, 0);
   exact
     .map((value, row) => ({ row, remainder: value - Math.floor(value) }))
     .sort((a, b) => b.remainder - a.remainder)
@@ -41,5 +41,5 @@ export function hemicycleSeats() {
       }),
     )
     .sort((a, b) => b.angle - a.angle)
-    .map((seat, index) => ({ ...seat, majority: index < MAJORITY }));
+    .map((seat, index) => ({ ...seat, majority: index < Math.floor(total / 2) + 1 }));
 }

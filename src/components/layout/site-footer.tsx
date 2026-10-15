@@ -66,6 +66,11 @@ export function SiteFooter({ children }: { children?: ReactNode }) {
                 </Link>
               </li>
               <li>
+                <Link href="/how-it-works/senate" className={linkClass}>
+                  Cómo funciona el Senado
+                </Link>
+              </li>
+              <li>
                 <Link href="/privacy" className={linkClass}>
                   Privacidad
                 </Link>

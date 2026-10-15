@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-export type NavPage = "home" | "simulator" | "builder" | "how-it-works" | "profile" | "privacy";
+export type NavPage = "home" | "simulator" | "builder" | "how-it-works" | "senate" | "profile" | "privacy";
 
 export const BAR =
   "min-h-11 bg-[linear-gradient(currentColor,currentColor)] bg-[length:0_2px] bg-[position:0_100%] bg-no-repeat opacity-90 transition-[background-size,opacity] duration-300 ease-snappy hover:bg-[length:100%_2px] hover:opacity-100 motion-reduce:duration-0 aria-[current=page]:bg-[linear-gradient(var(--color-primary-on-dark),var(--color-primary-on-dark))] aria-[current=page]:bg-[length:100%_2px] aria-[current=page]:opacity-100";
