@@ -20,8 +20,6 @@ export type CongressSeat = { colour: string; code: string };
 const blocOf = new Map(blocs2023.flatMap((bloc) => bloc.candidacyIds.map((id) => [id, bloc] as const)));
 const acronymOf = new Map(election.candidacies.map(({ id, acronym }) => [id, acronym]));
 
-// Provinces take contiguous wedges of the hemicycle in INE code order, and
-// inside its wedge each column fills its seats in column order.
 function build() {
   const provinces: ProvinceMachine[] = [];
   const seats: CongressSeat[] = [];

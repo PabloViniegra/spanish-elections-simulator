@@ -13,14 +13,13 @@ import { P } from "./view";
 
 const BEAT = 1100;
 const TOUR_PAUSE = 4500;
-// Provinces the idle tour walks through: large, mid-size and the smallest.
 const TOUR = ["28", "08", "41", "46", "33", "42"];
 
 function readoutOf(province: ProvinceMachine, step: number) {
   if (step === 0) return `${province.seats} escaños por repartir`;
   const award = province.awards[step - 1];
   const column = province.columns[award.column];
-  return `Escaño ${step} de ${province.seats} · ${column.label} · ${format(column.votes)} ÷ ${award.divisor} = ${format(award.quotient)}`;
+  return `Escaño ${step} de ${province.seats}: ${column.label}, ${format(column.votes)} ÷ ${award.divisor} = ${format(award.quotient)}`;
 }
 
 export function MachineLive({ seats, provinces, initial }: { seats: Seating; provinces: ProvinceMachine[]; initial: string }) {
@@ -33,12 +32,12 @@ export function MachineLive({ seats, provinces, initial }: { seats: Seating; pro
   const running = playing && step < total;
   const [touched, setTouched] = useState(false);
   const stage = useRef<HTMLDivElement>(null);
+  const scroller = useRef<HTMLDivElement>(null);
   const svg = useRef<SVGSVGElement>(null);
   const bar = useRef<SVGGElement>(null);
   const level = useRef(parts.levels[total]);
   const [barAt] = useState(() => translateAlong(P, [0, 0, parts.levels[total]]));
   const started = useRef(false);
-  // The first time the figure comes into view it empties and deals again.
   const inView = useInView(stage, (visible) => {
     if (!visible || started.current || asksForStillness()) return;
     started.current = true;
@@ -46,6 +45,11 @@ export function MachineLive({ seats, provinces, initial }: { seats: Seating; pro
     setPlaying(true);
   });
   const still = useStillness();
+
+  useEffect(() => {
+    const node = scroller.current;
+    if (node) node.scrollLeft = (node.scrollWidth - node.clientWidth) / 2;
+  }, []);
 
   const target = parts.levels[step];
   const kick = useLoop((dt, calm) => {
@@ -130,9 +134,11 @@ export function MachineLive({ seats, provinces, initial }: { seats: Seating; pro
         className="relative rounded-lg bg-canvas-parchment px-3 pt-14 pb-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-action-blue sm:px-8 sm:pt-16"
       >
         <p className="absolute top-5 left-5 text-caption font-semibold text-ink sm:top-6 sm:left-8">
-          {province.name} <span className="font-normal text-ink-muted-80">· {province.seats} escaños</span>
+          {province.name}
         </p>
-        <MachineFigure seats={seats} parts={parts} step={step} label={label} svgRef={svg} barRef={bar} barAt={barAt} />
+        <div ref={scroller} className="overflow-x-auto">
+          <MachineFigure seats={seats} parts={parts} step={step} label={label} svgRef={svg} barRef={bar} barAt={barAt} />
+        </div>
         <p
           id="congress-machine-readout"
           aria-live={running ? "off" : "polite"}
@@ -156,8 +162,11 @@ export function MachineLive({ seats, provinces, initial }: { seats: Seating; pro
           <li key={column.id} className="flex items-center gap-2">
             <span aria-hidden="true" className="size-2.5 rounded-full" style={{ background: column.excluded ? "var(--color-hairline)" : column.colour }} />
             <span className="text-ink">{column.label}</span>
-            {percent(column.share)}
-            <span className="tabular-nums">{column.excluded ? "· no llega al 3 %" : `· ${column.seats} ${column.seats === 1 ? "escaño" : "escaños"}`}</span>
+            <span className="tabular-nums">
+              {column.excluded
+                ? `${percent(column.share)}, no llega al 3 %`
+                : `${column.seats} ${column.seats === 1 ? "escaño" : "escaños"} (${percent(column.share)})`}
+            </span>
           </li>
         ))}
         {province.hidden ? <li>y {province.hidden} candidaturas más sin escaño</li> : null}

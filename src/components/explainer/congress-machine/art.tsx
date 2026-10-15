@@ -18,8 +18,6 @@ function LabelPlate({ label }: { label: Label }) {
   );
 }
 
-// Seats rest in a pale party colour until the live figure marks the chosen
-// province's seats as waiting or won.
 const SEAT_STATES = [
   "[&_[data-slot]:not([data-state])]:[--cap:color-mix(in_oklab,var(--seat)_24%,white)]",
   "[&_[data-slot]:not([data-state])]:[--side:color-mix(in_oklab,var(--seat)_34%,white)]",

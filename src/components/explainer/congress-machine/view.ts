@@ -10,7 +10,6 @@ export const BASE: Plan = { x: -244, y: -84, w: 492, d: 146, r: 10 };
 export const BASE_H = 9;
 export const FOOT_H = 5;
 
-// Hemicycle: the home layout scaled into world units, opening toward the viewer.
 export const HEMI = { x: -118, y: 34 };
 export const HEMI_SCALE = 0.8;
 export const ROWS = 10;
@@ -29,8 +28,6 @@ export const seatAt = (x: number, y: number) => {
   return { x: HEMI.x + dx, y: HEMI.y + dy, row };
 };
 
-// Machine: one column per candidacy, a bar that falls in front of them, and
-// a coin tray per column in front of the bar.
 export const BED: Plan = { x: 10, y: -30, w: 232, d: 74, r: 5 };
 export const BED_H = 5;
 export const SOCKET_H = 3;

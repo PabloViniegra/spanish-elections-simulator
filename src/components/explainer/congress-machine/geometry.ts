@@ -29,8 +29,6 @@ export const BASE_ART = {
   label: labelOf({ x: -34, y: 44, w: 34, d: 12, r: 1 }, 0),
 };
 
-// The plinth is a D: a half disc behind the hemicycle's centre line plus the
-// strip in front where the Mesa stands.
 const OUTER = INNER + (ROWS - 1) * ROW_GAP + ROW_GAP / 2 + 4;
 const halfDisc = (radius: number, from: number, to: number, steps = 40): Plane[] =>
   Array.from({ length: steps + 1 }, (_, step) => {
@@ -105,7 +103,6 @@ export const FRAME_ART = {
 
 export const WHEEL_TOP = POST_TOP + BEAM_H + 4.2;
 
-// The bar is built with its top at z = 0 and moved up to the current level.
 const carriage = (x: number): Plan => ({ x: x - 6.5, y: POST_Y + POST_HALF, w: 13, d: 6.5, r: 1.2 });
 const barPlan: Plan = { x: POSTS[0], y: BAR_Y - BAR_HALF, w: POSTS[1] - POSTS[0], d: BAR_HALF * 2, r: 0.8 };
 export const BAR_ART = {

@@ -11,17 +11,17 @@ export function CongressMachine() {
   return (
     <section aria-labelledby="congress-machine-title" className="depth-scope overflow-clip bg-canvas">
       <div className="mx-auto flex max-w-content flex-col gap-12 px-5 py-section sm:px-8 lg:py-40">
-        <div className="rise-scope rise-unmask flex max-w-[46rem] flex-col gap-5">
+        <div className="rise-scope rise-focus flex max-w-[46rem] flex-col gap-5">
           <h2 id="congress-machine-title" className={`rise [--c:0] ${sectionTitle}`}>
             La máquina que llena el Congreso
           </h2>
           <p className="rise text-body text-pretty text-ink-muted-80 [--c:1]">
-            Cada columna mide el porcentaje de voto válido de una candidatura en la provincia. Sus muescas marcan ese voto
-            dividido entre 2, 3, 4… Una barra baja desde arriba y, cada vez que toca una muesca o la parte de arriba de una
-            columna, esa candidatura gana un escaño. La barra para cuando la provincia ha repartido todos los suyos.
+            Cada columna es el voto válido de una candidatura en la provincia, y sus muescas marcan ese voto dividido entre
+            2, 3, 4… La barra baja desde arriba y cada muesca o columna que toca es un escaño para esa candidatura. Se
+            detiene cuando se han repartido todos.
           </p>
           <p className="rise text-caption text-pretty text-ink-muted-80 [--c:2]">
-            Elige una provincia o recorre el reparto paso a paso con las flechas del teclado.
+            Elige una provincia o recorre el reparto con las flechas del teclado.
           </p>
         </div>
         <figure className="flex flex-col gap-5">

@@ -9,8 +9,6 @@ const LOWEST_NOTCH = 1.2;
 
 export type ColumnPart = ReturnType<typeof partsOf>["columns"][number];
 
-// Everything that changes with the province, built from the same award list
-// that the readout and the hemicycle use.
 export function partsOf(province: ProvinceMachine) {
   const columns = province.columns.map((column, index) => {
     const plan = columnPlan(columnX(index));

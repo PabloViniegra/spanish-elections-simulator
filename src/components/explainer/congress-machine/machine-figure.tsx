@@ -9,8 +9,6 @@ import { HEIGHT, WIDTH } from "./view";
 
 type Parts = ReturnType<typeof partsOf>;
 
-// A party colour spread over the kit's shade tokens, so the column keeps its
-// lit top and darker sides.
 const tint = (colour: string) => ({
   ...cssVar("--anatomy-paper", colour),
   ...cssVar("--anatomy-top", `color-mix(in oklab, ${colour} 70%, white)`),
@@ -36,7 +34,7 @@ export function MachineFigure({ seats, parts, step, label, svgRef, barRef, barAt
     if (coin.index < step) won[coin.column]++;
   });
   return (
-    <svg ref={svgRef} className="iso-svg mx-auto max-w-[64rem]" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={label} focusable="false">
+    <svg ref={svgRef} className="iso-svg mx-auto min-w-[30rem] max-w-[64rem]" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="img" aria-label={label} focusable="false">
       <Base />
       <Hemicycle seats={seats} />
       <Back />
