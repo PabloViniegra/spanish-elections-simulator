@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type List = { party: string; names: string[] };
+type List = { party: string; note?: string; names: string[] };
 
 function status(marked: string[], parties: number, limit: number) {
   if (marked.length === 0) return "Sin cruces, la papeleta contaría como voto en blanco.";
@@ -26,18 +26,19 @@ export function BallotLive({ lists, limit }: { lists: List[]; limit: number }) {
         <legend className="sr-only">Papeleta del Senado, marca hasta {limit} candidatos</legend>
         <div aria-hidden="true" className="flex flex-col gap-1">
           <p className="text-fine-print font-semibold tracking-[0.08em] uppercase">Elecciones al Senado · Soria</p>
-          <p className="text-fine-print">Puede votar como máximo a {limit} candidatos. Cualquier alteración anula el voto.</p>
+          <p className="text-caption">Puede votar como máximo a {limit} candidatos. Cualquier alteración anula el voto.</p>
         </div>
         <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
-          {lists.map(({ party, names }) => (
-            <div key={party} role="group" aria-label={party} className="flex flex-col gap-1.5">
+          {lists.map(({ party, note, names }) => (
+            <div key={party} role="group" aria-label={note ? `${party}, ${note}` : party} className="flex flex-col gap-1.5">
               <p aria-hidden="true" className="border-b border-ink/25 pb-1 text-caption font-semibold">
                 {party}
+                {note && <span className="block font-normal text-ink-muted-80 text-caption">{note}</span>}
               </p>
               {names.map((name) => {
                 const checked = marked.includes(name);
                 return (
-                  <label key={name} className={`flex min-h-11 cursor-pointer items-center gap-3 text-caption ${!checked && full ? "cursor-not-allowed opacity-50" : ""}`}>
+                  <label key={name} className={`flex min-h-11 cursor-pointer items-center gap-3 text-caption ${!checked && full ? "cursor-not-allowed opacity-70" : ""}`}>
                     <span className="relative flex shrink-0">
                       <input
                         type="checkbox"
@@ -59,7 +60,7 @@ export function BallotLive({ lists, limit }: { lists: List[]; limit: number }) {
           ))}
         </div>
       </fieldset>
-      <div className="sticky bottom-0 z-10 -mx-5 flex flex-wrap items-center justify-between gap-3 border-t border-hairline bg-canvas/90 px-5 py-3 backdrop-blur-md sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+      <div className="sticky bottom-0 z-10 -mx-5 flex flex-wrap items-center justify-between gap-3 border-t border-hairline bg-canvas px-5 py-3 sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:p-0">
         <p aria-live="polite" className="text-body text-pretty">
           {status(marked, parties, limit)}
         </p>

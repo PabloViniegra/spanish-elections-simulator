@@ -5,9 +5,10 @@ import { type RecountConstituency, RecountLive } from "./recount-live";
 const constituencies: RecountConstituency[] = senate2023.constituencies
   .map((item) => {
     const { code, name, seats, candidates } = item;
-    const shown = seats * 2 + 2;
+    const shown = seats + 2;
     const split = partySeats(item).map(([party, won]) => `${won} ${party}`).join(" · ");
-    return { code, name, seats, split, candidates: candidates.slice(0, shown), more: Math.max(0, candidates.length - shown) };
+    const margin = candidates[seats - 1] && candidates[seats] ? candidates[seats - 1].votes - candidates[seats].votes : null;
+    return { code, name, seats, split, margin, candidates: candidates.slice(0, shown), more: Math.max(0, candidates.length - shown) };
   })
   .sort((a, b) => a.name.localeCompare(b.name, "es"));
 
@@ -35,7 +36,7 @@ export function SenateRecount() {
             </p>
           </div>
         </div>
-        <RecountLive constituencies={constituencies} initial="429" evenSplits={evenSplits} />
+        <RecountLive constituencies={constituencies} initial={evenSplits[0].code} evenSplits={evenSplits} />
       </div>
     </section>
   );

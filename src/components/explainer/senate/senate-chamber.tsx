@@ -82,7 +82,7 @@ export function SenateChamber() {
                 cx={x.toFixed(1)}
                 cy={y.toFixed(1)}
                 r={elected ? 3 : 2.5}
-                strokeWidth={elected ? 0 : 1}
+                strokeWidth={elected ? 0 : 1.5}
                 style={cssVar("--i", elected ? order : order + DESIGNATED_PAUSE)}
                 className={`seat-in transition-[fill,stroke] duration-200 ease-[ease] ${seatClass(elected, group === active, active !== null && group !== active)}`}
               />

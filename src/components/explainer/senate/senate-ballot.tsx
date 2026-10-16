@@ -5,7 +5,10 @@ import { BallotLive } from "./ballot-live";
 const SHOWN_PARTIES = 4;
 const soria = constituency("429");
 const parties = Map.groupBy(soria.candidates, (candidate) => candidate.party);
-const lists = [...parties].slice(0, SHOWN_PARTIES).map(([party, candidates]) => ({ party, names: candidates.map((candidate) => candidate.name) }));
+const notes = new Map([["SY", "Soria ¡Ya!, agrupación de electores"]]);
+const lists = [...parties]
+  .slice(0, SHOWN_PARTIES)
+  .map(([party, candidates]) => ({ party, note: notes.get(party), names: candidates.map((candidate) => candidate.name) }));
 const hidden = parties.size - SHOWN_PARTIES;
 
 export function SenateBallot() {
@@ -39,7 +42,7 @@ export function SenateBallot() {
           <figcaption className="max-w-[34rem] text-caption text-pretty text-ink-muted-80">
             Las {SHOWN_PARTIES} candidaturas más votadas en {soria.name} el 23 de julio de 2023, de más a menos votos; la papeleta real
             traía {hidden} más. En ella, las candidaturas siguen los votos de las anteriores elecciones al Senado y cada partido
-            ordena a sus candidatos (LOREG, artículo 172.3). SY es la agrupación de electores Soria ¡Ya!.
+            ordena a sus candidatos (LOREG, artículo 172.3).
           </figcaption>
         </figure>
       </div>
