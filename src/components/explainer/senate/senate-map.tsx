@@ -63,7 +63,7 @@ export function SenateMap() {
             <svg viewBox={`0 0 ${map.width} ${map.height}`} aria-hidden="true" className="w-full drop-shadow-[3px_5px_30px_rgb(0_0_0/0.22)]">
               <path d={map.inset} fill="none" className="stroke-ink-muted-48" strokeWidth={1} />
               {map.provinces.map(({ code, d, x, y }) => {
-                const lit = `fill-ink-muted-48/35 transition-[fill] duration-300 motion-reduce:transition-none ${LIT[groupOf(code)]}`;
+                const lit = `fill-ink-muted-48/35 transition-[fill] duration-200 ease-[ease] motion-reduce:transition-none ${LIT[groupOf(code)]}`;
                 return CITY_CODES.has(code) ? (
                   <circle key={code} cx={x} cy={y} r={5} className={lit} />
                 ) : (
@@ -76,7 +76,7 @@ export function SenateMap() {
                 key={name}
                 aria-hidden="true"
                 style={{ left, top }}
-                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-canvas px-2 py-0.5 text-fine-print font-semibold whitespace-nowrap text-ink opacity-0 shadow-[0_0_0_1px_var(--color-hairline)] transition-opacity duration-300 group-data-[active=provinces]/map:opacity-100 motion-reduce:transition-none"
+                className="absolute -translate-x-1/2 -translate-y-1/2 rounded-full bg-canvas px-2 py-0.5 text-fine-print font-semibold whitespace-nowrap text-ink scale-96 opacity-0 shadow-[0_0_0_1px_var(--color-hairline)] transition-[opacity,scale] duration-200 ease-snappy group-data-[active=provinces]/map:scale-100 group-data-[active=provinces]/map:opacity-100 motion-reduce:transition-none"
               >
                 {name} · {seats}
               </span>

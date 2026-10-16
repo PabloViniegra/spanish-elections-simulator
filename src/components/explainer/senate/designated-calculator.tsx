@@ -29,7 +29,7 @@ export function DesignatedCalculator() {
       <p aria-live="polite" className="flex flex-wrap items-center gap-3 text-body">
         <span aria-hidden="true" className="flex flex-wrap gap-1.5">
           {Array.from({ length: seats }, (_, i) => (
-            <span key={i} className={`size-4 rounded-full ${i === 0 ? "bg-ink" : "border-2 border-ink"}`} />
+            <span key={i} className={`size-4 rounded-full transition-[opacity,scale] duration-200 ease-snappy starting:opacity-0 motion-safe:starting:scale-90 ${i === 0 ? "bg-ink" : "border-2 border-ink"}`} />
           ))}
         </span>
         <span>

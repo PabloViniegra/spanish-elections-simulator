@@ -47,7 +47,7 @@ export function RecountLive({
               type="button"
               aria-pressed={item.code === code}
               onClick={() => setCode(item.code)}
-              className={`min-h-11 rounded-full px-3 text-ink shadow-[0_0_0_1px_var(--color-hairline)] transition-colors hover:bg-divider-soft aria-pressed:bg-ink aria-pressed:text-on-dark ${control}`}
+              className={`min-h-11 rounded-full px-3 text-ink shadow-[0_0_0_1px_var(--color-hairline)] transition-[background-color,color,scale] duration-150 active:scale-[0.96] hover:bg-divider-soft aria-pressed:bg-ink aria-pressed:text-on-dark ${control}`}
             >
               {item.name.split("/")[0]}
             </button>

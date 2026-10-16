@@ -65,7 +65,7 @@ export function BallotLive({ lists, limit }: { lists: List[]; limit: number }) {
           <button
             type="button"
             onClick={() => setMarked([])}
-            className="min-h-11 rounded-full px-4 text-caption shadow-[0_0_0_1px_var(--color-hairline)] transition-colors hover:bg-divider-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus"
+            className="min-h-11 rounded-full px-4 text-caption shadow-[0_0_0_1px_var(--color-hairline)] transition-[background-color,color,scale] duration-150 active:scale-[0.96] hover:bg-divider-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus"
           >
             Borrar cruces
           </button>

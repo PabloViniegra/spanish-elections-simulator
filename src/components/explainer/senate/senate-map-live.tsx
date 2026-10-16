@@ -27,7 +27,7 @@ export function SenateMapLive({ groups, children }: { groups: MapGroup[]; childr
             type="button"
             aria-pressed={id === active}
             onClick={() => setActive(id)}
-            className="min-h-11 rounded-full px-4 text-caption shadow-[0_0_0_1px_var(--color-hairline)] transition-colors hover:bg-divider-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus aria-pressed:bg-ink aria-pressed:text-on-dark aria-pressed:shadow-none"
+            className="min-h-11 rounded-full px-4 text-caption shadow-[0_0_0_1px_var(--color-hairline)] transition-[background-color,color,scale] duration-150 active:scale-[0.96] hover:bg-divider-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus aria-pressed:bg-ink aria-pressed:text-on-dark aria-pressed:shadow-none"
           >
             {label} <span className="tabular-nums opacity-80">· {senators(seats)}</span>
           </button>
@@ -36,23 +36,25 @@ export function SenateMapLive({ groups, children }: { groups: MapGroup[]; childr
       <div data-active={active} className="group/map">
         {children}
       </div>
-      <div aria-live="polite" className="flex flex-col gap-3">
-        <p className="text-body text-pretty">
-          <span className="font-semibold">
-            {group.constituencies} circunscripciones, {senators(group.seats)}.
-          </span>{" "}
-          <span className="text-ink-muted-80">{group.note}</span>
-        </p>
-        {group.detail.length > 0 && (
-          <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-caption sm:grid-cols-3">
-            {group.detail.map(({ code, name, seats }) => (
-              <li key={code} className="flex justify-between gap-3 border-b border-divider-soft py-1.5">
-                <span>{name}</span>
-                <span className="tabular-nums text-ink-muted-80">{seats}</span>
-              </li>
-            ))}
-          </ul>
-        )}
+      <div aria-live="polite">
+        <div key={active} className="swap-in flex flex-col gap-3">
+          <p className="text-body text-pretty">
+            <span className="font-semibold">
+              {group.constituencies} circunscripciones, {senators(group.seats)}.
+            </span>{" "}
+            <span className="text-ink-muted-80">{group.note}</span>
+          </p>
+          {group.detail.length > 0 && (
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-1 text-caption sm:grid-cols-3">
+              {group.detail.map(({ code, name, seats }) => (
+                <li key={code} className="flex justify-between gap-3 border-b border-divider-soft py-1.5">
+                  <span>{name}</span>
+                  <span className="tabular-nums text-ink-muted-80">{seats}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
       <figcaption className="max-w-[42rem] text-caption text-pretty text-ink-muted-80">
         Las {groups.reduce((sum, item) => sum + item.constituencies, 0)} circunscripciones del Senado suman {total} senadores electos.

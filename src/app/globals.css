@@ -576,10 +576,19 @@
   :checked + .ballot-cross path + path {
     animation-delay: 110ms;
   }
+  .swap-in {
+    animation: swap-in 200ms var(--ease-snappy) both;
+  }
   .recount-bar {
     transform-origin: left;
-    animation: bar-grow 600ms var(--ease-smooth) both;
-    animation-delay: calc(var(--i) * 35ms);
+    animation: bar-grow 300ms var(--ease-snappy) both;
+    animation-delay: calc(var(--i) * 30ms);
+  }
+}
+@keyframes swap-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
   }
 }
 @keyframes ink-stroke {

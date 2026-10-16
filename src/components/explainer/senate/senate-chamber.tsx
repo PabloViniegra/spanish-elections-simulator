@@ -82,7 +82,7 @@ export function SenateChamber() {
                 r={elected ? 3 : 2.5}
                 strokeWidth={elected ? 0 : 0.7}
                 style={cssVar("--i", elected ? order : order + DESIGNATED_PAUSE)}
-                className={`seat-in transition-[fill,stroke] duration-200 ${seatClass(elected, group === active, active !== null && group !== active)}`}
+                className={`seat-in transition-[fill,stroke] duration-200 ease-[ease] ${seatClass(elected, group === active, active !== null && group !== active)}`}
               />
             );
           })}
