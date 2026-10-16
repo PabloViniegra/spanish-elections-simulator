@@ -23,7 +23,7 @@ export function SenateHero() {
         <figure className="sink flex w-full max-w-[min(60rem,max(18rem,calc((100svh-36rem)*2)))] flex-col items-center gap-6">
           <SenateChamber />
           <figcaption>
-            <ul className="flex flex-col items-center gap-2 text-left text-caption text-pretty text-on-dark-muted sm:flex-row sm:justify-center sm:gap-6">
+            <ul className="mx-auto flex w-fit flex-col items-start gap-2 text-left text-caption text-pretty text-on-dark-muted sm:flex-row sm:justify-center sm:gap-6">
               {legend.map(({ filled, label }) => (
                 <li key={label} className="flex items-start gap-2">
                   <span aria-hidden="true" className={`mt-1.5 size-2.5 shrink-0 rounded-full ${filled ? "bg-on-dark" : "border border-on-dark/70"}`} />

@@ -9,6 +9,7 @@ const PAD = 12;
 const REACH = 9;
 const DESIGNATED_PAUSE = 120;
 const LAST = chamberGroups.length - 1;
+const FIRST_DESIGNATED = chamberGroups.findIndex(({ elected }) => !elected);
 const next = (current: number) => Math.min(current + 1, LAST);
 const previous = (current: number) => Math.max(current - 1, 0);
 const STEPS = new Map([
@@ -18,6 +19,8 @@ const STEPS = new Map([
   ["ArrowUp", previous],
   ["Home", () => 0],
   ["End", () => LAST],
+  ["PageUp", () => 0],
+  ["PageDown", () => FIRST_DESIGNATED],
 ]);
 
 function describe(group: number | null) {
@@ -50,7 +53,7 @@ export function SenateChamber() {
     const move = STEPS.get(event.key);
     if (!move) return;
     event.preventDefault();
-    setActive((current) => (current === null ? 0 : move(current)));
+    setActive((current) => move(current ?? -1));
   };
 
   return (
@@ -58,9 +61,8 @@ export function SenateChamber() {
       <div
         role="group"
         tabIndex={0}
-        aria-label="Hemiciclo del Senado. Usa las flechas para recorrer circunscripciones y comunidades."
+        aria-label="Hemiciclo del Senado. Usa las flechas para recorrer circunscripciones y comunidades; Re Pág y Av Pág saltan entre electos y designados."
         onKeyDown={step}
-        onBlur={() => setActive(null)}
         className="rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4"
       >
         <svg
@@ -80,7 +82,7 @@ export function SenateChamber() {
                 cx={x.toFixed(1)}
                 cy={y.toFixed(1)}
                 r={elected ? 3 : 2.5}
-                strokeWidth={elected ? 0 : 0.7}
+                strokeWidth={elected ? 0 : 1}
                 style={cssVar("--i", elected ? order : order + DESIGNATED_PAUSE)}
                 className={`seat-in transition-[fill,stroke] duration-200 ease-[ease] ${seatClass(elected, group === active, active !== null && group !== active)}`}
               />

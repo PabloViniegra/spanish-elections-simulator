@@ -17,15 +17,17 @@ export function BallotLive({ lists, limit }: { lists: List[]; limit: number }) {
   const full = marked.length >= limit;
   const parties = new Set(lists.filter(({ names }) => names.some((name) => marked.includes(name))).map(({ party }) => party)).size;
 
-  const toggle = (name: string) => setMarked((current) => (current.includes(name) ? current.filter((item) => item !== name) : [...current, name]));
+  const toggle = (name: string) =>
+    setMarked((current) => (current.includes(name) ? current.filter((item) => item !== name) : current.length < limit ? [...current, name] : current));
 
   return (
     <div className="flex flex-col gap-4">
       <fieldset className="flex flex-col gap-5 rounded-xs bg-ballot-sepia p-5 shadow-product sm:p-7">
         <legend className="sr-only">Papeleta del Senado, marca hasta {limit} candidatos</legend>
-        <p aria-hidden="true" className="text-fine-print font-semibold tracking-[0.08em] uppercase">
-          Elecciones al Senado · Soria
-        </p>
+        <div aria-hidden="true" className="flex flex-col gap-1">
+          <p className="text-fine-print font-semibold tracking-[0.08em] uppercase">Elecciones al Senado · Soria</p>
+          <p className="text-fine-print">Puede votar como máximo a {limit} candidatos. Cualquier alteración anula el voto.</p>
+        </div>
         <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
           {lists.map(({ party, names }) => (
             <div key={party} role="group" aria-label={party} className="flex flex-col gap-1.5">
@@ -40,7 +42,7 @@ export function BallotLive({ lists, limit }: { lists: List[]; limit: number }) {
                       <input
                         type="checkbox"
                         checked={checked}
-                        disabled={!checked && full}
+                        aria-disabled={!checked && full}
                         onChange={() => toggle(name)}
                         className="peer size-5 cursor-[inherit] appearance-none rounded-[2px] border-[1.5px] border-ink bg-canvas/50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus"
                       />
@@ -57,7 +59,7 @@ export function BallotLive({ lists, limit }: { lists: List[]; limit: number }) {
           ))}
         </div>
       </fieldset>
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="sticky bottom-0 z-10 -mx-5 flex flex-wrap items-center justify-between gap-3 border-t border-hairline bg-canvas/90 px-5 py-3 backdrop-blur-md sm:-mx-8 sm:px-8 lg:static lg:mx-0 lg:border-0 lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
         <p aria-live="polite" className="text-body text-pretty">
           {status(marked, parties, limit)}
         </p>

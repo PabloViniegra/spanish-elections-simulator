@@ -39,8 +39,8 @@ export function RecountLive({
             ))}
           </select>
         </label>
-        <div className="flex flex-wrap items-center gap-2 text-caption text-ink-muted-80">
-          <span>Quedaron 2-2:</span>
+        <div className="grid grid-cols-2 items-center gap-2 text-caption text-ink-muted-80 sm:flex sm:flex-wrap">
+          <span className="col-span-2">Quedaron 2-2:</span>
           {evenSplits.map((item) => (
             <button
               key={item.code}
@@ -98,7 +98,7 @@ export function RecountLive({
           ))}
         </tbody>
       </table>
-      <figcaption className="max-w-[42rem] text-caption text-pretty text-ink-muted-80">
+      <figcaption className="max-w-[34rem] text-caption text-pretty text-ink-muted-80">
         Resultados oficiales del 23 de julio de 2023 (Ministerio del Interior).
         {current.more > 0 && ` Se muestran los ${current.candidates.length} más votados; hubo ${current.more} candidatos más.`} La raya marca el
         último escaño.

@@ -3,6 +3,8 @@ import { DESIGNATED_SENATORS, designated } from "@/lib/senate/senate";
 import { sectionTitle } from "../../home/type";
 import { DesignatedCalculator } from "./designated-calculator";
 
+const bucket = (seats: number) => Math.min(seats, 4);
+
 export function SenateDesignated() {
   return (
     <section aria-labelledby="senate-designated-title" className="overflow-clip bg-canvas">
@@ -24,9 +26,10 @@ export function SenateDesignated() {
           </div>
           <DesignatedCalculator />
         </div>
-        <table className="w-full border-collapse text-left">
+        <table className="w-full max-w-[44rem] border-collapse text-left">
           <caption className="caption-bottom pt-4 text-left text-caption text-pretty text-ink-muted-80">
-            Senadores designados por cada comunidad en la XV legislatura (Constitución, artículo 69.5).
+            Senadores designados por cada comunidad en la legislatura actual, la XV (Constitución, artículo 69.5). Ceuta y Melilla
+            no tienen parlamento autonómico y no designan senadores.
           </caption>
           <thead className="sr-only">
             <tr>
@@ -36,7 +39,7 @@ export function SenateDesignated() {
           </thead>
           <tbody className="reveal-scope">
             {designated.map(({ name, seats }, row) => (
-              <tr key={name} className="border-b border-divider-soft">
+              <tr key={name} className={`border-b border-divider-soft ${row > 0 && bucket(designated[row - 1].seats) !== bucket(seats) ? "[&>*]:pt-7" : ""}`}>
                 <th scope="row" className="w-0 py-2.5 pr-4 align-middle text-caption font-normal whitespace-nowrap sm:pr-6 sm:text-body lg:pr-10">
                   {name}
                 </th>

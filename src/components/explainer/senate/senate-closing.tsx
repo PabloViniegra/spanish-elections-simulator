@@ -32,7 +32,7 @@ export function SenateClosing() {
         <a href="https://www.boe.es/buscar/act.php?id=BOE-A-1985-11672" className="underline underline-offset-2">
           Ley Orgánica del Régimen Electoral General
         </a>{" "}
-        (artículos 96, 165 y 166) y los resultados oficiales del Ministerio del Interior.
+        (artículos 96, 165, 166 y 172) y los resultados oficiales del Ministerio del Interior.
       </SiteFooter>
     </>
   );

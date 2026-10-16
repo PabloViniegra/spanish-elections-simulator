@@ -36,9 +36,10 @@ export function SenateBallot() {
         </div>
         <figure className="flex flex-col gap-4">
           <BallotLive lists={lists} limit={marksAllowed(soria.seats)} />
-          <figcaption className="text-caption text-pretty text-ink-muted-80">
-            Las {SHOWN_PARTIES} candidaturas más votadas en {soria.name} el 23 de julio de 2023. La papeleta real traía {hidden}{" "}
-            más.
+          <figcaption className="max-w-[34rem] text-caption text-pretty text-ink-muted-80">
+            Las {SHOWN_PARTIES} candidaturas más votadas en {soria.name} el 23 de julio de 2023, de más a menos votos; la papeleta real
+            traía {hidden} más. En ella, las candidaturas siguen los votos de las anteriores elecciones al Senado y cada partido
+            ordena a sus candidatos (LOREG, artículo 172.3). SY es la agrupación de electores Soria ¡Ya!.
           </figcaption>
         </figure>
       </div>

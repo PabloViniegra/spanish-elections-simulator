@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { designatedFor } from "@/lib/senate/senate";
 
 const STEP = 50_000;
@@ -9,11 +9,12 @@ const millions = (n: number) => `${(n / 1_000_000).toLocaleString("es-ES", { max
 export function DesignatedCalculator() {
   const [population, setPopulation] = useState(2_400_000);
   const seats = designatedFor(population);
+  const labelId = useId();
 
   return (
     <div className="flex flex-col gap-5 rounded-lg bg-canvas-parchment p-5 sm:p-7">
       <label className="flex flex-col gap-3">
-        <span className="text-caption text-ink-muted-80">Habitantes de una comunidad imaginaria</span>
+        <span id={labelId} className="text-caption text-ink-muted-80">Habitantes de una comunidad imaginaria</span>
         <span className="text-tagline font-semibold tabular-nums">{millions(population)}</span>
         <input
           type="range"
@@ -22,6 +23,7 @@ export function DesignatedCalculator() {
           step={STEP}
           value={population}
           onChange={(event) => setPopulation(Number(event.target.value))}
+          aria-labelledby={labelId}
           aria-valuetext={millions(population)}
           className="min-h-11 w-full accent-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-focus"
         />

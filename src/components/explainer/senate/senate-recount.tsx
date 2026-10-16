@@ -26,10 +26,10 @@ export function SenateRecount() {
           <div className="flex flex-col gap-5">
             <p className="rise max-w-[34rem] text-body text-pretty text-ink-muted-80 [--c:1]">
               Cada candidato suma las cruces que ha recibido. Se ordenan de más a menos votos y, en una provincia, los 4 primeros son senadores. No
-              hay listón del 3 % ni reparto proporcional.
+              hay mínimo del 3 % de los votos ni el reparto proporcional (D’Hondt) que se usa en el Congreso.
             </p>
             <p className="rise max-w-[34rem] text-caption text-pretty text-ink-muted-80 [--c:2]">
-              Como casi todo el mundo marca a los 3 candidatos de su partido, el más votado suele llevarse 3 escaños y el segundo,
+              Como la mayoría de electores marca a los 3 candidatos de su partido, el más votado suele llevarse 3 escaños y el segundo,
               1. En 2023 pasó en {threeOne} de las {fourSeat.length} provincias. Cuando los dos primeros van casi empatados, el
               resultado puede quedar 2-2.
             </p>

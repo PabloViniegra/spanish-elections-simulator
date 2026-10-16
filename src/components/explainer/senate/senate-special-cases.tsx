@@ -17,13 +17,13 @@ const cities = kinds[2];
 export function SenateSpecialCases() {
   return (
     <section aria-labelledby="senate-cases-title" className="focus-on-dark overflow-clip bg-surface-tile-1 text-on-dark">
-      <div className="mx-auto grid max-w-content gap-12 px-5 py-section sm:px-8 lg:grid-cols-[5fr_7fr] lg:items-center lg:gap-16 lg:py-40">
+      <div className="mx-auto grid max-w-content gap-12 px-5 py-section sm:px-8 lg:grid-cols-[7fr_5fr] lg:items-center lg:gap-16 lg:py-40">
         <div className="rise-scope rise-side flex flex-col gap-5">
           <h2 id="senate-cases-title" className={`rise [--c:0] ${sectionTitle}`}>
-            Una cruz menos que escaños
+            Casi siempre, una cruz menos que escaños
           </h2>
           <p className="rise max-w-[30rem] text-body text-pretty text-on-dark-muted [--c:1]">
-            Casi siempre puedes marcar menos nombres de los escaños que hay. Así, aunque un partido gane con claridad, sus votantes
+            En las provincias y en las tres islas mayores puedes marcar un nombre menos de los escaños que hay. Así, aunque un partido gane con claridad, sus votantes
             no pueden llevárselo todo y el último escaño suele ir al segundo partido.
           </p>
           <p className="rise max-w-[30rem] text-caption text-pretty text-on-dark-muted [--c:2]">
@@ -31,7 +31,7 @@ export function SenateSpecialCases() {
             {cities.sweeps === cities.count ? "las dos" : cities.sweeps}. En las islas que eligen 1, gana el candidato más votado.
           </p>
         </div>
-        <table className="w-full border-collapse text-left">
+        <table className="w-full border-collapse text-left lg:order-first">
           <caption className="caption-bottom pt-4 text-left text-caption text-pretty text-on-dark-muted">
             Ley Orgánica del Régimen Electoral General, artículos 165 y 166.
           </caption>
