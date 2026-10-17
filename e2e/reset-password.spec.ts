@@ -11,7 +11,7 @@ test("a forgotten password can be replaced through the emailed link", async ({ p
   await page.getByLabel("Nombre de usuario").fill(account.username);
   await page.getByLabel("Correo electrónico").fill(account.email);
   await page.getByLabel("Contraseña", { exact: true }).fill(account.password);
-  await page.getByLabel("Confirmar contraseña").fill(account.password);
+  await page.getByLabel("Confirmar contraseña", { exact: true }).fill(account.password);
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page).toHaveURL(/\/register\/check-email/);
   await confirmEmail(account.email);
@@ -27,7 +27,7 @@ test("a forgotten password can be replaced through the emailed link", async ({ p
   const token = await passwordResetToken(account.email);
   await page.goto(`/api/auth/reset-password/${token}?callbackURL=%2Freset-password`);
   await expect(page).toHaveURL(/\/reset-password\?token=/);
-  await page.getByLabel("Contraseña nueva").fill(newPassword);
+  await page.getByLabel("Contraseña nueva", { exact: true }).fill(newPassword);
   await page.getByRole("button", { name: "Cambiar contraseña" }).click();
   await expect(page.getByText("Contraseña cambiada", { exact: true })).toBeVisible();
 

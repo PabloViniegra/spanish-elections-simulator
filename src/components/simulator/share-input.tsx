@@ -27,7 +27,7 @@ export function ShareInput({ id, label, value, onChange, colour = "var(--color-i
     <div className="flex items-center gap-3">
       <input
         type="range"
-        aria-label={label}
+        aria-label={`Porcentaje de ${label}`}
         min={0}
         max={SLIDER_STEPS}
         step={1}

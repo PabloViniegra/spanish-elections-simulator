@@ -14,7 +14,7 @@ test("register page shows every profile field", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Crea tu cuenta" })).toBeVisible();
   await expect(page.getByLabel("Nombre de usuario")).toBeVisible();
   await expect(page.getByLabel("Correo electrónico")).toBeVisible();
-  await expect(page.getByLabel("Confirmar contraseña")).toHaveAttribute("type", "password");
+  await expect(page.getByLabel("Confirmar contraseña", { exact: true })).toHaveAttribute("type", "password");
   await expect(page.getByLabel("Provincia (opcional)").locator("option")).toHaveCount(53);
   await expect(page.getByLabel("Perfil de uso")).toHaveValue("citizen");
 });
@@ -32,7 +32,7 @@ test("register keeps entered values when validation rejects them", async ({ page
   await page.getByLabel("Nombre de usuario").fill("ab");
   await page.getByLabel("Correo electrónico").fill("ana@example.com");
   await page.getByLabel("Contraseña", { exact: true }).fill("contraseña-segura");
-  await page.getByLabel("Confirmar contraseña").fill("contraseña-segura");
+  await page.getByLabel("Confirmar contraseña", { exact: true }).fill("contraseña-segura");
   await page.getByText("Añadir detalles (opcional)").click();
   await page.getByLabel("Provincia (opcional)").selectOption("28");
   await page.getByLabel("Perfil de uso").selectOption("teacher");
@@ -65,13 +65,13 @@ test("register validates fields while typing and clears corrected errors", async
   await expect(page.getByText("La contraseña debe tener al menos 8 caracteres.")).toBeVisible();
   await password.fill("contraseña-segura");
   await expect(password).not.toHaveAttribute("aria-invalid", "true");
-  await expect(page.getByLabel("Confirmar contraseña")).not.toHaveAttribute("aria-invalid", "true");
+  await expect(page.getByLabel("Confirmar contraseña", { exact: true })).not.toHaveAttribute("aria-invalid", "true");
 });
 
 test("register revalidates confirmation when either password changes", async ({ page }) => {
   await page.goto("/register");
   const password = page.getByLabel("Contraseña", { exact: true });
-  const confirmation = page.getByLabel("Confirmar contraseña");
+  const confirmation = page.getByLabel("Confirmar contraseña", { exact: true });
   await password.fill("contraseña-segura");
   await confirmation.fill("contraseña-distinta");
   await expect(page.getByText("Las contraseñas no coinciden.")).toBeVisible();
@@ -90,14 +90,14 @@ test("register requires confirmation and focuses it on submit", async ({ page })
   await page.getByLabel("Contraseña", { exact: true }).fill("contraseña-segura");
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page.getByText("Confirma tu contraseña.")).toBeVisible();
-  await expect(page.getByLabel("Confirmar contraseña")).toBeFocused();
+  await expect(page.getByLabel("Confirmar contraseña", { exact: true })).toBeFocused();
   await expect(page).toHaveURL(/\/register$/);
 });
 
 test("register supports keyboard navigation and independent password visibility", async ({ page }) => {
   await page.goto("/register");
   const password = page.getByLabel("Contraseña", { exact: true });
-  const confirmation = page.getByLabel("Confirmar contraseña");
+  const confirmation = page.getByLabel("Confirmar contraseña", { exact: true });
   await page.getByLabel("Nombre de usuario").focus();
   await page.keyboard.press("Tab");
   await expect(page.getByLabel("Correo electrónico")).toBeFocused();
@@ -117,7 +117,7 @@ test("register supports keyboard navigation and independent password visibility"
 test("register reflows at narrow viewport widths", async ({ page }) => {
   await page.setViewportSize({ width: 320, height: 800 });
   await page.goto("/register");
-  await expect(page.getByLabel("Confirmar contraseña")).toBeVisible();
+  await expect(page.getByLabel("Confirmar contraseña", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Crear cuenta" })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
 });

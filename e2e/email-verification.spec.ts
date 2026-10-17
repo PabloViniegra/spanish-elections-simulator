@@ -14,7 +14,7 @@ test("email verification rejects invalid tokens and enables sign-in with a valid
   await page.getByLabel("Nombre de usuario").fill(`verify_${id}`);
   await page.getByLabel("Correo electrónico").fill(email);
   await page.getByLabel("Contraseña", { exact: true }).fill(password);
-  await page.getByLabel("Confirmar contraseña").fill(password);
+  await page.getByLabel("Confirmar contraseña", { exact: true }).fill(password);
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page).toHaveURL(/\/register\/check-email/);
 

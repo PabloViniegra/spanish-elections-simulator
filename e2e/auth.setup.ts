@@ -9,7 +9,7 @@ setup("registers, confirms the email and signs in", async ({ page }) => {
   await page.getByLabel("Nombre de usuario").fill(ACCOUNT.username);
   await page.getByLabel("Correo electrónico").fill(ACCOUNT.email);
   await page.getByLabel("Contraseña", { exact: true }).fill(ACCOUNT.password);
-  await page.getByLabel("Confirmar contraseña").fill(ACCOUNT.password);
+  await page.getByLabel("Confirmar contraseña", { exact: true }).fill(ACCOUNT.password);
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page).toHaveURL(/\/register\/check-email\?email=e2e%40example\.com$/);
 

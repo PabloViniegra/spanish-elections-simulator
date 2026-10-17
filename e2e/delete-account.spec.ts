@@ -10,7 +10,7 @@ test("deleting the account asks for the password and removes it", async ({ page 
   await page.getByLabel("Nombre de usuario").fill(account.username);
   await page.getByLabel("Correo electrónico").fill(account.email);
   await page.getByLabel("Contraseña", { exact: true }).fill(account.password);
-  await page.getByLabel("Confirmar contraseña").fill(account.password);
+  await page.getByLabel("Confirmar contraseña", { exact: true }).fill(account.password);
   await page.getByRole("button", { name: "Crear cuenta" }).click();
   await expect(page).toHaveURL(/\/register\/check-email/);
   await confirmEmail(account.email);
