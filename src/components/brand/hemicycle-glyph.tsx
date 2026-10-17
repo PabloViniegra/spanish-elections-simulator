@@ -1,6 +1,8 @@
+// Rounded so server and client serialise identical attributes (trig results differ in the last digit).
+const round = (value: number) => Math.round(value * 1000) / 1000;
 const seats = Array.from({ length: 7 }, (_, i) => {
   const angle = Math.PI - (i * Math.PI) / 6;
-  return { x: 11 + 8 * Math.cos(angle), y: 11 - 8 * Math.sin(angle) };
+  return { x: round(11 + 8 * Math.cos(angle)), y: round(11 - 8 * Math.sin(angle)) };
 });
 
 export function HemicycleGlyph({ className = "h-3.5 w-[22px]" }: { className?: string }) {

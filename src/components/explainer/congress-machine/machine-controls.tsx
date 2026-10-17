@@ -57,7 +57,7 @@ export function MachineControls({ provinces, code, step, total, playing, onProvi
           onChange={(event) => onStep(Number(event.target.value))}
           aria-label="Escaños repartidos"
           aria-valuetext={`${step} de ${total} escaños`}
-          className="ml-2 min-w-0 flex-1 accent-ink"
+          className="ml-2 h-6 min-w-0 flex-1 accent-ink"
         />
         <span className="w-14 shrink-0 text-right text-caption text-ink-muted-80 tabular-nums">
           {step}/{total}
