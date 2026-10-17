@@ -11,7 +11,7 @@ import { OG_SIZE, SITE_OPEN_GRAPH, SITE_URL } from "@/lib/site";
 import { ElectionReference } from "@/components/legal/election-reference";
 
 const metadata: Metadata = {
-  title: "Simulador",
+  title: "Simulador de escaños del Congreso",
   description: "Cambia el porcentaje de voto de cada partido y mira el reparto de los 350 escaños del Congreso, sin cuenta.",
   alternates: { canonical: "/simulator" },
 };
