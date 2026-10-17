@@ -8,8 +8,10 @@ const THEME =
   "[--anatomy-card:var(--color-canvas-parchment)] [--anatomy-paper:var(--color-canvas-parchment)] [--anatomy-hi:var(--color-ink)] [--anatomy-lit:var(--color-ink)] [--anatomy-dot:var(--color-ink-muted-80)]";
 
 export function CongressMachine() {
+  // Its ~2,400 SVG nodes are two-thirds of the page: skip their style and layout until they near the viewport.
+  // The intrinsic sizes are the section's measured heights, so the page does not jump when they render.
   return (
-    <section aria-labelledby="congress-machine-title" className="depth-scope overflow-clip bg-canvas">
+    <section aria-labelledby="congress-machine-title" className="depth-scope overflow-clip bg-canvas [content-visibility:auto] [contain-intrinsic-size:auto_1265px] lg:[contain-intrinsic-size:auto_1526px]">
       <div className="mx-auto flex max-w-content flex-col gap-12 px-5 py-section sm:px-8 lg:py-40">
         <div className="rise-scope rise-focus flex max-w-[46rem] flex-col gap-5">
           <h2 id="congress-machine-title" className={`rise [--c:0] ${sectionTitle}`}>

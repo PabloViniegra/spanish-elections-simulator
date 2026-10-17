@@ -339,9 +339,9 @@
   }
 }
 
+/* Without a fade: text held at opacity 0 is not counted as painted, which delayed LCP by over a second. */
 @keyframes hero-rise {
   from {
-    opacity: 0;
     transform: translateY(20px);
   }
 }

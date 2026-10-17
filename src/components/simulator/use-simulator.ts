@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useDeferredValue, useState, useTransition } from "react";
 import { notify } from "@/components/feedback/notify";
 import { loadBase } from "@/lib/elections/load-base";
 import { baselineFor, baselineOf } from "@/lib/scenario/baselines";
@@ -27,7 +27,9 @@ function found<T>(value: T | undefined, code: string): T {
 export function useSimulator(initial: SimulatorInitialState) {
   const [loadedBases, setLoadedBases] = useState(() => new Map([[initial.base.election.id, initial.base]]));
   const [changingBase, startBaseChange] = useTransition();
-  const { scenario, valid, notice, update, discard, undo } = useScenario(initial.scenario ?? baselineOf(initial.base).scenario);
+  const { scenario, valid: latestValid, notice, update, discard, undo } = useScenario(initial.scenario ?? baselineOf(initial.base).scenario);
+  // Inputs repaint first; the results re-render in the background so a slider never waits on them.
+  const valid = useDeferredValue(latestValid);
   const base = loadedBases.get(valid.baseElectionId) ?? initial.base;
   // Results follow the blocs of the last valid scenario, the inputs those being edited (FR-11).
   const blocs = scenarioBlocs(valid, base);

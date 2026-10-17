@@ -10,7 +10,7 @@ import {
 import { cssVar } from "@/lib/css-var";
 import { seatCount } from "@/lib/seat-count";
 import map from "@/data/map/provinces.json";
-import { INSET_CODES, INSET_SHIFT, mapFrame, seatMapPositions } from "@/lib/seat-map";
+import { mapFrame, seatMapPositions } from "@/lib/seat-map";
 
 const { seats, steps, totalMs } = seatCount();
 const PAD = 12;
@@ -18,7 +18,6 @@ const origins = seatMapPositions(steps, PAD);
 const FLIGHT_MS = 1100;
 const endMs = totalMs + FLIGHT_MS;
 const frame = mapFrame(PAD);
-const insetShift = `translate(${INSET_SHIFT.x} ${INSET_SHIFT.y})`;
 
 function polar(radius: number, angle: number) {
   return {
@@ -42,16 +41,16 @@ export function SeatCount() {
         aria-label={`Hemiciclo del Congreso: ${TOTAL_SEATS} escaños repartidos en ${steps.length} circunscripciones. La mayoría absoluta está en ${MAJORITY}.`}
         className="w-full max-w-[min(64rem,max(18rem,calc((100svh-40rem)*2)))] min-w-0"
       >
-        <g
-          transform={`translate(${frame.x.toFixed(1)} ${frame.y}) scale(${frame.scale.toFixed(4)})`}
+        {/* Built by `pnpm map:build`. */}
+        <image
+          href="/map/seat-count.svg"
+          x={frame.x.toFixed(1)}
+          y={frame.y}
+          width={(map.width * frame.scale).toFixed(1)}
+          height={(map.height * frame.scale).toFixed(1)}
           style={{ animationDuration: `${endMs}ms` }}
-          className="count-map fill-on-dark/5 stroke-on-dark/15"
-        >
-          <path d={map.inset} transform={insetShift} fill="none" strokeWidth={2} />
-          {map.provinces.map(({ code, d }) => (
-            <path key={code} d={d} transform={INSET_CODES.has(code) ? insetShift : undefined} strokeWidth={2} />
-          ))}
-        </g>
+          className="count-map"
+        />
         {seats.map(({ x, y, delayMs }, index) => (
           <g
             key={`${x}-${y}`}

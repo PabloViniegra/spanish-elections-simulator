@@ -1,4 +1,5 @@
 // Builds src/data/map/provinces.json: SVG paths of the 52 constituencies,
+// plus the home page's decorative map as a static, cacheable image,
 // projected once so the browser ships no map library. Geometry is the IGN
 // (CNIG) provincial boundaries from es-atlas, drawn with the conic conformal
 // projection for Spain, which moves the Canary Islands into an inset;
@@ -11,6 +12,7 @@ import type { FeatureCollection, Geometry } from "geojson";
 import { feature } from "topojson-client";
 import type { Topology } from "topojson-specification";
 import { provinces } from "@/lib/provinces";
+import { INSET_CODES, INSET_SHIFT } from "@/lib/seat-map";
 
 // SAFETY: the package ships a UMD bundle without named ESM exports; its
 // index.d.ts describes that same bundle.
@@ -19,6 +21,7 @@ const { geoConicConformalSpain } = createRequire(import.meta.url)("d3-composite-
 const WIDTH = 600;
 const PADDING = 8;
 const OUTPUT = path.join("src", "data", "map", "provinces.json");
+const HOME_MAP = path.join("public", "map", "seat-count.svg");
 
 // SAFETY: es-atlas is pinned and its provinces.json is a TopoJSON topology.
 const topology = JSON.parse(await readFile(path.join("node_modules", "es-atlas", "es", "provinces.json"), "utf8")) as Topology;
@@ -57,3 +60,14 @@ const map = {
 await mkdir(path.dirname(OUTPUT), { recursive: true });
 await writeFile(OUTPUT, `${JSON.stringify(map)}\n`);
 console.log(`${OUTPUT}: ${map.provinces.length} provinces, ${(JSON.stringify(map).length / 1024).toFixed(0)} KB`);
+
+// Inline, these paths were sent twice (HTML and RSC payload). Colours are the
+// hero's on-dark/5 fill and on-dark/15 stroke: an <image> cannot inherit CSS.
+const shift = `translate(${INSET_SHIFT.x} ${INSET_SHIFT.y})`;
+const paths = map.provinces
+  .map(({ code, d }) => `<path d="${d}"${INSET_CODES.has(code) ? ` transform="${shift}"` : ""}/>`)
+  .join("");
+const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${map.width} ${map.height}"><g fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.15" stroke-width="2"><path d="${map.inset}" transform="${shift}" fill="none"/>${paths}</g></svg>\n`;
+await mkdir(path.dirname(HOME_MAP), { recursive: true });
+await writeFile(HOME_MAP, svg);
+console.log(`${HOME_MAP}: ${(svg.length / 1024).toFixed(0)} KB`);
