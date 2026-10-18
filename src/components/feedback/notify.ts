@@ -7,9 +7,24 @@ type Toast = Omit<SileoOptions, "description"> & { description?: string };
 
 let markMounted = () => {};
 const mounted = new Promise<void>((resolve) => (markMounted = resolve));
-// Sileo (and motion) load after the page, and a toast fired before its toaster subscribes is lost.
+// Sileo (and motion) load with the first toast, and a toast fired before its toaster subscribes is lost.
 export const toasterMounted = () => markMounted();
-const toaster = () => mounted.then(() => import("sileo")).then(({ sileo }) => sileo);
+
+let requested = false;
+const requestListeners = new Set<() => void>();
+export const toasterRequested = () => requested;
+export function subscribeToasterRequest(listener: () => void) {
+  requestListeners.add(listener);
+  return () => void requestListeners.delete(listener);
+}
+
+const toaster = () => {
+  if (!requested) {
+    requested = true;
+    requestListeners.forEach((listener) => listener());
+  }
+  return mounted.then(() => import("sileo")).then(({ sileo }) => sileo);
+};
 
 function announce({ title, description }: Toast) {
   const status = document.getElementById(STATUS_ID);

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { ComponentProps } from "react";
 import type { FieldErrors, UseFormRegister } from "react-hook-form";
 import { FormAlert } from "@/components/forms/form-alert";
@@ -7,6 +8,7 @@ import { SubmitButton } from "@/components/forms/submit-button";
 import { TextField } from "@/components/forms/text-field";
 import type { SignUpValues } from "@/lib/auth/forms";
 import { usageProfileLabels } from "@/lib/auth/usage-profiles";
+import { CONTROLLER_NAME } from "@/lib/legal";
 import { provinces } from "@/lib/provinces";
 
 const provinceOptions = [
@@ -92,6 +94,15 @@ export function RegisterForm({ register, errors, onSubmit, error, pending }: Reg
           />
         </div>
       </details>
+      <p className="px-1 text-caption text-pretty text-ink-muted-80">
+        Al crear la cuenta confirmas que tienes al menos 14 años. Responsable: {CONTROLLER_NAME}. Finalidad: gestionar tu
+        cuenta y guardar tus simulaciones. Puedes acceder a tus datos, rectificarlos, borrarlos y ejercer tus demás
+        derechos. Más información en la{" "}
+        <Link href="/privacy" className="text-primary underline">
+          política de privacidad
+        </Link>
+        .
+      </p>
       <FormAlert message={error} />
       <SubmitButton pending={pending} label="Crear cuenta" pendingLabel="Creando cuenta…" />
     </form>

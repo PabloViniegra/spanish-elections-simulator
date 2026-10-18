@@ -13,10 +13,9 @@ export const metadata: Metadata = { title: "Elecciones construidas", robots: { i
 // A built election has no public address, so the short link shows it here, read-only.
 export default async function ShortLinkPage({ params }: PageProps<"/l/[id]">) {
   const { id } = await params;
-  const scenario = await findShortLink(id);
-  if (scenario) permanentRedirect(simulatorHref(scenario));
-  const stored = await findShortLink(id, "built");
-  const built = stored && validBuilt(stored, builderReference);
+  const link = await findShortLink(id);
+  if (link?.kind === "projection") permanentRedirect(simulatorHref(link.scenario));
+  const built = link && validBuilt(link.scenario, builderReference);
   if (!built || !isComplete(built, builderReference)) notFound();
   return (
     <>

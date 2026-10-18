@@ -15,7 +15,7 @@ export function PrivacyRights() {
             <strong>Sesiones:</strong> caducan a los 7 días sin actividad o al cerrar sesión.
           </li>
           <li>
-            <strong>Contadores de intentos:</strong> se borran en menos de 24 horas.
+            <strong>Contadores de intentos:</strong> se borran en la siguiente limpieza automática, una vez pasadas 24 horas.
           </li>
           <li>
             <strong>Enlaces de verificación del correo:</strong> caducan a la hora.
@@ -46,7 +46,7 @@ export function PrivacyRights() {
             </thead>
             <tbody>
               <tr>
-                <td className="py-2 pr-4 font-mono break-all">better-auth.session_token</td>
+                <td className="py-2 pr-4 font-mono break-all">__Secure-better-auth.session_token</td>
                 <td className="py-2 pr-4">Mantener la sesión iniciada</td>
                 <td className="py-2">7 días</td>
               </tr>
