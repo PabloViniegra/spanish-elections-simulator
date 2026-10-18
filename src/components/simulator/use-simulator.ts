@@ -24,6 +24,13 @@ function found<T>(value: T | undefined, code: string): T {
   return value;
 }
 
+// Kept outside the hook: React Compiler skips any hook holding a try/catch like this one.
+const fetchBase = (id: string) =>
+  loadBase(id).catch(() => {
+    notify.error({ title: "No se ha podido cargar la elección", description: "Vuelve a seleccionarla para intentarlo de nuevo." });
+    return undefined;
+  });
+
 export function useSimulator(initial: SimulatorInitialState) {
   const [loadedBases, setLoadedBases] = useState(() => new Map([[initial.base.election.id, initial.base]]));
   const [changingBase, startBaseChange] = useTransition();
@@ -73,14 +80,10 @@ export function useSimulator(initial: SimulatorInitialState) {
   const reset = () => restart(baseline.scenario, `Escenario restablecido a los votos de ${base.label}.`);
   const changeBase = (id: string) => {
     startBaseChange(async () => {
-      try {
-        const next = loadedBases.get(id) ?? await loadBase(id);
-        if (!next) return;
-        setLoadedBases((loaded) => new Map(loaded).set(id, next));
-        restart(baselineOf(next).scenario, `Votos de partida: generales de ${next.label}.`);
-      } catch {
-        notify.error({ title: "No se ha podido cargar la elección", description: "Vuelve a seleccionarla para intentarlo de nuevo." });
-      }
+      const next = loadedBases.get(id) ?? await fetchBase(id);
+      if (!next) return;
+      setLoadedBases((loaded) => new Map(loaded).set(id, next));
+      restart(baselineOf(next).scenario, `Votos de partida: generales de ${next.label}.`);
     });
   };
 

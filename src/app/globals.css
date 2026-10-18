@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "@fontsource-variable/hanken-grotesk/wght.css";
 
 @theme {
   --color-*: initial;
@@ -36,7 +35,7 @@
   /* The Senate ballot is printed on sepia paper. */
   --color-ballot-sepia: #ecdfc6;
 
-  --font-sans: "Hanken Grotesk Variable", system-ui, sans-serif;
+  --font-sans: var(--font-hanken-grotesk), system-ui, sans-serif;
 
   --text-hero-display: 3.5rem;
   --text-hero-display--line-height: 1.07;
