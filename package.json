@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "test:e2e:db": "docker compose -f compose.e2e.yml up -d --wait",
     "test:e2e:db:down": "docker compose -f compose.e2e.yml down",
+    "test:stress": "k6 run load/stress.js",
     "data:build": "tsx scripts/build-data.mts",
     "map:build": "tsx scripts/build-map.mts",
     "test:coverage": "vitest run --coverage",
