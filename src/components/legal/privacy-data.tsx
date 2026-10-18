@@ -3,7 +3,7 @@ import { LegalSection } from "./legal-section";
 
 const processors = [
   { name: "Vercel Inc.", role: "Alojamiento de la web y estadísticas de visitas", country: "EE. UU." },
-  { name: "Neon Inc.", role: "Base de datos de cuentas y simulaciones", country: "servidores en Fráncfort, UE" },
+  { name: "Neon, LLC (grupo Databricks)", role: "Base de datos de cuentas y simulaciones", country: "servidores en Fráncfort, UE" },
   { name: "Resend (Plus Five Five Inc.)", role: "Envío de correos electrónicos", country: "EE. UU." },
 ];
 
@@ -77,9 +77,10 @@ export function PrivacyData() {
           ))}
         </ul>
         <p>
-          Tus datos de cuenta y simulaciones se guardan en la Unión Europea. Como los proveedores son empresas
-          estadounidenses, puede haber transferencias internacionales, amparadas por el Marco de Privacidad de Datos
-          UE-EE. UU. o por las cláusulas contractuales tipo de la Comisión Europea.
+          Tus datos de cuenta y simulaciones se guardan en la Unión Europea, aunque el servidor que atiende tus
+          peticiones puede estar en EE. UU. Como los proveedores son empresas estadounidenses, puede haber transferencias
+          internacionales, amparadas por el Marco de Privacidad de Datos UE-EE. UU. o por las cláusulas contractuales
+          tipo de la Comisión Europea.
         </p>
       </LegalSection>
     </>
